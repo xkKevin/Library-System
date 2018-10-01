@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="baidu-site-verification" content="nPxypLjNNn">
+<meta http-equiv="X-UA-Compatible" content="IE=emulateIE7">
+{% load i18n %}
+<title>Index</title>
+    <link rel="icon" href="/static/images/favicon.ico">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link href="/static/css/style.css" rel="stylesheet" type="text/css">
+<link href="/static/css/index.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<form action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ redirect_to }}"/>
+    <select name="language">
+        {% for language in LANGUAGES %}
+            <option value="{{ language.0 }}"{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                {{ language.1 }} ({{ language.0 }})
+        {% endfor %}
+    </select>
+    <input type="submit" value="Go"/>
+</form>
+<div style="width: 400px;text-align:right;float:right;position: absolute;right: 200px;top:0px;">
+     {% if login == True %}
+         <span><a href="/user_message/">{% trans '当前用户' %}:{{ username }}</a></span>
+         <span><a href="/clear_message/"> | {% trans '注销' %}</a></span>
+     {% else %}
+         <span><a href="/login/">{% trans '登录' %}</a> | </span>
+         <span><a href="/register/">{% trans '注册' %}</a></span>
+     {% endif %}
+
+</div>
+<div id="container">
+	<div id="bd">
+        <div id="main">
+        	<h1 class="title">
+
+                    <img src="/static/images/logo.png" height="108" width="519"/>
+
+            </h1>
+            <div class="nav ue-clear">
+            	<ul class="searchList">
+                    <li class="searchItem current" data-type="computer">{% trans '计算机' %}</li>
+                    <li class="searchItem" data-type="literature">{% trans  '文学' %}</li>
+                    <li class="searchItem" data-type="philosophy">{% trans '哲学' %}</li>
+                    <li class="searchItem" data-type="history">{% trans '历史' %}</li>
+                </ul>
+            </div>
+            <div class="inputArea">
+            	<input type="text" class="searchInput" style="vertical-align:middle">
+                <input type="button" class="searchButton" onclick="search()">
+                <img src="/static/images/seachbtn.png" height="42" width="106" style="vertical-align:middle"/>
+            </div>
+
+</div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/global.js"></script>
+<script type="text/javascript">
+    var suggest_url = "/suggest/";
+    var search_url = "/search/";
+
+
+	$('.searchList').on('click', '.searchItem', function(){
+		$('.searchList .searchItem').removeClass('current');
+		$(this).addClass('current');
+	});
+</script>
+<script>
+    function search() {
+        var type = $('.current').attr('data-type')
+    }
+</script>
+</body>
+
+</html>

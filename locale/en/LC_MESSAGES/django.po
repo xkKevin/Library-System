@@ -1,0 +1,167 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-10-01 14:39+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: .\librarian\templates\index.html:27
+msgid "当前用户"
+msgstr "The current user"
+
+#: .\librarian\templates\index.html:28
+msgid "注销"
+msgstr "cancellation "
+
+#: .\librarian\templates\index.html:30 .\reader\templates\login.html:54
+msgid "登录"
+msgstr "Sign in"
+
+#: .\librarian\templates\index.html:31 .\reader\templates\login.html:55
+#: .\reader\templates\register.html:70 .\reader\templates\register.html:90
+msgid "注册"
+msgstr "registered"
+
+#: .\librarian\templates\index.html:45
+msgid "计算机"
+msgstr "Computer"
+
+#: .\librarian\templates\index.html:46
+msgid "文学"
+msgstr "Literature"
+
+#: .\librarian\templates\index.html:47
+msgid "哲学"
+msgstr "Philosophy"
+
+#: .\librarian\templates\index.html:48
+msgid "历史"
+msgstr "History"
+
+#: .\reader\templates\login.html:31 .\reader\templates\register.html:65
+msgid "返回主页"
+msgstr "Return to the home page"
+
+#: .\reader\templates\login.html:36
+msgid "登陆"
+msgstr "Sign in"
+
+#: .\reader\templates\login.html:40 .\reader\templates\register.html:37
+#: .\reader\templates\register.html:148
+msgid "用户名不能为空"
+msgstr "The username cannot be empty!"
+
+#: .\reader\templates\login.html:44 .\reader\templates\register.html:45
+msgid "密码不能为空"
+msgstr "The password cannot be empty!"
+
+#: .\reader\templates\login.html:48
+msgid "记住我"
+msgstr "Remember me"
+
+#: .\reader\templates\login.html:103
+msgid "用户名或密码错误"
+msgstr "User name or password error"
+
+#: .\reader\templates\register.html:24
+msgid "两次密码相同"
+msgstr "Same password twice"
+
+#: .\reader\templates\register.html:29
+msgid "两次密码不相同"
+msgstr "Two different passwords"
+
+#: .\reader\templates\register.html:109
+msgid "邮箱格式不正确"
+msgstr "Incorrect email format"
+
+#: .\reader\templates\register.html:126
+msgid "注册失败!"
+msgstr "Registration failed!"
+
+#: .\reader\templates\register.html:138
+msgid "用户名可用"
+msgstr "User name available"
+
+#: .\reader\templates\register.html:141
+msgid "用户名不可用"
+msgstr "The user name is not available"
+
+#: .\reader\templates\user_message.html:6
+msgid "个人信息"
+msgstr "User Message"
+
+#: .\reader\templates\user_message.html:77
+msgid "首页"
+msgstr "HomePage"
+
+#: .\reader\templates\user_message.html:77
+msgid "退出"
+msgstr "Quit"
+
+#: .\reader\templates\user_message.html:91
+msgid "基本资料"
+msgstr "Basic Information "
+
+#: .\reader\templates\user_message.html:99
+msgid "用户ID"
+msgstr "User ID"
+
+#: .\reader\templates\user_message.html:100
+#, fuzzy
+#| msgid "用户名可用"
+msgid "用户名"
+msgstr "User name available"
+
+#: .\reader\templates\user_message.html:101
+msgid "邮箱"
+msgstr "Email"
+
+#: .\reader\templates\user_message.html:105
+msgid "修改"
+msgstr "Edit"
+
+#: .\reader\templates\user_message.html:112
+msgid "借阅记录"
+msgstr "Borrowed Record"
+
+#: .\reader\templates\user_message.html:122
+msgid "书名"
+msgstr "Book Name"
+
+#: .\reader\templates\user_message.html:123
+msgid "借阅日期"
+msgstr "Borrow Date"
+
+#: .\reader\templates\user_message.html:124
+msgid "归还期限"
+msgstr "Due back"
+
+#: .\reader\templates\user_message.html:125
+msgid "欠费金额"
+msgstr "Owe"
+
+#: .\reader\templates\user_message.html:126
+msgid "是否归还"
+msgstr "Is Return"
+
+#~ msgid "Django多语言国际化测试"
+#~ msgstr "Django multilingual internationalization test"
+
+#~ msgid "English"
+#~ msgstr "English"
+
+#~ msgid "中文简体"
+#~ msgstr "Simple Chinese"
