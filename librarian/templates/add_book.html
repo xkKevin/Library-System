@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="icon" href="/static/images/favicon.ico">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form>
+ISBN: <input type="text" name="isbn" id="isbn"><br>
+author: <input type="text" name="author" id="author"><br>
+book_name: <input type="text" name="book_name" id="book_name"><br>
+image_url: <input type="text" name="image_url" id="image_url"><br>
+total_num: <input type="text" name="total_num" id="total_num"><br>
+type: <input type="text" name="type" id="type"><br>
+place: <input type="text" name="place" id="place"><br>
+
+</form>
+<button id="add_book" onclick="add_book()"> 提交</button>
+<script>
+    function isbn_fouces() {
+        document.getElementById("isbn").focus()
+    }
+    $.ajaxSetup({
+    data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+});
+isbn_fouces();
+    $(document).ready(function () {
+        $('#isbn').bind('keypress',function(event){
+            if (event.keyCode == "13") {
+                url = '/isbn/api/?isbn='+$(this).val();
+                $.get(url, function (result, statue) {
+                    if (result['result']=== true){
+                        document.getElementById("book_name").value = result["book_name"];
+                        document.getElementById("image_url").value = result["image_url"];
+                        document.getElementById("type").value = result["type"];
+                        document.getElementById("author").value = result["author"];
+                    } else {
+                        alert('ISBN查询失败')
+                    }
+                });
+            } else {
+                return;
+            }
+
+
+        })
+    });
+    function add_book() {
+        var isbn = document.getElementById("isbn").value;
+        var author = document.getElementById("author").value;
+        var book_name = document.getElementById("book_name").value;
+        var image_url = document.getElementById("image_url").value;
+        var total_num = document.getElementById("total_num").value;
+        var type = document.getElementById("type").value;
+        var place = document.getElementById("place").value;
+        var book_message = {};
+        book_message["isbn"] = isbn;
+        book_message['author'] = author;
+        book_message['image_url'] = image_url;
+        book_message['book_name'] = book_name;
+        book_message['total_num'] = total_num;
+        book_message['type'] = type;
+        book_message['place'] = place;
+        $.post('/add_book/api/', book_message, function (result, statue) {
+            if(statue === "success"){
+                if(result["result"] === false){
+                    alert("图书添加失败!\n错误信息: "+ result['msg']);
+                }
+                else {
+                    window.location.href = '/'
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>
