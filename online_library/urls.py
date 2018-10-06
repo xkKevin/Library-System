@@ -18,7 +18,8 @@ from django.contrib import admin
 import librarian.views as librarian_views
 import reader.views as reader_views
 import administrator.views as administrator_views
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # 网页 url
@@ -40,5 +41,5 @@ urlpatterns = [
     url(r'^search_book/api/$', librarian_views.search_book_api, name="search_book_api"),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 # urlpatterns += i18n_patterns('',)
