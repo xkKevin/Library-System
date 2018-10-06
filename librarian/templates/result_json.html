@@ -1,0 +1,51 @@
+{% load i18n %}
+{% for book in book_list %}
+    <table class="items" style="margin:5px 0">
+     <tbody>
+          <tr>
+                <td class="col1" valign="top"></td>
+                <td class="cover" valign="top"><img style="border: medium none;" src="{{ book.image_url }}"/></td>
+                <td class="col2">
+                    <div class="itemtitle">{{ book.book_name }}</div>
+                    <table border="0" cellpadding="0" cellspacing="0">
+                        <tbody>
+                              <tr>
+                                 <td class="label1">{% trans '作者' %}：</td>
+                                 <td class="content" valign="top">{{ book.author }}</td>
+                              </tr>
+                              <tr>
+                               <td class="label1">{% trans '索书号' %}：</td>
+                               <td class="content isbn id_{{ forloop.counter }}"  valign="top">{{ book.isbn }}</td>
+                              </tr>
+                              <tr>
+                                  <td class="label1">{% trans '地点' %}：</td>
+                                  <td class="content" valign="top">{{ book.place }}</td>
+                              </tr>
+                              <tr>
+                                  <td class="label1">{% trans '类型' %}：</td>
+                                  <td class="content" valign="top">{{ book.type }}</td>
+                              </tr>
+                              <tr>
+                                  <td>
+
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td class="libs" colspan="2" align="left"><a href="">{% blocktrans %}馆藏复本:{% endblocktrans %}{{ book.total_num }}    {% blocktrans %}已出借复本:{% endblocktrans %}{{ book.available_num }}</a></td>
+                              </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <!--<td class="cover" valign="top" ></td>-->
+                {% if book.available_num > 0 %}
+                    <td align="center"><button id="{{ forloop.counter }}" class="button">{% trans '预约' %}</button></td>
+                {% else %}
+                    <td align="center"><button id="{{ forloop.counter }}" class="button" disabled="disabled">{% trans '无可预约数据' %}</button></td>
+                {% endif %}
+
+          </tr>
+     </tbody>
+</table>
+<hr class="itemsep" size="1">
+
+{% endfor %}

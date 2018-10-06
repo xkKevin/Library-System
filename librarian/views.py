@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
+from django.utils import timezone
 from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder
 from reader.models import User
 
 import requests
-import datetime
 
 
 def index(request):
@@ -23,15 +23,92 @@ def index(request):
     return render(request, 'index.html', message)
 
 
-def reserve_api(request):
-    if request.method == 'POST':
-        book_id = request.POST['book_id']
-        user_id = request.POST['user_id']
+def search_book_api(request):
+    '''
+    查询书籍API
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == "None":
+        return JsonResponse({"result": False, "msg": "未登录"})
+    book_type = request.GET.get('book_type', None)
+    book_name = request.GET.get('book_name', None)
+    if book_name is None or book_type is None:
+        return JsonResponse({"result": False, "msg": "查询参数不正确"})
+    try:
+        if book_type == "全部":
+            result = Book.objects.filter(book_name__contains=book_name)
+        else:
+            result = Book.objects.filter(book_name__contains=book_name, type__contains=book_type)
+        if len(result) > 0:
+            result_json = render(request, 'result_json.html', {"book_list": result})
+            return JsonResponse({"result": True, "html": bytes.decode(result_json.content)})
+        else:
+            return JsonResponse({"result": False, "msg": "很抱歉未找到相关图书信息"})
+    except :
+        return JsonResponse({"result": False, "msg": "查询出错"})
 
-        book = AllBook.objects.get(book_id=book_id)
-        user = User.objects.get(user_id=user_id)
-        ReserveOrder.objects.create(book_id=book_id, user_id=user_id,
-                                    borrow_time=datetime.datetime.now(), successful=False)
+
+def search_book(request):
+    '''
+    查询书籍
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == "None":
+        return HttpResponseRedirect(reverse("login"))
+    book_type = request.GET.get('book_type', None)
+    book_name = request.GET.get('book_name', None)
+    if book_name is None or book_type is None:
+        return JsonResponse({"result": False, "msg": "查询参数不正确"})
+    try:
+        if book_type == "全部":
+            result = Book.objects.filter(book_name__contains=book_name)
+        else:
+            result = Book.objects.filter(book_name__contains=book_name, type__contains=book_type)
+
+        if len(result) > 0:
+            return render(request, 'search_results.html', {"book_list": result})
+    except :
+        return JsonResponse({"result": False, "msg": "查询出错"})
+
+
+def reserve_api(request):
+    '''
+    预约API
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == "None":
+        return JsonResponse({'result': False, "msg": "未登录"})
+    if request.method == 'POST':
+        isbn = request.POST['isbn']
+
+        try:
+            book = AllBook.objects.filter(isbn=isbn, is_available=True).first()
+            user = User.objects.get(user_name=username)
+            borrow = ReserveOrder.objects.filter(isbn=isbn, user_id=user.user_id).first()
+            if borrow:
+                borrow.borrow_time = timezone.now()
+                return JsonResponse({"result": True, "update": True})
+            isbn = Book.objects.get(isbn=isbn)
+        except Exception as e:
+            return JsonResponse({'result': False, "msg": "数据库错误"})
+        if not (book and user and isbn):
+            return JsonResponse({'result': False, "msg": "未查到相关数据"})
+        borrow_time = timezone.now()
+        try:
+            result = ReserveOrder.objects.create(book=book, user=user, borrow_time=borrow_time, successful=False,
+                                                 isbn=isbn)
+            if result:
+                return JsonResponse({"result": True, "update": False})
+            else:
+                return JsonResponse({"result": False, "msg": "数据库保存失败"})
+        except Exception as e:
+            return JsonResponse({"result": False,  "msg": "数据库错误"})
 
 
 def clear_message(request):
@@ -83,6 +160,11 @@ def book_message_api(request):
 
 
 def add_book_api(request):
+    '''
+    添加图书
+    :param request:
+    :return:
+    '''
     if request.method == "POST":
         try:
             isbn = request.POST['isbn']

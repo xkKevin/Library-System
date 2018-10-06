@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-01 14:39+0800\n"
+"POT-Creation-Date: 2018-10-06 18:38+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,85 +17,146 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: .\librarian\templates\index.html:27
+#: .\librarian\templates\index.html:36
 msgid "当前用户"
 msgstr "The current user"
 
-#: .\librarian\templates\index.html:28
+#: .\librarian\templates\index.html:37
 msgid "注销"
 msgstr "cancellation "
 
-#: .\librarian\templates\index.html:30 .\reader\templates\login.html:54
+#: .\librarian\templates\index.html:39 .\reader\templates\login.html:63
 msgid "登录"
 msgstr "Sign in"
 
-#: .\librarian\templates\index.html:31 .\reader\templates\login.html:55
-#: .\reader\templates\register.html:70 .\reader\templates\register.html:90
+#: .\librarian\templates\index.html:40 .\reader\templates\login.html:64
+#: .\reader\templates\register.html:80 .\reader\templates\register.html:100
 msgid "注册"
 msgstr "registered"
 
-#: .\librarian\templates\index.html:45
+#: .\librarian\templates\index.html:54
+msgid "全部"
+msgstr "All"
+
+#: .\librarian\templates\index.html:55
+#: .\librarian\templates\search_results.html:43
 msgid "计算机"
 msgstr "Computer"
 
-#: .\librarian\templates\index.html:46
+#: .\librarian\templates\index.html:56
+#: .\librarian\templates\search_results.html:41
 msgid "文学"
 msgstr "Literature"
 
-#: .\librarian\templates\index.html:47
+#: .\librarian\templates\index.html:57
+#: .\librarian\templates\search_results.html:42
 msgid "哲学"
 msgstr "Philosophy"
 
-#: .\librarian\templates\index.html:48
+#: .\librarian\templates\index.html:58
+#: .\librarian\templates\search_results.html:40
 msgid "历史"
 msgstr "History"
 
-#: .\reader\templates\login.html:31 .\reader\templates\register.html:65
+#: .\librarian\templates\result_json.html:13
+#: .\librarian\templates\search_results.html:70
+msgid "作者"
+msgstr "author"
+
+#: .\librarian\templates\result_json.html:17
+#: .\librarian\templates\search_results.html:74
+msgid "索书号"
+msgstr "ISBN"
+
+#: .\librarian\templates\result_json.html:21
+#: .\librarian\templates\search_results.html:78
+msgid "地点"
+msgstr "Place"
+
+#: .\librarian\templates\result_json.html:25
+#: .\librarian\templates\search_results.html:82
+msgid "类型"
+msgstr "Type"
+
+#: .\librarian\templates\result_json.html:34
+#: .\librarian\templates\search_results.html:91
+msgid "馆藏复本:"
+msgstr "Total Num:"
+
+#: .\librarian\templates\result_json.html:34
+#: .\librarian\templates\search_results.html:91
+msgid "已出借复本:"
+msgstr "Is available:"
+
+#: .\librarian\templates\result_json.html:41
+#: .\librarian\templates\search_results.html:98
+msgid "预约"
+msgstr "Reserve"
+
+#: .\librarian\templates\result_json.html:43
+#: .\librarian\templates\search_results.html:100
+msgid "无可预约数据"
+msgstr "Can not Reserve"
+
+#: .\librarian\templates\search_results.html:22
+#: .\reader\templates\login.html:40 .\reader\templates\register.html:75
 msgid "返回主页"
 msgstr "Return to the home page"
 
-#: .\reader\templates\login.html:36
+#: .\librarian\templates\search_results.html:23
+msgid "个人中心"
+msgstr "User Message"
+
+#: .\librarian\templates\search_results.html:37
+msgid "所有字段"
+msgstr "All"
+
+#: .\librarian\templates\search_results.html:47
+msgid "检索"
+msgstr "Search"
+
+#: .\reader\templates\login.html:45
 msgid "登陆"
 msgstr "Sign in"
 
-#: .\reader\templates\login.html:40 .\reader\templates\register.html:37
-#: .\reader\templates\register.html:148
+#: .\reader\templates\login.html:49 .\reader\templates\register.html:47
+#: .\reader\templates\register.html:158
 msgid "用户名不能为空"
 msgstr "The username cannot be empty!"
 
-#: .\reader\templates\login.html:44 .\reader\templates\register.html:45
+#: .\reader\templates\login.html:53 .\reader\templates\register.html:55
 msgid "密码不能为空"
 msgstr "The password cannot be empty!"
 
-#: .\reader\templates\login.html:48
+#: .\reader\templates\login.html:57
 msgid "记住我"
 msgstr "Remember me"
 
-#: .\reader\templates\login.html:103
+#: .\reader\templates\login.html:112
 msgid "用户名或密码错误"
 msgstr "User name or password error"
 
-#: .\reader\templates\register.html:24
+#: .\reader\templates\register.html:34
 msgid "两次密码相同"
 msgstr "Same password twice"
 
-#: .\reader\templates\register.html:29
+#: .\reader\templates\register.html:39
 msgid "两次密码不相同"
 msgstr "Two different passwords"
 
-#: .\reader\templates\register.html:109
+#: .\reader\templates\register.html:119
 msgid "邮箱格式不正确"
 msgstr "Incorrect email format"
 
-#: .\reader\templates\register.html:126
+#: .\reader\templates\register.html:136
 msgid "注册失败!"
 msgstr "Registration failed!"
 
-#: .\reader\templates\register.html:138
+#: .\reader\templates\register.html:148
 msgid "用户名可用"
 msgstr "User name available"
 
-#: .\reader\templates\register.html:141
+#: .\reader\templates\register.html:151
 msgid "用户名不可用"
 msgstr "The user name is not available"
 
@@ -156,6 +217,9 @@ msgstr "Owe"
 #: .\reader\templates\user_message.html:126
 msgid "是否归还"
 msgstr "Is Return"
+
+#~ msgid "馆藏复本:%(book.total_num)s,已出借复本:%(book.available_num)s "
+#~ msgstr "Total Num:%(book.total_num),Available Num:%(book.available_num)s "
 
 #~ msgid "Django多语言国际化测试"
 #~ msgstr "Django multilingual internationalization test"

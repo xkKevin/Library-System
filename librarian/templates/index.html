@@ -51,14 +51,15 @@
             </h1>
             <div class="nav ue-clear">
             	<ul class="searchList">
-                    <li class="searchItem current" data-type="computer">{% trans '计算机' %}</li>
+                    <li class="searchItem current" data-type="all_type">{% trans '全部' %}</li>
+                    <li class="searchItem" data-type="computer">{% trans '计算机' %}</li>
                     <li class="searchItem" data-type="literature">{% trans  '文学' %}</li>
                     <li class="searchItem" data-type="philosophy">{% trans '哲学' %}</li>
                     <li class="searchItem" data-type="history">{% trans '历史' %}</li>
                 </ul>
             </div>
             <div class="inputArea">
-            	<input type="text" class="searchInput" style="vertical-align:middle">
+            	<input type="text" class="searchInput" id="search_text" style="vertical-align:middle">
                 <input type="button" class="searchButton" onclick="search()">
                 <img src="/static/images/seachbtn.png" height="42" width="106" style="vertical-align:middle"/>
             </div>
@@ -79,9 +80,32 @@
 	});
 </script>
 <script>
+    $.ajaxSetup({
+    data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+});
     function search() {
-        var type = $('.current').attr('data-type')
+        var type_attr = $('.current').attr('data-type');
+        var type_dic = {"computer":"计算机","literature":"哲学" ,
+                         "philosophy": "哲学", "history":"历史",
+                        "all_type":"全部",
+                        };
+
+        var book_name = $('.searchInput').val();
+        if(book_name===""){
+            return;
+        }
+        {#var get_data = {"book_type":type_dic[type_attr],"book_name":book_name};#}
+        window.location.href ="/search_book/?book_type="+type_dic[type_attr] +"&book_name="+book_name;
+
     }
+
+    $(document).ready(function () {
+        $('#search_text').bind('keypress',function(event){
+            if (event.keyCode == "13") {
+               search();
+            }
+        })
+    });
 </script>
 </body>
 

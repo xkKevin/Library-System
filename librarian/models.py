@@ -22,7 +22,7 @@ class AllBook(models.Model):
     isbn = models.ForeignKey(Book, related_name="all_book_isbn")
 
     def __str__(self):
-        return self.book_id
+        return str(self.book_id)
 
 
 class BorrowOrder(models.Model):
@@ -35,18 +35,19 @@ class BorrowOrder(models.Model):
     is_return = models.BooleanField(null=False)
 
     def __str__(self):
-        return self.order_id
+        return str(self.borrow_time)
 
 
 class ReserveOrder(models.Model):
     order_id = models.IntegerField(primary_key=True)
     user = models.ForeignKey(User, related_name="reserve_order_user")
-    book = models.ForeignKey(AllBook, related_name="reserve_order_user")
+    book = models.ForeignKey(AllBook, related_name="reserve_order_book")
+    isbn = models.ForeignKey(Book, related_name="reserve_order_isbn")
     borrow_time = models.DateTimeField(null=False)
     successful = models.BooleanField(null=False)
 
     def __str__(self):
-        return self.order_id
+        return str(self.user)
 
 
 class Role(models.Model):
@@ -56,4 +57,4 @@ class Role(models.Model):
     fine = models.IntegerField()
 
     def __str__(self):
-        return self.books_limit
+        return str(self.books_limit)

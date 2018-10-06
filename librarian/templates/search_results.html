@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+<link rel="stylesheet" href="/static/css/exlchi.css" type="text/css">
+        <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="icon" href="/static/images/favicon.ico">
+<title>Search Results</title>
+</head>
+{% load i18n %}
+<body id="body">
+<form action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ redirect_to }}"/>
+    <select name="language">
+        {% for language in LANGUAGES %}
+            <option value="{{ language.0 }}"{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                {{ language.1 }} ({{ language.0 }})
+        {% endfor %}
+    </select>
+    <input type="submit" value="Go"/>
+</form>
+<div style="width: 400px;text-align:right;float:right;position: absolute;right: 200px;top:20px;">
+    <span class="h5"><a href="/">{% trans '返回主页' %}</a></span>|
+    <span class="h5"><a href="/user_message/">{% trans '个人中心' %}</a></span>
+</div>
+<div id="search">
+<img id="logo" style="width: 165px" src="../static/images/logo.jpg">
+<br>
+<br>
+<table id="search" >
+    <tbody>
+        <tr>
+            <td id="col1"></td>
+            <td id="col2">
+                    <form name="cclform" >
+                        <input style="width: 300px;visibility: hidden"  >
+                            <select name="find_code" id="find_code">
+                                <option value="all_type">{% trans '所有字段' %}</option>
+{#                                <option value="author">作者</option>#}
+{#                                <option value="isbn">ISBN</option>#}
+                                <option value="history">{% trans '历史' %}</option>
+                                <option value="literature">{% trans '文学' %}</option>
+                                <option value="philosophy">{% trans '哲学' %}</option>
+                                <option value="computer">{% trans '计算机' %}</option>
+                            </select>
+                        <input autocomplete="off" style="width:30%" name="request" value="" id="find_text"> &nbsp;
+                        <span id="refine"></span>
+                        <input id="lookup" type="button" value="{% trans '检索' %}" onclick="result_search()">
+                        </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<span><br></span>
+<span><br></span>
+</div>
+<hr class="itemsep" size="20">
+<div id="result">
+{% for book in book_list %}
+    <table class="items" style="margin:5px 0">
+     <tbody>
+          <tr>
+                <td class="col1" valign="top"></td>
+                <td class="cover" valign="top"><img style="border: medium none;" src="{{ book.image_url }}"/></td>
+                <td class="col2">
+                    <div class="itemtitle">{{ book.book_name }}</div>
+                    <table border="0" cellpadding="0" cellspacing="0">
+                        <tbody>
+                              <tr>
+                                 <td class="label1">{% trans '作者' %}：</td>
+                                 <td class="content" valign="top">{{ book.author }}</td>
+                              </tr>
+                              <tr>
+                               <td class="label1">{% trans '索书号' %}：</td>
+                               <td class="content isbn id_{{ forloop.counter }}"  valign="top">{{ book.isbn }}</td>
+                              </tr>
+                              <tr>
+                                  <td class="label1">{% trans '地点' %}：</td>
+                                  <td class="content" valign="top">{{ book.place }}</td>
+                              </tr>
+                              <tr>
+                                  <td class="label1">{% trans '类型' %}：</td>
+                                  <td class="content" valign="top">{{ book.type }}</td>
+                              </tr>
+                              <tr>
+                                  <td>
+
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td class="libs" colspan="2" align="left"><a href="">{% blocktrans %}馆藏复本:{% endblocktrans %}{{ book.total_num }},{% blocktrans %}已出借复本:{% endblocktrans %}{{ book.available_num }}</a></td>
+                              </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <!--<td class="cover" valign="top" ></td>-->
+                {% if book.available_num > 0 %}
+                    <td align="center"><button id="{{ forloop.counter }}" class="button">{% trans '预约' %}</button></td>
+                {% else %}
+                    <td align="center"><button id="{{ forloop.counter }}" class="button" disabled="disabled">{% trans '无可预约数据' %}</button></td>
+                {% endif %}
+
+          </tr>
+     </tbody>
+</table>
+<hr class="itemsep" size="1">
+
+{% endfor %}
+
+</div>
+<script type="application/javascript">
+    $("#body").on('click', '.button' ,function(){
+        var id = $(this).attr("id");
+        var class_selector = "id_"+ id;
+        var isbn = document.getElementsByClassName(class_selector)[0].innerHTML;
+        $.post('/reserve/api/',{"isbn":isbn}, function (result, statue) {
+            if(result["result"]===false){
+                alert("图书添加失败!\n错误信息: "+ result['msg']);
+            }else {
+                var this_button = document.getElementById(id);
+                this_button.disabled  = true;
+                this_button.innerText = "预约成功";
+                if(result["update"] === true){
+                    alert("该书已预约, 已更新预约时间!")
+                }
+            }
+        })
+    });
+    function result_search() {
+        var type_dic = {"computer":"计算机","literature":"哲学" ,
+                         "philosophy": "哲学", "history":"历史",
+                        "all_type":"全部",
+                        };
+            var find_code =  document.getElementById("find_code");
+            var index = find_code.selectedIndex;
+            var type = find_code.options[index].value;
+            var find_text = $("#find_text").val();
+            var get_data ={};
+            get_data["book_type"] = type_dic[type];
+            get_data["book_name"] = find_text;
+            $.get('/search_book/api/',get_data, function (result, status) {
+            if(result["result"]===false){
+                alert("搜索失败!\n失败信息: "+ result["msg"])
+            }
+            else {
+                var result_div = document.getElementById("result");
+                result_div.innerHTML= result["html"];
+            }
+        }
+        )
+    }
+</script>
+<script>
+    $.ajaxSetup({
+    data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+});
+    $(document).ready(function () {
+        $('#find_text').bind('keypress',function(event){
+            if (event.keyCode == "13") {
+               result_search();
+            }
+        })
+    });
+</script>
+</body>
+</html>
