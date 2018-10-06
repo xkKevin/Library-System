@@ -68,9 +68,8 @@ def search_book(request):
             result = Book.objects.filter(book_name__contains=book_name)
         else:
             result = Book.objects.filter(book_name__contains=book_name, type__contains=book_type)
+        return render(request, 'search_results.html', {"book_list": result})
 
-        if len(result) > 0:
-            return render(request, 'search_results.html', {"book_list": result})
     except :
         return JsonResponse({"result": False, "msg": "查询出错"})
 
