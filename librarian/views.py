@@ -68,9 +68,8 @@ def search_book(request):
             result = Book.objects.filter(book_name__contains=book_name)
         else:
             result = Book.objects.filter(book_name__contains=book_name, type__contains=book_type)
+        return render(request, 'search_results.html', {"book_list": result})
 
-        if len(result) > 0:
-            return render(request, 'search_results.html', {"book_list": result})
     except :
         return JsonResponse({"result": False, "msg": "查询出错"})
 
@@ -180,7 +179,11 @@ def add_book_api(request):
             total_num = request.POST['total_num']
             type = request.POST["type"]
             place = request.POST['place']
-
+            image_result = requests.get(image_url)
+            if image_result.status_code == 200:
+                with open("./librarian/static/book_image/%s.jpg" % isbn, "wb") as file:
+                    file.write(image_result.content)
+            image_url = '/static/book_image/%s.jpg' % isbn
             book = Book()
             book.isbn = isbn
             book.author = author
