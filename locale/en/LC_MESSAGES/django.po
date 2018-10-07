@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-06 18:38+0800\n"
+"POT-Creation-Date: 2018-10-07 22:44+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -160,63 +160,79 @@ msgstr "User name available"
 msgid "用户名不可用"
 msgstr "The user name is not available"
 
-#: .\reader\templates\user_message.html:6
-msgid "个人信息"
-msgstr "User Message"
-
-#: .\reader\templates\user_message.html:77
+#: .\reader\templates\user_message.html:122
 msgid "首页"
 msgstr "HomePage"
 
-#: .\reader\templates\user_message.html:77
+#: .\reader\templates\user_message.html:122
 msgid "退出"
 msgstr "Quit"
 
-#: .\reader\templates\user_message.html:91
+#: .\reader\templates\user_message.html:138
+#: .\reader\templates\user_message.html:145
 msgid "基本资料"
 msgstr "Basic Information "
 
-#: .\reader\templates\user_message.html:99
-msgid "用户ID"
-msgstr "User ID"
-
-#: .\reader\templates\user_message.html:100
-#, fuzzy
-#| msgid "用户名可用"
-msgid "用户名"
-msgstr "User name available"
-
-#: .\reader\templates\user_message.html:101
-msgid "邮箱"
-msgstr "Email"
-
-#: .\reader\templates\user_message.html:105
-msgid "修改"
-msgstr "Edit"
-
-#: .\reader\templates\user_message.html:112
+#: .\reader\templates\user_message.html:139
+#: .\reader\templates\user_message.html:161
 msgid "借阅记录"
 msgstr "Borrowed Record"
 
-#: .\reader\templates\user_message.html:122
+#: .\reader\templates\user_message.html:140
+#: .\reader\templates\user_message.html:211
+msgid "预约记录"
+msgstr "Reserve Record"
+
+#: .\reader\templates\user_message.html:151
+msgid "用户ID"
+msgstr "User ID"
+
+#: .\reader\templates\user_message.html:152
+msgid "用户名"
+msgstr "User name available"
+
+#: .\reader\templates\user_message.html:153
+msgid "邮箱"
+msgstr "Email"
+
+#: .\reader\templates\user_message.html:157
+msgid "修改"
+msgstr "Edit"
+
+#: .\reader\templates\user_message.html:170
 msgid "书名"
 msgstr "Book Name"
 
-#: .\reader\templates\user_message.html:123
+#: .\reader\templates\user_message.html:171
 msgid "借阅日期"
 msgstr "Borrow Date"
 
-#: .\reader\templates\user_message.html:124
+#: .\reader\templates\user_message.html:172
 msgid "归还期限"
 msgstr "Due back"
 
-#: .\reader\templates\user_message.html:125
+#: .\reader\templates\user_message.html:173
 msgid "欠费金额"
 msgstr "Owe"
 
-#: .\reader\templates\user_message.html:126
+#: .\reader\templates\user_message.html:174
 msgid "是否归还"
 msgstr "Is Return"
+
+#: .\reader\templates\user_message.html:218
+msgid "书号"
+msgstr "ISBN"
+
+#: .\reader\templates\user_message.html:219
+msgid "预约时间"
+msgstr "Reserve Time"
+
+#: .\reader\templates\user_message.html:220
+msgid "是否有效"
+msgstr "Is available"
+
+#~ msgid "个人信息"
+#~ msgstr "User Message"
 
 #~ msgid "馆藏复本:%(book.total_num)s,已出借复本:%(book.available_num)s "
 #~ msgstr "Total Num:%(book.total_num),Available Num:%(book.available_num)s "
