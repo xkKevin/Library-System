@@ -61,7 +61,7 @@ body{
                 </div>
                 <div class="form-group col-md-offset-9">
                     <button type="submit" class="btn pull-right" name="submit" onclick="login()">{% trans '登录' %}</button>
-                    <button type="submit" class="btn pull-left" name="submit"><a href="/register/">{% trans '注册' %}</a></button>
+                    <button type="submit" class="btn pull-left" name="submit" onclick="admin_login()">{% trans '管理员登录' %}</button>
                 </div>
             </div>
         </div>
@@ -93,11 +93,11 @@ body{
         var password = $('#password').val();
         var flag = false;
         if(username.length===0){
-            $("#warn1").css('visibility','visible')
+            $("#warn1").css('visibility','visible');
             flag = true
         }
         if(password.length===0){
-            $("#warn2").css('visibility','visible')
+            $("#warn2").css('visibility','visible');
             flag = true;
         }
         if(flag)
@@ -107,6 +107,32 @@ body{
             if(statue ==='success'){
                 if(result["result"]===true){
                     $(window).attr('location', '/');
+                }
+                else {
+                    document.getElementById('warn5').innerText = "{% trans '用户名或密码错误' %}"
+                }
+            }
+        },"json")
+    }
+    function admin_login() {
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var flag = false;
+        if(username.length===0){
+            $("#warn1").css('visibility','visible');
+            flag = true
+        }
+        if(password.length===0){
+            $("#warn2").css('visibility','visible');
+            flag = true;
+        }
+        if(flag)
+            return;
+        var remember = document.getElementById('remember').checked;
+        $.post('/manager_login/api/',{'type':'administrator', 'username':username, "password":hex_md5(password),"remember":remember},function (result,statue) {
+            if(statue ==='success'){
+                if(result["result"]===true){
+                    $(window).attr('location', '/manage/');
                 }
                 else {
                     document.getElementById('warn5').innerText = "{% trans '用户名或密码错误' %}"

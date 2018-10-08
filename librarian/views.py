@@ -4,7 +4,8 @@ from django.urls import reverse
 from django.utils import timezone
 from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder
 from reader.models import User
-
+from administrator.models import Administrator
+import time
 import requests
 
 
@@ -29,9 +30,12 @@ def search_book_api(request):
     :param request:
     :return:
     '''
+    is_administrator = False
     username = request.session.get('username', "None")
     if username == "None":
         return JsonResponse({"result": False, "msg": "未登录"})
+    elif username == "root":
+        is_administrator = True
     book_type = request.GET.get('book_type', None)
     book_name = request.GET.get('book_name', None)
     if book_name is None or book_type is None:
@@ -42,7 +46,7 @@ def search_book_api(request):
         else:
             result = Book.objects.filter(book_name__contains=book_name, type__contains=book_type)
         if len(result) > 0:
-            result_json = render(request, 'result_json.html', {"book_list": result})
+            result_json = render(request, 'result_json.html', {"book_list": result, "administrator": is_administrator})
             return JsonResponse({"result": True, "html": bytes.decode(result_json.content)})
         else:
             return JsonResponse({"result": False, "msg": "很抱歉未找到相关图书信息"})
@@ -56,9 +60,12 @@ def search_book(request):
     :param request:
     :return:
     '''
+    is_administrator = False
     username = request.session.get('username', "None")
     if username == "None":
-        return HttpResponseRedirect(reverse("login"))
+        return JsonResponse({"result": False, "msg": "未登录"})
+    elif username == "root":
+        is_administrator = True
     book_type = request.GET.get('book_type', None)
     book_name = request.GET.get('book_name', None)
     if book_name is None or book_type is None:
@@ -68,7 +75,7 @@ def search_book(request):
             result = Book.objects.filter(book_name__contains=book_name)
         else:
             result = Book.objects.filter(book_name__contains=book_name, type__contains=book_type)
-        return render(request, 'search_results.html', {"book_list": result})
+        return render(request, 'search_results.html', {"book_list": result, "administrator": is_administrator})
 
     except :
         return JsonResponse({"result": False, "msg": "查询出错"})
@@ -92,6 +99,7 @@ def reserve_api(request):
             borrow = ReserveOrder.objects.filter(isbn=isbn, user_id=user.user_id).first()
             if borrow:
                 borrow.borrow_time = timezone.now()
+                borrow.save()
                 return JsonResponse({"result": True, "update": True})
             isbn = Book.objects.get(isbn=isbn)
         except Exception as e:
@@ -156,6 +164,50 @@ def book_message_api(request):
         else:
             result_json['result'] = False
         return JsonResponse(result_json)
+
+
+def administrator_login_post(request):
+    '''
+    管理员登陆api
+    :param request:
+    :return:
+    '''
+    if request.method == "POST":
+        try:
+            user_type = request.POST["type"]
+            if not user_type == 'administrator':
+                return JsonResponse({'result': False})
+            password = request.POST["password"]
+            username = request.POST["username"]
+            remember = request.POST['remember']
+            temp = Administrator.objects.get(administrator_name=username, password=password)
+            if temp:
+                response = JsonResponse({'result': True})
+                if not remember:
+                    request.session.set_expiry(0)
+                request.session["admin_name"] = temp.administrator_name
+                request.session['username'] = 'root'
+                request.session['login_time'] = time.time()
+                request.session['type'] = 'administrator'
+            else:
+                response = JsonResponse({'result': False})
+            return response
+        except Exception as e:
+            return JsonResponse({'result': False})
+
+
+def manager_page(request):
+    '''
+    管理员界面
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        reserve_order_list = ReserveOrder.objects.filter(user_id=1, expire=False, )
+        return render(request, 'manager_page.html', {'reserve_order_list': reserve_order_list})
+    else:
+        return HttpResponseRedirect(reverse("login"))
 
 
 def add_book_api(request):

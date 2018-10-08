@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-07 22:44+0800\n"
+"POT-Creation-Date: 2018-10-08 21:40+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,8 +30,8 @@ msgstr "注销"
 msgid "登录"
 msgstr "登录"
 
-#: .\librarian\templates\index.html:40 .\reader\templates\login.html:64
-#: .\reader\templates\register.html:80 .\reader\templates\register.html:100
+#: .\librarian\templates\index.html:40 .\reader\templates\register.html:80
+#: .\reader\templates\register.html:100
 msgid "注册"
 msgstr "注册"
 
@@ -58,6 +58,68 @@ msgstr "哲学"
 #: .\librarian\templates\search_results.html:40
 msgid "历史"
 msgstr "历史"
+
+#: .\librarian\templates\manager_page.html:124
+#: .\reader\templates\user_message.html:122
+msgid "首页"
+msgstr "首页"
+
+#: .\librarian\templates\manager_page.html:124
+#: .\reader\templates\user_message.html:122
+msgid "退出"
+msgstr "退出"
+
+#: .\librarian\templates\manager_page.html:159
+#: .\reader\templates\user_message.html:151
+msgid "用户ID"
+msgstr "用户ID"
+
+#: .\librarian\templates\manager_page.html:160
+#: .\reader\templates\user_message.html:152
+msgid "用户名"
+msgstr "用户名"
+
+#: .\librarian\templates\manager_page.html:161
+#: .\reader\templates\user_message.html:153
+msgid "邮箱"
+msgstr "邮箱"
+
+#: .\librarian\templates\manager_page.html:170
+#: .\reader\templates\user_message.html:157
+msgid "修改"
+msgstr "修改"
+
+#: .\librarian\templates\manager_page.html:183
+#: .\reader\templates\user_message.html:170
+msgid "书名"
+msgstr "书名"
+
+#: .\librarian\templates\manager_page.html:184
+msgid "预约用户"
+msgstr "预约用户"
+
+#: .\librarian\templates\manager_page.html:185
+#: .\librarian\templates\manager_page.html:208
+#: .\librarian\templates\manager_page.html:251
+#: .\reader\templates\user_message.html:219
+msgid "预约时间"
+msgstr "预约时间"
+
+#: .\librarian\templates\manager_page.html:186
+msgid "是否借阅"
+msgstr "是否借阅"
+
+#: .\librarian\templates\manager_page.html:207
+#: .\librarian\templates\manager_page.html:250
+#: .\reader\templates\user_message.html:218
+msgid "书号"
+msgstr "书号"
+
+#: .\librarian\templates\manager_page.html:209
+#: .\librarian\templates\manager_page.html:252
+#: .\reader\templates\user_message.html:220
+msgid "是否有效"
+msgstr "是否有效"
 
 #: .\librarian\templates\result_json.html:13
 #: .\librarian\templates\search_results.html:70
@@ -133,6 +195,10 @@ msgstr "密码不能为空"
 msgid "记住我"
 msgstr "记住我"
 
+#: .\reader\templates\login.html:64
+msgid "管理员登录"
+msgstr "管理员"
+
 #: .\reader\templates\login.html:112
 msgid "用户名或密码错误"
 msgstr "用户名或密码错误"
@@ -161,14 +227,6 @@ msgstr "用户名可用"
 msgid "用户名不可用"
 msgstr "用户名不可用"
 
-#: .\reader\templates\user_message.html:122
-msgid "首页"
-msgstr "首页"
-
-#: .\reader\templates\user_message.html:122
-msgid "退出"
-msgstr "退出"
-
 #: .\reader\templates\user_message.html:138
 #: .\reader\templates\user_message.html:145
 msgid "基本资料"
@@ -182,27 +240,7 @@ msgstr "借阅记录"
 #: .\reader\templates\user_message.html:140
 #: .\reader\templates\user_message.html:211
 msgid "预约记录"
-msgstr ""
-
-#: .\reader\templates\user_message.html:151
-msgid "用户ID"
-msgstr "用户ID"
-
-#: .\reader\templates\user_message.html:152
-msgid "用户名"
-msgstr "用户名"
-
-#: .\reader\templates\user_message.html:153
-msgid "邮箱"
-msgstr "邮箱"
-
-#: .\reader\templates\user_message.html:157
-msgid "修改"
-msgstr "修改"
-
-#: .\reader\templates\user_message.html:170
-msgid "书名"
-msgstr "书名"
+msgstr "预约记录"
 
 #: .\reader\templates\user_message.html:171
 msgid "借阅日期"
@@ -219,18 +257,6 @@ msgstr "欠费金额"
 #: .\reader\templates\user_message.html:174
 msgid "是否归还"
 msgstr "是否归还"
-
-#: .\reader\templates\user_message.html:218
-msgid "书号"
-msgstr "书号"
-
-#: .\reader\templates\user_message.html:219
-msgid "预约时间"
-msgstr "预约时间"
-
-#: .\reader\templates\user_message.html:220
-msgid "是否有效"
-msgstr "是否有效"
 
 #~ msgid "个人信息"
 #~ msgstr "个人信息"

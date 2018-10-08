@@ -105,6 +105,11 @@ def login_post(request):
 
 
 def user_message(request):
+    '''
+    用户信息
+    :param request:
+    :return:
+    '''
     username = request.session.get('username', "None")
     if username == "None":
         return HttpResponseRedirect(reverse("login"))

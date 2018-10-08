@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-07 22:44+0800\n"
+"POT-Creation-Date: 2018-10-08 21:40+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,8 +29,8 @@ msgstr "cancellation "
 msgid "登录"
 msgstr "Sign in"
 
-#: .\librarian\templates\index.html:40 .\reader\templates\login.html:64
-#: .\reader\templates\register.html:80 .\reader\templates\register.html:100
+#: .\librarian\templates\index.html:40 .\reader\templates\register.html:80
+#: .\reader\templates\register.html:100
 msgid "注册"
 msgstr "registered"
 
@@ -57,6 +57,68 @@ msgstr "Philosophy"
 #: .\librarian\templates\search_results.html:40
 msgid "历史"
 msgstr "History"
+
+#: .\librarian\templates\manager_page.html:124
+#: .\reader\templates\user_message.html:122
+msgid "首页"
+msgstr "HomePage"
+
+#: .\librarian\templates\manager_page.html:124
+#: .\reader\templates\user_message.html:122
+msgid "退出"
+msgstr "Quit"
+
+#: .\librarian\templates\manager_page.html:159
+#: .\reader\templates\user_message.html:151
+msgid "用户ID"
+msgstr "User ID"
+
+#: .\librarian\templates\manager_page.html:160
+#: .\reader\templates\user_message.html:152
+msgid "用户名"
+msgstr "User name available"
+
+#: .\librarian\templates\manager_page.html:161
+#: .\reader\templates\user_message.html:153
+msgid "邮箱"
+msgstr "Email"
+
+#: .\librarian\templates\manager_page.html:170
+#: .\reader\templates\user_message.html:157
+msgid "修改"
+msgstr "Edit"
+
+#: .\librarian\templates\manager_page.html:183
+#: .\reader\templates\user_message.html:170
+msgid "书名"
+msgstr "Book Name"
+
+#: .\librarian\templates\manager_page.html:184
+msgid "预约用户"
+msgstr "Reserve User"
+
+#: .\librarian\templates\manager_page.html:185
+#: .\librarian\templates\manager_page.html:208
+#: .\librarian\templates\manager_page.html:251
+#: .\reader\templates\user_message.html:219
+msgid "预约时间"
+msgstr "Reserve Time"
+
+#: .\librarian\templates\manager_page.html:186
+msgid "是否借阅"
+msgstr "Is Reserve"
+
+#: .\librarian\templates\manager_page.html:207
+#: .\librarian\templates\manager_page.html:250
+#: .\reader\templates\user_message.html:218
+msgid "书号"
+msgstr "ISBN"
+
+#: .\librarian\templates\manager_page.html:209
+#: .\librarian\templates\manager_page.html:252
+#: .\reader\templates\user_message.html:220
+msgid "是否有效"
+msgstr "Is available"
 
 #: .\librarian\templates\result_json.html:13
 #: .\librarian\templates\search_results.html:70
@@ -132,6 +194,10 @@ msgstr "The password cannot be empty!"
 msgid "记住我"
 msgstr "Remember me"
 
+#: .\reader\templates\login.html:64
+msgid "管理员登录"
+msgstr "Administrator"
+
 #: .\reader\templates\login.html:112
 msgid "用户名或密码错误"
 msgstr "User name or password error"
@@ -160,14 +226,6 @@ msgstr "User name available"
 msgid "用户名不可用"
 msgstr "The user name is not available"
 
-#: .\reader\templates\user_message.html:122
-msgid "首页"
-msgstr "HomePage"
-
-#: .\reader\templates\user_message.html:122
-msgid "退出"
-msgstr "Quit"
-
 #: .\reader\templates\user_message.html:138
 #: .\reader\templates\user_message.html:145
 msgid "基本资料"
@@ -182,26 +240,6 @@ msgstr "Borrowed Record"
 #: .\reader\templates\user_message.html:211
 msgid "预约记录"
 msgstr "Reserve Record"
-
-#: .\reader\templates\user_message.html:151
-msgid "用户ID"
-msgstr "User ID"
-
-#: .\reader\templates\user_message.html:152
-msgid "用户名"
-msgstr "User name available"
-
-#: .\reader\templates\user_message.html:153
-msgid "邮箱"
-msgstr "Email"
-
-#: .\reader\templates\user_message.html:157
-msgid "修改"
-msgstr "Edit"
-
-#: .\reader\templates\user_message.html:170
-msgid "书名"
-msgstr "Book Name"
 
 #: .\reader\templates\user_message.html:171
 msgid "借阅日期"
@@ -218,18 +256,6 @@ msgstr "Owe"
 #: .\reader\templates\user_message.html:174
 msgid "是否归还"
 msgstr "Is Return"
-
-#: .\reader\templates\user_message.html:218
-msgid "书号"
-msgstr "ISBN"
-
-#: .\reader\templates\user_message.html:219
-msgid "预约时间"
-msgstr "Reserve Time"
-
-#: .\reader\templates\user_message.html:220
-msgid "是否有效"
-msgstr "Is available"
 
 #~ msgid "个人信息"
 #~ msgstr "User Message"

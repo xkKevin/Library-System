@@ -36,12 +36,13 @@
                         </tbody>
                     </table>
                 </td>
-                <!--<td class="cover" valign="top" ></td>-->
-                {% if book.available_num > 0 %}
+          {% if not administrator %}
+              {% if book.available_num > 0 %}
                     <td align="center"><button id="{{ forloop.counter }}" class="button">{% trans '预约' %}</button></td>
                 {% else %}
                     <td align="center"><button id="{{ forloop.counter }}" class="button" disabled="disabled">{% trans '无可预约数据' %}</button></td>
                 {% endif %}
+          {% endif %}
 
           </tr>
      </tbody>

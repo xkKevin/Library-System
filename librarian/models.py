@@ -33,6 +33,8 @@ class BorrowOrder(models.Model):
     debt = models.IntegerField(default=0)
     return_time = models.DateTimeField()
     is_return = models.BooleanField(null=False)
+    # 判断是否为历史订单 方便后期查找
+    expire = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.borrow_time)
@@ -45,6 +47,8 @@ class ReserveOrder(models.Model):
     isbn = models.ForeignKey(Book, related_name="reserve_order_isbn")
     borrow_time = models.DateTimeField(null=False)
     successful = models.BooleanField(null=False)
+    # 判断是否为历史订单 方便后期查找
+    expire = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.user)
