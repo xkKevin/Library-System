@@ -214,6 +214,7 @@ def book_message_api(request):
             book_message = json.loads(result.text)
             if 'msg' not in book_message.keys():
                 try:
+                    result_json['price'] = book_message['price']
                     result_json['isbn'] = book_message['isbn13']
                     result_json['author'] = ','.join(book_message['author'])
                     result_json['image_url'] = book_message['image']
@@ -379,6 +380,7 @@ def add_book_api(request):
             book_name = request.POST['book_name']
             image_url = request.POST['image_url']
             total_num = request.POST['total_num']
+            price = request.POST['price']
             type = request.POST["type"]
             place = request.POST['place']
             image_result = requests.get(image_url)
@@ -394,6 +396,7 @@ def add_book_api(request):
             book.total_num = total_num
             book.type = type
             book.place = place
+            book.price = price
             book.available_num = total_num
             book.save()
             all_book_list = list()

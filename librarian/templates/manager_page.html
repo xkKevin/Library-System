@@ -130,8 +130,9 @@
                 <li><a href="#section-2">{% trans '处理预约书籍' %}</a></li>
 				<li><a href="#section-3">{% trans '归还图书' %}</a></li>
 				<li><a href="{% url 'manager_add_reader' %}">{% trans '添加读者' %}</a></li>
+
 {#				<li><a href="#section-5">修改图书规则</a></li>#}
-{#				<li><a href="/add_book/">添加书籍</a></li>#}
+				<li><a href="{% url 'add_book' %}">{% trans '添加书籍' %}</a></li>
             </ul>
         </div>
         <div class="input-group col-md-3" style="width: 600px;margin-left: auto;margin-right: auto" >

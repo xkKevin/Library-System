@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load i18n %}
 	<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
     <link rel="icon" href="/static/images/favicon.ico">
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
@@ -12,44 +13,67 @@
     </style>
 </head>
 <body>
+<form action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ redirect_to }}"/>
+    <select name="language">
+        {% for language in LANGUAGES %}
+            <option value="{{ language.0 }}"{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                {{ language.1 }} ({{ language.0 }})
+        {% endfor %}
+    </select>
+    <input type="submit" value="Go"/>
+</form>
 <div align="right" class="banner-content" style="display: block;">
-		<a href="/manage/"style=" font-size:16px;">返回管理中心</a>
+		<a href="/manage/"style=" font-size:16px;">{% trans '进入管理中心' %}</a>
 	</div>
 <div class="container">
     <div class="form row">
         <div class="form-horizontal col-md-offset-3" id="register_form">
             <div class="col-md-9">
                 <div class="form-group">
-                    <i class="fa fa-barcode"></i>
+                    <i class="fa fa-barcode"> {% trans 'isbn' %}</i>
+                    <br>
                     <input type="text" name="isbn" id="isbn">
                 </div>
                 <div class="form-group">
-                    <i class="fa fa-user-o"></i>
+                    <i class="fa fa-user-o"> {% trans '作者' %}</i>
+                    <br>
                     <input type="text" name="author" id="author">
                 </div>
                 <div class="form-group">
-                    <i class="fa fa-book"></i>
+                    <i class="fa fa-book">  {% trans '书名' %}  </i>
+                    <br>
                     <input type="text" name="book_name" id="book_name">
                 </div>
                 <div class="form-group">
-                    <i class="fa fa-image"></i>
+                    <i class="fa fa-image"> {% trans '封面' %} </i>
+                    <br>
                     <input type="text" name="image_url" id="image_url">
                 </div>
                 <div class="form-group">
-                    <i class="fa fa-clone"></i>
+                    <i class="fa fa-clone"> {% trans '数量' %} </i>
+                    <br>
                     <input type="text" name="total_num" id="total_num">
                 </div>
                 <div class="form-group">
-                    <i class="fa fa-sort"></i>
+                    <i class="fa fa-sort"> {% trans '类型' %} </i>
+                    <br>
                     <input type="text" name="type" id="type">
                 </div>
                 <div class="form-group">
-                    <i class="fa fa-location-arrow"></i>
+                    <i class="fa fa-money"> {% trans '价格' %} </i>
+                    <br>
+                    <input type="text" name="place" id="price">
+                </div>
+                <div class="form-group">
+                    <i class="fa fa-location-arrow"> {% trans '地点' %} </i>
+                    <br>
                     <input type="text" name="place" id="place">
                 </div>
 
                 <div class="form-group col-md-offset-9">
-                    <button type="submit" class="btn pull-right" name="submit" onclick="add_book()">提交</button>
+                    <button type="submit" class="btn pull-right" name="submit" onclick="add_book()">{% trans '添加图书' %}</button>
                 </div>
             </div>
         </div>
@@ -74,6 +98,7 @@ isbn_fouces();
                         document.getElementById("image_url").value = result["image_url"];
                         document.getElementById("type").value = result["type"];
                         document.getElementById("author").value = result["author"];
+                        document.getElementById("price").value = result["price"];
                     } else {
                         alert('ISBN查询失败')
                     }
@@ -93,6 +118,7 @@ isbn_fouces();
         var total_num = document.getElementById("total_num").value;
         var type = document.getElementById("type").value;
         var place = document.getElementById("place").value;
+        var price = document.getElementById("price").value;
         var book_message = {};
         book_message["isbn"] = isbn;
         book_message['author'] = author;
@@ -101,6 +127,7 @@ isbn_fouces();
         book_message['total_num'] = total_num;
         book_message['type'] = type;
         book_message['place'] = place;
+        book_message['price'] = price;
         $.post('/add_book/api/', book_message, function (result, statue) {
             if(statue === "success"){
                 if(result["result"] === false){
