@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-11 18:14+0800\n"
+"POT-Creation-Date: 2018-10-11 19:22+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,58 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: .\librarian\templates\add_book.html:28
+#: .\librarian\templates\add_reader.html:58 .\librarian\templates\index.html:37
+msgid "进入管理中心"
+msgstr "Manage Center"
+
+#: .\librarian\templates\add_book.html:35
+msgid "isbn"
+msgstr "ISBN"
+
+#: .\librarian\templates\add_book.html:40
+#: .\librarian\templates\result_json.html:13
+#: .\librarian\templates\search_results.html:70
+msgid "作者"
+msgstr "author"
+
+#: .\librarian\templates\add_book.html:45
+#: .\librarian\templates\manager_page.html:174
+#: .\librarian\templates\manager_page.html:194
+#: .\reader\templates\user_message.html:211
+msgid "书名"
+msgstr "Book Name"
+
+#: .\librarian\templates\add_book.html:50
+msgid "封面"
+msgstr "Cover Page"
+
+#: .\librarian\templates\add_book.html:55
+msgid "数量"
+msgstr "Number"
+
+#: .\librarian\templates\add_book.html:60
+#: .\librarian\templates\result_json.html:25
+#: .\librarian\templates\search_results.html:82
+msgid "类型"
+msgstr "Type"
+
+#: .\librarian\templates\add_book.html:65
+#: .\librarian\templates\result_json.html:29
+#: .\librarian\templates\search_results.html:86
+msgid "价格"
+msgstr "Price"
+
+#: .\librarian\templates\add_book.html:70
+#: .\librarian\templates\result_json.html:21
+#: .\librarian\templates\search_results.html:78
+msgid "地点"
+msgstr "Place"
+
+#: .\librarian\templates\add_book.html:76
+msgid "添加图书"
+msgstr "Add Book"
 
 #: .\librarian\templates\add_reader.html:29
 #: .\librarian\templates\add_reader.html:147 .\reader\templates\login.html:49
@@ -34,10 +86,6 @@ msgstr "The password cannot be empty!"
 #: .\reader\templates\login.html:40 .\reader\templates\register.html:75
 msgid "返回主页"
 msgstr "Return to the home page"
-
-#: .\librarian\templates\add_reader.html:58 .\librarian\templates\index.html:37
-msgid "进入管理中心"
-msgstr "Manage Center"
 
 #: .\librarian\templates\add_reader.html:63
 #: .\librarian\templates\manager_page.html:132
@@ -131,114 +179,97 @@ msgid "退出"
 msgstr "Quit"
 
 #: .\librarian\templates\manager_page.html:129
-#: .\librarian\templates\manager_page.html:145
+#: .\librarian\templates\manager_page.html:146
 msgid "用户资料"
 msgstr "User Information"
 
 #: .\librarian\templates\manager_page.html:130
-#: .\librarian\templates\manager_page.html:163
+#: .\librarian\templates\manager_page.html:164
 msgid "处理预约书籍"
 msgstr "Reserve Book"
 
 #: .\librarian\templates\manager_page.html:131
-#: .\librarian\templates\manager_page.html:185
+#: .\librarian\templates\manager_page.html:186
 msgid "归还图书"
 msgstr "Return Book"
 
-#: .\librarian\templates\manager_page.html:140
+#: .\librarian\templates\manager_page.html:135
+msgid "添加书籍"
+msgstr "Add Book"
+
+#: .\librarian\templates\manager_page.html:141
 msgid "查找"
 msgstr "Search"
 
-#: .\librarian\templates\manager_page.html:151
+#: .\librarian\templates\manager_page.html:152
 #: .\reader\templates\user_message.html:151
 msgid "用户ID"
 msgstr "User ID"
 
-#: .\librarian\templates\manager_page.html:152
-#: .\librarian\templates\manager_page.html:174
-#: .\librarian\templates\manager_page.html:194
+#: .\librarian\templates\manager_page.html:153
+#: .\librarian\templates\manager_page.html:175
+#: .\librarian\templates\manager_page.html:195
 #: .\reader\templates\user_message.html:152
 msgid "用户名"
 msgstr "User name"
 
-#: .\librarian\templates\manager_page.html:153
+#: .\librarian\templates\manager_page.html:154
 #: .\reader\templates\user_message.html:153
 msgid "邮箱"
 msgstr "Email"
 
-#: .\librarian\templates\manager_page.html:172
-#: .\librarian\templates\manager_page.html:192
+#: .\librarian\templates\manager_page.html:173
+#: .\librarian\templates\manager_page.html:193
 #: .\reader\templates\user_message.html:171
 #: .\reader\templates\user_message.html:209
 msgid "订单号"
 msgstr "Order Id"
 
-#: .\librarian\templates\manager_page.html:173
-#: .\librarian\templates\manager_page.html:193
-#: .\reader\templates\user_message.html:211
-msgid "书名"
-msgstr "Book Name"
-
-#: .\librarian\templates\manager_page.html:175
-#: .\librarian\templates\manager_page.html:195
+#: .\librarian\templates\manager_page.html:176
+#: .\librarian\templates\manager_page.html:196
 #: .\reader\templates\user_message.html:212
 msgid "预约时间"
 msgstr "Reserve Time"
 
-#: .\librarian\templates\manager_page.html:176
+#: .\librarian\templates\manager_page.html:177
 msgid "是否借阅"
 msgstr "Is Reserve"
 
-#: .\librarian\templates\manager_page.html:196
+#: .\librarian\templates\manager_page.html:197
 msgid "欠费"
 msgstr "Debt"
 
-#: .\librarian\templates\manager_page.html:197
-#: .\librarian\templates\manager_page.html:358
+#: .\librarian\templates\manager_page.html:198
+#: .\librarian\templates\manager_page.html:359
 msgid "归还"
 msgstr "Return"
 
-#: .\librarian\templates\manager_page.html:327
+#: .\librarian\templates\manager_page.html:328
 msgid "借阅"
 msgstr "Reserve"
-
-#: .\librarian\templates\result_json.html:13
-#: .\librarian\templates\search_results.html:70
-msgid "作者"
-msgstr "author"
 
 #: .\librarian\templates\result_json.html:17
 #: .\librarian\templates\search_results.html:74
 msgid "索书号"
 msgstr "ISBN"
 
-#: .\librarian\templates\result_json.html:21
-#: .\librarian\templates\search_results.html:78
-msgid "地点"
-msgstr "Place"
-
-#: .\librarian\templates\result_json.html:25
-#: .\librarian\templates\search_results.html:82
-msgid "类型"
-msgstr "Type"
-
-#: .\librarian\templates\result_json.html:34
-#: .\librarian\templates\search_results.html:91
+#: .\librarian\templates\result_json.html:33
+#: .\librarian\templates\search_results.html:90
 msgid "馆藏复本:"
 msgstr "Total Num:"
 
-#: .\librarian\templates\result_json.html:34
-#: .\librarian\templates\search_results.html:91
+#: .\librarian\templates\result_json.html:33
+#: .\librarian\templates\search_results.html:90
 msgid "已出借复本:"
 msgstr "Is available:"
 
-#: .\librarian\templates\result_json.html:41
-#: .\librarian\templates\search_results.html:98
+#: .\librarian\templates\result_json.html:40
+#: .\librarian\templates\search_results.html:97
 msgid "预约"
 msgstr "Reserve"
 
-#: .\librarian\templates\result_json.html:43
-#: .\librarian\templates\search_results.html:100
+#: .\librarian\templates\result_json.html:42
+#: .\librarian\templates\search_results.html:99
 msgid "无可预约数据"
 msgstr "Can not Reserve"
 
@@ -254,7 +285,7 @@ msgstr "All"
 msgid "检索"
 msgstr "Search"
 
-#: .\librarian\templates\search_results.html:125
+#: .\librarian\templates\search_results.html:124
 msgid "预约成功"
 msgstr "Successful"
 

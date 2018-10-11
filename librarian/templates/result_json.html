@@ -26,9 +26,8 @@
                                   <td class="content" valign="top">{{ book.type }}</td>
                               </tr>
                               <tr>
-                                  <td>
-
-                                  </td>
+                                  <td class="label1">{% trans '价格' %}：</td>
+                                  <td class="content" valign="top">{{ book.price }}</td>
                               </tr>
                               <tr>
                                   <td class="libs" colspan="2" align="left"><a href="">{% blocktrans %}馆藏复本:{% endblocktrans %}{{ book.total_num }}    {% blocktrans %}已出借复本:{% endblocktrans %}{{ book.available_num }}</a></td>

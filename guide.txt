@@ -9,9 +9,13 @@
 3·后台操作
     后台网址 /admin/
     用户 root
+<<<<<<< HEAD
     密码 WangNing7411.
 
 
 
 
 
+=======
+    密码 WangNing7411. |||| 987654321
+>>>>>>> afe40918934eb4a9e2e60c2be22f5c1d5042ffde
