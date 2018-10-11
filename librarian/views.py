@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.utils import timezone
-from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder
+from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder, Role
 from reader.models import User
 from administrator.models import Administrator
 import time
@@ -191,7 +191,8 @@ def return_book_api(request):
         borrow_order.return_time = timezone.now()
         borrow_order.expire = True
         borrow_order.book.is_available = True
-        borrow_order.book.isbn.available_num = borrow_order.book.isbn.available_num + 1
+        if borrow_order.book.isbn.available_num < borrow_order.book.isbn.total_num:
+            borrow_order.book.isbn.available_num = borrow_order.book.isbn.available_num + 1
         borrow_order.book.isbn.save()
         borrow_order.save()
         return JsonResponse({"result": True})
@@ -276,13 +277,19 @@ def borrow_book_api(request):
     except:
         return JsonResponse({"result": False, "msg": "Forbidden"})
     try:
+        limit = Role.objects.all().first().books_limit
         reserve_order = None
+
         try:
             reserve_order = ReserveOrder.objects.get(order_id=reserve_id,)
         except:
             return JsonResponse({"result": False, "msg": "Reserve_id is invalid"})
+        a = BorrowOrder.objects.filter(user_id=reserve_order.user.user_id, expire=False).count()
+        if BorrowOrder.objects.filter(user_id=reserve_order.user.user_id, expire=False).count() >= limit:
+            return JsonResponse({"result": False, "msg": "This User can not borrow!"})
         reserve_time = reserve_order.borrow_time
         delay = time.mktime(timezone.now().timetuple()) - time.mktime(reserve_time.timetuple())
+
         if delay > (60**2)*2:
             reserve_order.successful = False
             reserve_order.expire = True
@@ -301,7 +308,8 @@ def borrow_book_api(request):
         reserve_order.successful = True
         reserve_order.book.is_available = False
         reserve_order.expire = True
-        reserve_order.isbn.available_num = reserve_order.isbn.available_num - 1
+        if reserve_order.isbn.available_num > 0:
+            reserve_order.isbn.available_num = reserve_order.isbn.available_num - 1
         reserve_order.isbn.save()
         reserve_order.save()
         return JsonResponse({"result": True, "expire": False})
