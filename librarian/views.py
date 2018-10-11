@@ -193,6 +193,8 @@ def return_book_api(request):
         borrow_order.book.is_available = True
         if borrow_order.book.isbn.available_num < borrow_order.book.isbn.total_num:
             borrow_order.book.isbn.available_num = borrow_order.book.isbn.available_num + 1
+        else:
+            borrow_order.book.isbn.available_num = borrow_order.book.isbn.total_num
         borrow_order.book.isbn.save()
         borrow_order.save()
         return JsonResponse({"result": True})
@@ -310,6 +312,8 @@ def borrow_book_api(request):
         reserve_order.expire = True
         if reserve_order.isbn.available_num > 0:
             reserve_order.isbn.available_num = reserve_order.isbn.available_num - 1
+        else:
+            return JsonResponse({"result": False, "msg": "Error!"})
         reserve_order.isbn.save()
         reserve_order.save()
         return JsonResponse({"result": True, "expire": False})
