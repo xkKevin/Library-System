@@ -4,6 +4,7 @@ from reader.models import User
 import time
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from librarian.models import ReserveOrder, BorrowOrder
 # import datetime
 # from datetime import timedelta
 
@@ -116,9 +117,11 @@ def user_message(request):
     try:
         user = User.objects.get(user_name=username)
         if user:
+            reserve_order_list = ReserveOrder.objects.filter(user_id=user.user_id, )
             return render(request, 'user_message.html', {'user_id': user.user_id,
                                                          'user_email': user.email,
-                                                         'user_name': user.user_name})
+                                                         'user_name': user.user_name,
+                                                         'reserve_order_list':reserve_order_list})
         else:
             return HttpResponseRedirect(reverse("login"))
     except:

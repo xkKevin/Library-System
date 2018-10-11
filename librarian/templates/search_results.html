@@ -122,7 +122,7 @@
             }else {
                 var this_button = document.getElementById(id);
                 this_button.disabled  = true;
-                this_button.innerText = "预约成功";
+                this_button.innerText = "{% trans '预约成功' %}";
                 if(result["update"] === true){
                     alert("该书已预约, 已更新预约时间!")
                 }

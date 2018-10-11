@@ -152,7 +152,8 @@ $(document).ready(function(){
         <tr class="t2"> <th width="25%" align="right">{% trans '用户名' %}:</th> <td class="line30" align="center"><input  align="center" type="text" value="{{ user_name }}" name="user_name" placeholder="用户名" readonly />
 		<tr class="t3"><th width="25%" align="right">{% trans '邮箱' %}:</th> <td class="line30" align="center"><input    type="email" name="email" value="{{ user_email }}" placeholder="邮箱" readonly />
 		</table>
-			
+
+    </form>
 	<div id="login_click" align="center">
         <a id="btlogin" href="#">{% trans '修改' %}</a>
     </div>
@@ -215,38 +216,24 @@ $(document).ready(function(){
 	
 	<thead>
 		<tr >
-        <th align="center">{% trans '书号' %}</th>
+            <th align="center">{% trans '订单号' %}</th>
+            <th align="center">{% trans '书号' %}</th>
+            <th align="center">{% trans '书名' %}</th>
 			<th align="center">{% trans '预约时间' %}</th>
 			<th align="center">{% trans '是否有效' %}</th>
 			
 		</tr>
 	</thead>
 	<tbody >
-		<tr class="active">
-			<td >图书1</td>
-			<td >30/9/2018</td>
-			<td>YES</td>
-		
+    {% for reserve_order in reserve_order_list %}
+        <tr class="active">
+            <td>{{ reserve_order.order_id }}</td>
+            <td>{{ reserve_order.book.isbn.isbn }}</td>
+			<td >{{ reserve_order.book.isbn.book_name }}</td>
+			<td>{{ reserve_order.borrow_time }}</td>
+            <td>{{ reserve_order.successful }}</td>
 		</tr>
-		<tr class="success">
-			<td>图书2</td>
-			<td>30/9/2018</td>
-			<td>NO</td>
-		
-		</tr>
-		<tr  class="active">
-			<td>图书1</td>
-			<td>30/9/2018</td>
-			<td>YES</td>
-		
-		</tr>
-		<tr  class="success">
-			<td>图书1</td>
-			<td>30/9/2018</td>
-			<td>YES</td>
-		
-		</tr>
-		
+    {% endfor %}
 	</tbody>
 </table>
         </div>

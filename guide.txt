@@ -1,0 +1,5 @@
+常用指令
+1·国际化
+    python manage.py makemessages -l zh_hans
+    python manage.py makemessages -l en
+    python manage.py compilemessages

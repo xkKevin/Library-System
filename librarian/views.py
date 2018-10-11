@@ -24,6 +24,42 @@ def index(request):
     return render(request, 'index.html', message)
 
 
+def manager_page(request):
+    '''
+    管理员界面
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        return render(request, 'manager_page.html')
+    else:
+        return HttpResponseRedirect(reverse("login"))
+
+
+def clear_message(request):
+    '''
+    注销
+    :param request:
+    :return:
+    '''
+    del request.session["username"]
+    return HttpResponseRedirect(reverse("index"))
+
+
+def add_book(request):
+    '''
+    添加图书
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        return render(request, 'add_book.html')
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
 def search_book_api(request):
     '''
     查询书籍API
@@ -118,25 +154,6 @@ def reserve_api(request):
             return JsonResponse({"result": False,  "msg": "数据库错误"})
 
 
-def clear_message(request):
-    '''
-    注销
-    :param request:
-    :return:
-    '''
-    del request.session["username"]
-    return HttpResponseRedirect(reverse("index"))
-
-
-def add_book(request):
-    '''
-    添加图书
-    :param request:
-    :return:
-    '''
-    return render(request, 'add_book.html')
-
-
 def book_message_api(request):
     '''
     通过ISBN查询书籍
@@ -196,18 +213,44 @@ def administrator_login_post(request):
             return JsonResponse({'result': False})
 
 
-def manager_page(request):
+def manage_user_api(request):
     '''
-    管理员界面
+    管理界面请求用户信息
     :param request:
     :return:
     '''
+    if request.method != "POST":
+        return JsonResponse({"result": False, "msg": "Forbidden"})
     username = request.session.get('username', "None")
-    if username == 'root':
-        reserve_order_list = ReserveOrder.objects.filter(user_id=1, expire=False, )
-        return render(request, 'manager_page.html', {'reserve_order_list': reserve_order_list})
-    else:
-        return HttpResponseRedirect(reverse("login"))
+    if not username == 'root':
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    try:
+        user_id = 0
+        username = request.POST["user_name"]
+        try:
+            user = User.objects.get(user_name=username)
+            if user:
+                user_id = user.user_id
+        except:
+            return JsonResponse({"result": False, "msg": "User Name Invalid!"})
+        reserve_order_list = ReserveOrder.objects.filter(user_id=user_id, expire=False, )
+        user_dict = {
+            "user_name": user.user_name,
+            "user_id": user.user_id,
+            "email": user.email
+        }
+        reserve_orders = list()
+        for reserve_order in reserve_order_list:
+            order = {
+                'reserve_order_id': reserve_order.order_id,
+                "reserve_book_name": reserve_order.book.isbn.book_name,
+                "reserve_user_name": user.user_name,
+                "reserve_time": reserve_order.borrow_time
+            }
+            reserve_orders.append(order)
+        return JsonResponse({'result': True, 'user_message': user_dict, 'reserve_orders': reserve_orders})
+    except Exception:
+        return JsonResponse({"result": False, "msg": "Error!"})
 
 
 def add_book_api(request):
