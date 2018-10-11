@@ -3,3 +3,10 @@
     python manage.py makemessages -l zh_hans
     python manage.py makemessages -l en
     python manage.py compilemessages
+2·数据库操作
+    python manage.py makemigrations
+    python manage.py migrate
+3·后台操作
+    后台网址 /admin/
+    用户 root
+    密码 WangNing7411.

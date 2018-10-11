@@ -31,7 +31,7 @@ class BorrowOrder(models.Model):
     book = models.ForeignKey(AllBook, related_name="borrow_order_book")
     borrow_time = models.DateTimeField(null=False)
     debt = models.IntegerField(default=0)
-    return_time = models.DateTimeField()
+    return_time = models.DateTimeField(null=True)
     is_return = models.BooleanField(null=False)
     # 判断是否为历史订单 方便后期查找
     expire = models.BooleanField(default=False)

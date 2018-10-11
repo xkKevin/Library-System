@@ -60,6 +60,19 @@ def add_book(request):
         return HttpResponseRedirect(reverse("index"))
 
 
+def add_reader(request):
+    '''
+    管理员添加读者
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        return render(request, 'add_reader.html')
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
 def search_book_api(request):
     '''
     查询书籍API
@@ -132,7 +145,7 @@ def reserve_api(request):
         try:
             book = AllBook.objects.filter(isbn=isbn, is_available=True).first()
             user = User.objects.get(user_name=username)
-            borrow = ReserveOrder.objects.filter(isbn=isbn, user_id=user.user_id).first()
+            borrow = ReserveOrder.objects.filter(isbn=isbn, user_id=user.user_id, expire=False).first()
             if borrow:
                 borrow.borrow_time = timezone.now()
                 borrow.save()
@@ -152,6 +165,36 @@ def reserve_api(request):
                 return JsonResponse({"result": False, "msg": "数据库保存失败"})
         except Exception as e:
             return JsonResponse({"result": False,  "msg": "数据库错误"})
+
+
+def return_book_api(request):
+    '''
+    归还图书 API
+    :param request:
+    :return:
+    '''
+    if request.method != "POST":
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    username = request.session.get('username', "None")
+    if not username == 'root':
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    try:
+        borrow_id = request.POST["borrow_id"]
+    except:
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    try:
+        borrow_order = None
+        try:
+            borrow_order = BorrowOrder.objects.get(order_id=borrow_id)
+        except:
+            return JsonResponse({"result": False, "msg": "Borrow_order_id is invalid"})
+        borrow_order.return_time = timezone.now()
+        borrow_order.expire = True
+        borrow_order.book.is_available = True
+        borrow_order.save()
+        return JsonResponse({"result": True})
+    except Exception:
+        return JsonResponse({"result": False, "msg": "Error!"})
 
 
 def book_message_api(request):
@@ -213,6 +256,53 @@ def administrator_login_post(request):
             return JsonResponse({'result': False})
 
 
+def borrow_book_api(request):
+    '''
+    预约图书API
+    通过获取 reserve订单号,把预约订单变为借阅订单
+    :param request:
+    :return:
+    '''
+    if request.method != "POST":
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    username = request.session.get('username', "None")
+    if not username == 'root':
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    try:
+        reserve_id = request.POST["reserve_id"]
+    except:
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    try:
+        reserve_order = None
+        try:
+            reserve_order = ReserveOrder.objects.get(order_id=reserve_id,)
+        except:
+            return JsonResponse({"result": False, "msg": "Reserve_id is invalid"})
+        reserve_time = reserve_order.borrow_time
+        delay = time.mktime(timezone.now().timetuple()) - time.mktime(reserve_time.timetuple())
+        if delay > (60**2)*2:
+            reserve_order.successful = False
+            reserve_order.expire = True
+            reserve_order.save()
+            return JsonResponse({"result": True, "expire": True})
+        borrow_time = timezone.now()
+        book_id = reserve_order.book_id
+        user_id = reserve_order.user_id
+        BorrowOrder.objects.create(borrow_time=borrow_time,
+                                   debt=0,
+                                   is_return=False,
+                                   book_id=book_id,
+                                   user_id=user_id,
+                                   expire=False)
+        reserve_order.successful = True
+        reserve_order.book.is_available = False
+        reserve_order.expire = True
+        reserve_order.save()
+        return JsonResponse({"result": True, "expire": False})
+    except Exception:
+        return JsonResponse({"result": False, "msg": "Error!"})
+
+
 def manage_user_api(request):
     '''
     管理界面请求用户信息
@@ -234,6 +324,7 @@ def manage_user_api(request):
         except:
             return JsonResponse({"result": False, "msg": "User Name Invalid!"})
         reserve_order_list = ReserveOrder.objects.filter(user_id=user_id, expire=False, )
+        borrow_order_list = BorrowOrder.objects.filter(user_id=user_id, expire=False)
         user_dict = {
             "user_name": user.user_name,
             "user_id": user.user_id,
@@ -248,7 +339,23 @@ def manage_user_api(request):
                 "reserve_time": reserve_order.borrow_time
             }
             reserve_orders.append(order)
-        return JsonResponse({'result': True, 'user_message': user_dict, 'reserve_orders': reserve_orders})
+        borrow_orders = list()
+        for borrow_order in borrow_order_list:
+            order = {
+                'borrow_order_id': borrow_order.order_id,
+                "borrow_book_name": borrow_order.book.isbn.book_name,
+                "borrow_user_name": user.user_name,
+                "borrow_time": borrow_order.borrow_time,
+                "debt": borrow_order.debt
+            }
+            borrow_orders.append(order)
+        return JsonResponse(
+                            {'result': True,
+                             'user_message': user_dict,
+                             'reserve_orders': reserve_orders,
+                             'borrow_orders': borrow_orders
+                             }
+                            )
     except Exception:
         return JsonResponse({"result": False, "msg": "Error!"})
 

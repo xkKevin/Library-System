@@ -126,23 +126,23 @@
     <div class="row">
         <div class="col-xs-3" id="myScrollspy">
             <ul class="nav nav-tabs nav-stacked" id="myNav">
-                <li class="active"><a href="#section-1">基本资料</a></li>
-                <li><a href="#section-2">处理预约书籍</a></li>
-				<li><a href="#section-3">归还书籍</a></li>
-				<li><a href="#section-4">超时处理</a></li>
-				<li><a href="#section-5">修改图书规则</a></li>
-				<li><a href="/add_book/">添加书籍</a></li>
+                <li class="active"><a href="#section-1">{% trans '用户资料' %}</a></li>
+                <li><a href="#section-2">{% trans '处理预约书籍' %}</a></li>
+				<li><a href="#section-3">{% trans '归还图书' %}</a></li>
+				<li><a href="{% url 'manager_add_reader' %}">{% trans '添加读者' %}</a></li>
+{#				<li><a href="#section-5">修改图书规则</a></li>#}
+{#				<li><a href="/add_book/">添加书籍</a></li>#}
             </ul>
         </div>
         <div class="input-group col-md-3" style="width: 600px;margin-left: auto;margin-right: auto" >
 			<input type="text" class="form-control" id="search_input"  placeholder="请输入用户名：" />
 			<span class="input-group-btn">
-				<button class="btn btn-info btn-search" onclick="search_user_message()">查找</button>
+				<button class="btn btn-info btn-search" onclick="search_user_message()">{% trans '查找' %}</button>
 			</span>
         </div>
 
         <div class="col-xs-9 ">
-            <h2 id="section-1" style="display:block; height:50px; width:350px">基本资料</h2>
+            <h2 id="section-1" style="display:block; height:50px; width:350px">{% trans '用户资料' %}</h2>
         
 	    <table align="center" id="tab" width="300px"  class="table table-striped">
 
@@ -160,7 +160,7 @@
             </tbody>
         </table>
     <hr>
-            <h2 id="section-2" style="display:block; height:50px; width:400px">处理预约书籍</h2>
+            <h2 id="section-2" style="display:block; height:50px; width:400px">{% trans '处理预约书籍' %}</h2>
            
            
 	
@@ -182,71 +182,74 @@
 </table>
 
             <hr>
-            <h2 id="section-3" style="display:block; height:50px; width:400px">归还书籍</h2>
+            <h2 id="section-3" style="display:block; height:50px; width:400px">{% trans '归还图书' %}</h2>
       
 
 <table align="center" id="tab" width="300px"  class="table table-striped">
 	
 	<thead>
 		<tr >
-        <th align="center">{% trans '书号' %}</th>
+            <th align="center">{% trans '订单号' %}</th>
+            <th align="center">{% trans '书名' %}</th>
+            <th align="center">{% trans '用户名' %}</th>
 			<th align="center">{% trans '预约时间' %}</th>
-			<th align="center">{% trans '是否有效' %}</th>
-			
+			<th align="center">{% trans '欠费' %}</th>
+            <th align="center">{%  trans '归还' %}</th>
 		</tr>
 	</thead>
 	<tbody id="return_book_tbody">
-{#		<tr class="active">#}
-{#			<td >图书1</td>#}
-{#			<td >30/9/2018</td>#}
-{#			<td>YES</td>#}
-{#		</tr>#}
+
+            {#		<tr class="active">#}
+            {#			<td >图书1</td>#}
+            {#			<td >30/9/2018</td>#}
+            {#			<td>YES</td>#}
+            {#		</tr>#}
 
 	</tbody>
 </table>
 
-		<hr>
-		<h2 id="section-3" style="display:block; height:50px; width:400px">超时处理</h2>
-
-
-		<table align="center" id="tab" width="300px"  class="table table-striped">
-
-			<thead>
-			<tr >
-				<th align="center">{% trans '书号' %}</th>
-				<th align="center">{% trans '预约时间' %}</th>
-				<th align="center">{% trans '是否有效' %}</th>
-
-			</tr>
-			</thead>
-			<tbody >
-			<tr class="active">
-				<td >图书1</td>
-				<td >30/9/2018</td>
-				<td>YES</td>
-
-			</tr>
-			<tr class="success">
-				<td>图书2</td>
-				<td>30/9/2018</td>
-				<td>NO</td>
-
-			</tr>
-			<tr  class="active">
-				<td>图书1</td>
-				<td>30/9/2018</td>
-				<td>YES</td>
-
-			</tr>
-			<tr  class="success">
-				<td>图书1</td>
-				<td>30/9/2018</td>
-				<td>YES</td>
-
-			</tr>
-
-			</tbody>
-		</table>
+{#		<hr>#}
+{#		<h2 id="section-3" style="display:block; height:50px; width:400px">超时处理</h2>#}
+{##}
+{##}
+{#		<table align="center" id="tab" width="300px"  class="table table-striped">#}
+{##}
+{#			<thead>#}
+{#			<tr >#}
+{#				<th align="center">{% trans '书号' %}</th>#}
+{#				<th align="center">{% trans '预约时间' %}</th>#}
+{#				<th align="center">{% trans '是否有效' %}</th>#}
+{##}
+{#			</tr>#}
+{#			</thead>#}
+{#			<tbody >#}
+{#			<tr class="active">#}
+{#				<td >图书1</td>#}
+{#				<td >30/9/2018</td>#}
+{#				<td>YES</td>#}
+{##}
+{#			</tr>#}
+{#			<tr class="success">#}
+{#				<td>图书2</td>#}
+{#				<td>30/9/2018</td>#}
+{#				<td>NO</td>#}
+{##}
+{#			</tr>#}
+{#			<tr  class="active">#}
+{#				<td>图书1</td>#}
+{#				<td>30/9/2018</td>#}
+{#				<td>YES</td>#}
+{##}
+{#			</tr>#}
+{#			<tr  class="success">#}
+{#				<td>图书1</td>#}
+{#				<td>30/9/2018</td>#}
+{#				<td>YES</td>#}
+{##}
+{#			</tr>#}
+{##}
+{#			</tbody>#}
+{#		</table>#}
 
         </div>
     </div>
@@ -263,10 +266,32 @@
             }
         })
     });
+    function return_book(order_id) {
+        //归还图书函数
+        $.post("{% url 'manage_return_book_api' %}", {'borrow_id':order_id}, function(result){
+            if(result["result"] === true){
+                search_user_message();
+            }else {
+                alert("Failed!\n message:"+result["msg"])
+            }
+        });
+    }
     function borrow_book(order_id) {
-        alert(order_id);
+        // 借阅 函数
+        $.post("{% url 'manage_borrow_book_api' %}", {'reserve_id':order_id}, function(result){
+            if(result["result"] === true){
+                if(result["expire"]===true){
+                    alert("该订单已过期！")
+                }
+                search_user_message();
+            }else {
+                alert("Failed!\n message:"+result["msg"])
+            }
+        });
     }
     function  add_user_message(user) {
+        // 动态添加读者信息
+        //
         var user_parent = document.getElementById("user_message_tr");
         user_parent.innerText = "";
         var td = document.createElement("td");
@@ -279,10 +304,11 @@
         td_2.innerText = user["email"];
         user_parent.appendChild(td_2);
     }
-    function  add_reserve_order(reserver_orders) {
+    function  add_reserve_order(reserve_orders) {
+        // 动态添加 预约 订单
         var reserve_tbody = document.getElementById("reserve_table_body");
                         reserve_tbody.innerText = "";
-                        for( var i=0;i<reserver_orders.length;i++){
+                        for( var i=0;i<reserve_orders.length;i++){
                             var tr = document.createElement("tr");
                             tr.setAttribute("class", "active");
                             var td = document.createElement("td");
@@ -290,15 +316,15 @@
                             var td_2 = document.createElement("td");
                             var td_3 = document.createElement("td");
                             var td_4 = document.createElement("td");
-                            td.innerText = reserver_orders[i]["reserve_order_id"];
-                            td_1.innerText = reserver_orders[i]["reserve_book_name"];
-                            td_2.innerText = reserver_orders[i]["reserve_user_name"];
-                            td_3.innerText = reserver_orders[i]["reserve_time"];
+                            td.innerText = reserve_orders[i]["reserve_order_id"];
+                            td_1.innerText = reserve_orders[i]["reserve_book_name"];
+                            td_2.innerText = reserve_orders[i]["reserve_user_name"];
+                            td_3.innerText = reserve_orders[i]["reserve_time"];
                             td_4.setAttribute("width","100px");
                             var button = document.createElement("button");
                             button.setAttribute("name", "借阅");
-                            button.setAttribute("onclick", "borrow_book("+reserver_orders[i]["reserve_order_id"].toString()+")");
-                            button.innerText = "借阅";
+                            button.setAttribute("onclick", "borrow_book("+reserve_orders[i]["reserve_order_id"].toString()+")");
+                            button.innerText = "{%  trans '借阅' %}";
                             td_4.appendChild(button);
                             tr.appendChild(td);
                             tr.appendChild(td_1);
@@ -308,14 +334,49 @@
                             reserve_tbody.appendChild(tr)
                         }
     }
+    function add_borrow_order(borrow_orders) {
+        //添加 借阅图书
+        var parent = document.getElementById("return_book_tbody");
+        parent.innerText = "";
+        for( var i=0;i<borrow_orders.length;i++){
+            var tr = document.createElement("tr");
+            tr.setAttribute("class", "active");
+            var td = document.createElement("td");
+            var td_1 = document.createElement("td");
+            var td_2 = document.createElement("td");
+            var td_3 = document.createElement("td");
+            var td_4 = document.createElement("td");
+            var td_5 = document.createElement("td");
+            td.innerText = borrow_orders[i]["borrow_order_id"];
+            td_1.innerText = borrow_orders[i]["borrow_book_name"];
+            td_2.innerText = borrow_orders[i]["borrow_user_name"];
+            td_3.innerText = borrow_orders[i]["borrow_time"];
+            td_4.innerText = borrow_orders[i]["debt"];
+            td_5.setAttribute("width","100px");
+            var button = document.createElement("button");
+            button.setAttribute("onclick", "return_book("+borrow_orders[i]["borrow_order_id"].toString()+")");
+            button.innerText = "{%  trans '归还' %}";
+            td_5.appendChild(button);
+            tr.appendChild(td);
+            tr.appendChild(td_1);
+            tr.appendChild(td_2);
+            tr.appendChild(td_3);
+            tr.appendChild(td_4);
+            tr.appendChild(td_5);
+            parent.appendChild(tr);
+        }
+    }
     function search_user_message() {
+        // 搜索用户信息
         var user_name = $("#search_input").val();
         $.post('{% url 'manage_user_message_api' %}',{"user_name":user_name},function(result, statue){
                 if(result["result"] === true){
                         var user = result["user_message"];
                         add_user_message(user);
-                        var reserver_orders = result["reserve_orders"];
-                        add_reserve_order(reserver_orders)
+                        var reserve_orders = result["reserve_orders"];
+                        add_reserve_order(reserve_orders);
+                        var borrow_orders = result["borrow_orders"];
+                        add_borrow_order(borrow_orders)
                 }else {
                     alert("Failed!\n message:"+result["msg"])
                 }

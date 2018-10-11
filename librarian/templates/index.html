@@ -33,11 +33,16 @@
 </form>
 <div style="width: 400px;text-align:right;float:right;position: absolute;right: 200px;top:0px;">
      {% if login == True %}
-         <span><a href="/user_message/">{% trans '当前用户' %}:{{ username }}</a></span>
-         <span><a href="/clear_message/"> | {% trans '注销' %}</a></span>
+         {% if username == 'root' %}
+             <span><a href="{% url 'manage_page' %}">{% trans '进入管理中心' %}</a></span>
+         {% else %}
+             <span><a href="/user_message/">{% trans '当前用户' %}:{{ username }}</a></span>
+         {% endif %}
+
+            <span><a href="/clear_message/"> | {% trans '注销' %}</a></span>
      {% else %}
-         <span><a href="/login/">{% trans '登录' %}</a> | </span>
-         <span><a href="/register/">{% trans '注册' %}</a></span>
+         <span><a href="/login/">{% trans '登录' %}</a></span>
+{#         <span><a href="/register/">{% trans '注册' %}</a></span>#}
      {% endif %}
 
 </div>
@@ -59,7 +64,7 @@
                 </ul>
             </div>
             <div class="inputArea">
-                <input type="text" class="searchInput" style="vertical-align:middle;width:600px;height:48px;">
+                <input type="text" class="searchInput" style="vertical-align:middle;width:600px;height:35px;" id="search_text">
                     <button type="button" class="btn btn-success btn-lg" onclick="search()">{% trans '搜索' %}</button>
             </div>
 

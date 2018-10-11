@@ -64,12 +64,7 @@ def register_post(request):
             user.save()
             temp = User.objects.get(user_name=username)
             if temp:
-                user_id = temp.user_id
                 response = JsonResponse({'result': True})
-                request.session.set_expiry(0)
-                request.session['username'] = username
-                request.session['user_id'] = user_id
-                request.session['login_time'] = time.time()
             else:
                 response = JsonResponse({'result': False})
 
@@ -117,11 +112,15 @@ def user_message(request):
     try:
         user = User.objects.get(user_name=username)
         if user:
+            borrow_order_list = BorrowOrder.objects.filter(user_id=user.user_id)
             reserve_order_list = ReserveOrder.objects.filter(user_id=user.user_id, )
             return render(request, 'user_message.html', {'user_id': user.user_id,
                                                          'user_email': user.email,
                                                          'user_name': user.user_name,
-                                                         'reserve_order_list':reserve_order_list})
+                                                         'reserve_order_list': reserve_order_list,
+                                                         'borrow_order_list': borrow_order_list
+                                                         }
+                          )
         else:
             return HttpResponseRedirect(reverse("login"))
     except:
