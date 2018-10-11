@@ -191,6 +191,8 @@ def return_book_api(request):
         borrow_order.return_time = timezone.now()
         borrow_order.expire = True
         borrow_order.book.is_available = True
+        borrow_order.book.isbn.available_num = borrow_order.book.isbn.available_num + 1
+        borrow_order.book.isbn.save()
         borrow_order.save()
         return JsonResponse({"result": True})
     except Exception:
@@ -295,9 +297,12 @@ def borrow_book_api(request):
                                    book_id=book_id,
                                    user_id=user_id,
                                    expire=False)
+
         reserve_order.successful = True
         reserve_order.book.is_available = False
         reserve_order.expire = True
+        reserve_order.isbn.available_num = reserve_order.isbn.available_num - 1
+        reserve_order.isbn.save()
         reserve_order.save()
         return JsonResponse({"result": True, "expire": False})
     except Exception:

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-11 19:22+0800\n"
+"POT-Creation-Date: 2018-10-11 20:48+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -260,8 +260,8 @@ msgstr "Total Num:"
 
 #: .\librarian\templates\result_json.html:33
 #: .\librarian\templates\search_results.html:90
-msgid "已出借复本:"
-msgstr "Is available:"
+msgid "可用复本:"
+msgstr "Available Num"
 
 #: .\librarian\templates\result_json.html:40
 #: .\librarian\templates\search_results.html:97
@@ -372,6 +372,9 @@ msgstr "ISBN"
 #: .\reader\templates\user_message.html:213
 msgid "是否有效"
 msgstr "Is available"
+
+#~ msgid "已出借复本:"
+#~ msgstr "Is available:"
 
 #~ msgid "管理员登录"
 #~ msgstr "Librarian"
