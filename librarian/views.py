@@ -289,9 +289,10 @@ def borrow_book_api(request):
         a = BorrowOrder.objects.filter(user_id=reserve_order.user.user_id, expire=False).count()
         if BorrowOrder.objects.filter(user_id=reserve_order.user.user_id, expire=False).count() >= limit:
             return JsonResponse({"result": False, "msg": "This User can not borrow!"})
+        if reserve_order.isbn.available_num <= 0:
+            return JsonResponse({"result": False, "msg": "All Book have been lent out!"})
         reserve_time = reserve_order.borrow_time
         delay = time.mktime(timezone.now().timetuple()) - time.mktime(reserve_time.timetuple())
-
         if delay > (60**2)*2:
             reserve_order.successful = False
             reserve_order.expire = True
@@ -306,14 +307,10 @@ def borrow_book_api(request):
                                    book_id=book_id,
                                    user_id=user_id,
                                    expire=False)
-
+        reserve_order.isbn.available_num = reserve_order.isbn.available_num - 1
         reserve_order.successful = True
         reserve_order.book.is_available = False
         reserve_order.expire = True
-        if reserve_order.isbn.available_num > 0:
-            reserve_order.isbn.available_num = reserve_order.isbn.available_num - 1
-        else:
-            return JsonResponse({"result": False, "msg": "Error!"})
         reserve_order.isbn.save()
         reserve_order.save()
         return JsonResponse({"result": True, "expire": False})
