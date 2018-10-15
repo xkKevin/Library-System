@@ -1,3 +1,7 @@
+import datetime
+import json
+
+from django.core import serializers
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -71,7 +75,91 @@ def add_reader(request):
         return render(request, 'add_reader.html')
     else:
         return HttpResponseRedirect(reverse("index"))
+def delete_reader(request):
+    '''
+    管理员删除读者
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        if request.method == "GET":
+            try:
+                username = request.GET["username"]
+                temp = User.objects.filter(user_name=username).delete()
+                response = JsonResponse({'result': True})
+                return response
+            except Exception as e:
+                return JsonResponse({'result': False})
+    else:
+        return HttpResponseRedirect(reverse("index"))
 
+def update_reader(request):
+    '''
+    管理员修改读者
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        if request.method == "GET":
+            try:
+                username = request.GET["username"]
+                email = request.GET["email"]
+                password = request.GET["psw"]
+                temp = User.objects.get(user_name=username)
+
+                if temp:
+                    if not email is "":
+                        temp.email = email
+                    if not password is "":
+                        temp.password = password
+                    temp.save()
+                    response = JsonResponse({'result': True})
+                else:
+                    response = JsonResponse({'result': False})
+                return response
+            except Exception as e:
+                return JsonResponse({'result': "FALSE"+str(e)+temp})
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
+class DateEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(obj, datetime.date):
+            return obj.strftime("%Y-%m-%d")
+        else:
+            return json.JSONEncoder.default(self, obj)
+
+
+
+def get_reader_history(request):
+    '''
+    管理员查阅读者信息
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        if request.method == "GET":
+                username = request.GET["username"]
+                person = User.objects.filter(user_name=username).values()
+                json_data = list(person)
+                person_json_data = json.dumps(json_data, cls=DateEncoder, ensure_ascii=False)
+                borHis = BorrowOrder.objects.filter(user=person[0]['user_id']).values()
+                json_data = list(borHis)
+                bor_json_data = json.dumps(json_data, cls=DateEncoder, ensure_ascii=False)
+                resHis = ReserveOrder.objects.filter(user=person[0]['user_id']).values()
+                json_data = list(resHis)
+                resHis_json_data = json.dumps(json_data, cls=DateEncoder, ensure_ascii=False)
+
+                response = JsonResponse({'person': person_json_data,'borHis': bor_json_data, 'resHis': resHis_json_data})
+                return response
+    else:
+        return HttpResponseRedirect(reverse("index"))
 
 def search_book_api(request):
     '''
@@ -407,3 +495,37 @@ def add_book_api(request):
             return JsonResponse({'result': False, "msg": "数据库保存错误"})
     return JsonResponse({'result': True})
 
+def update_book(request):
+    '''
+    管理员修改书的位置
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        if request.method == "GET":
+
+                isbn = request.GET["isbn"]
+                book = Book.objects.get(isbn=isbn)
+                '''
+                author = request.POST['author']
+                book_name = request.POST['book_name']
+                image_url = request.POST['image_url']
+                total_num = request.POST['total_num']
+                price = request.POST['price']
+                type = request.POST["type"]
+                image_result = requests.get(image_url)
+                '''
+                place = request.GET['place']
+
+                if book:
+                    if not place is "":
+                        book.place = place
+                    book.save()
+                    response = JsonResponse({'result': True})
+                else:
+                    response = JsonResponse({'result': False})
+                return response
+
+    else:
+        return HttpResponseRedirect(reverse("index"))

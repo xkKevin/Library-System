@@ -32,6 +32,10 @@ urlpatterns = [
     url(r'^add_book/$', librarian_views.add_book, name="add_book"),
     url(r'^search_book/$', librarian_views.search_book, name="search_book"),
     url(r'^manager/add_reader/$', librarian_views.add_reader, name="manager_add_reader"),
+    url(r'^manager/delete_reader/$', librarian_views.delete_reader, name="manager_delete_reader"),
+    url(r'^manager/update_reader/$', librarian_views.update_reader, name="manager_update_reader"),
+    url(r'^manager/get_readerHis/$', librarian_views.get_reader_history, name="manager_get_readerHis"),
+
     # api js 请求 url
     url(r'^manager/return_book/api/$', librarian_views.return_book_api, name="manage_return_book_api"),
     url(r'^manager/borrow_book/api/$', librarian_views.borrow_book_api, name="manage_borrow_book_api"),
@@ -42,6 +46,7 @@ urlpatterns = [
     url(r'^login/api/$', reader_views.login_post, name="login_api"),
     url(r'^isbn/api/$', librarian_views.book_message_api, name="isbn_api"),
     url(r'^add_book/api/$', librarian_views.add_book_api, name="add_book_api"),
+    url(r'^update_book/api/$', librarian_views.update_book, name="update_book_api"),
     url(r'^reserve/api/$', librarian_views.reserve_api, name="reserve_api"),
     url(r'^search_book/api/$', librarian_views.search_book_api, name="search_book_api"),
     url(r'^i18n/', include('django.conf.urls.i18n')),
