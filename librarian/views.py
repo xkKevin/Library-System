@@ -120,7 +120,7 @@ def update_reader(request):
                     response = JsonResponse({'result': False})
                 return response
             except Exception as e:
-                return JsonResponse({'result': "FALSE"+str(e)+temp})
+                return JsonResponse({'result': False})
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -509,6 +509,27 @@ def add_book_api(request):
             return JsonResponse({'result': False, "msg": "数据库保存错误"})
     return JsonResponse({'result': True})
 
+def get_book(request):
+    '''
+    管理员修改书的位置
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        if request.method == "GET":
+
+            isbn = request.GET["isbn"]
+            book = Book.objects.filter(isbn=isbn)
+            json_data = list(book)
+            book_json_data = json.dumps(json_data, cls=DateEncoder, ensure_ascii=False)
+            response = JsonResponse({'book': book_json_data})
+            return response
+
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
 def update_book(request):
     '''
     管理员修改书的位置
@@ -521,6 +542,7 @@ def update_book(request):
 
                 isbn = request.GET["isbn"]
                 book = Book.objects.get(isbn=isbn)
+
                 '''
                 author = request.POST['author']
                 book_name = request.POST['book_name']
@@ -531,10 +553,12 @@ def update_book(request):
                 image_result = requests.get(image_url)
                 '''
                 place = request.GET['place']
-
+                type = request.GET['type']
                 if book:
                     if not place is "":
                         book.place = place
+                    if not type is "":
+                        book.type = type
                     book.save()
                     response = JsonResponse({'result': True})
                 else:
