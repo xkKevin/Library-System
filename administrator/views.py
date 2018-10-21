@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from administrator.models import Administrator
+from administrator.models import LibRoot
 
 
 def update_lib(request):
@@ -18,7 +19,7 @@ def update_lib(request):
             try:
                 admin = request.GET["username"]
                 password = request.GET["psw"]
-                temp = Administrator.objects.get(user_name=username)
+                temp = Administrator.objects.get(administrator_name=username)
 
                 if temp:
                     if not password is "":
@@ -34,6 +35,33 @@ def update_lib(request):
         return HttpResponseRedirect(reverse("index"))
 
 
+def update_adminPsw(request):
+    '''
+    超管修改超管功能
+    :param request:
+    :return:
+    '''
+
+    if request.method == "GET":
+        try:
+            admin = request.GET["username"]
+            password = request.GET["psw"]
+            temp = LibRoot.objects.get(root_name=admin)
+
+            if temp:
+                if not password is "":
+                    temp.password = password
+                temp.save()
+                response = JsonResponse({'result': True})
+            else:
+                response = JsonResponse({'result': False})
+            return response
+        except Exception as e:
+            return JsonResponse({'result': False})
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
 def get_adminPsw(request):
     '''
     超管获取图书管理员密码
@@ -44,7 +72,7 @@ def get_adminPsw(request):
     if request.method == "GET":
         try:
             admin = request.GET["username"]
-            temp = Administrator.objects.get(user_name=admin)
+            temp = Administrator.objects.get(administrator_name=admin)
             response = JsonResponse({'result': True, "psw": temp.password})
             return response
         except Exception as e:
