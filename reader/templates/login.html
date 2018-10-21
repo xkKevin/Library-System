@@ -129,7 +129,7 @@ body{
         if(flag)
             return;
         var remember = document.getElementById('remember').checked;
-        $.post('/manager_login/api/',{'type':'administrator', 'username':username, "password":hex_md5(password),"remember":remember},function (result,statue) {
+        $.post('/manager_login/api/',{'type':'administrator', 'username':username, "password":password,"remember":remember},function (result,statue) {
             if(statue ==='success'){
                 if(result["result"]===true){
                     $(window).attr('location', '/manage/');

@@ -35,7 +35,7 @@ urlpatterns = [
     url(r'^manager/delete_reader/$', librarian_views.delete_reader, name="manager_delete_reader"),
     url(r'^manager/update_reader/$', librarian_views.update_reader, name="manager_update_reader"),
     url(r'^manager/get_readerHis/$', librarian_views.get_reader_history, name="manager_get_readerHis"),
-
+    #url(r'^manager/get_adminPsw/$', admin.get, name="manager_get_readerHis"),
     # api js 请求 url
     url(r'^manager/return_book/api/$', librarian_views.return_book_api, name="manage_return_book_api"),
     url(r'^manager/borrow_book/api/$', librarian_views.borrow_book_api, name="manage_borrow_book_api"),

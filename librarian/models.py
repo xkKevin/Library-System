@@ -11,7 +11,7 @@ class Book(models.Model):
     type = models.CharField(max_length=20, null=False)
     place = models.CharField(max_length=50, null=False)
     image_url = models.CharField(max_length=100, default='None')
-    price = models.CharField(max_length=100, default='100') 
+    price = models.CharField(max_length=100, default='100')
 
     def __str__(self):
         return self.book_name
@@ -32,7 +32,7 @@ class BorrowOrder(models.Model):
     book = models.ForeignKey(AllBook, related_name="borrow_order_book")
     borrow_time = models.DateTimeField(null=False)
     debt = models.IntegerField(default=0)
-    return_time = models.DateTimeField(null=True)
+    return_time = models.DateTimeField(null=False)
     is_return = models.BooleanField(null=False)
     # 判断是否为历史订单 方便后期查找
     expire = models.BooleanField(default=False)

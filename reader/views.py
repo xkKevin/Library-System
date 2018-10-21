@@ -1,5 +1,9 @@
+import random
+
 from django.shortcuts import render
 from django.http import JsonResponse
+
+from reader.changePsw import SendEmail
 from reader.models import User
 import time
 from django.http import HttpResponseRedirect
@@ -125,6 +129,49 @@ def user_message(request):
             return HttpResponseRedirect(reverse("login"))
     except:
         return HttpResponseRedirect(reverse("login"))
+
+def sendEmailToChangePsw(request):
+    if request.method == "GET":
+        try:
+            username = request.GET["username"]
+            temp = User.objects.get(user_name=username)
+            if temp:
+                email = temp.email
+                seed = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                sa = []
+                for i in range(8):
+                    sa.append(random.choice(seed))
+                salt = ''.join(sa)
+                code = salt
+                s = SendEmail()
+                s.send("图书管理系统密码修改", code, "825662106@qq.com")
+                s.close_smtp()
+                response = JsonResponse({'result': True, "code": code})
+            else:
+                response = JsonResponse({'result': False})
+            return response
+        except:
+            return JsonResponse({'result': False})
+def update_psw(request):
+        if request.method == "GET":
+            try:
+                username = request.GET["username"]
+                email = request.GET["email"]
+                password = request.GET["psw"]
+                temp = User.objects.get(user_name=username)
+
+                if temp:
+                    if not email is "":
+                        temp.email = email
+                    if not password is "":
+                        temp.password = password
+                    temp.save()
+                    response = JsonResponse({'result': True})
+                else:
+                    response = JsonResponse({'result': False})
+                return response
+            except Exception as e:
+                return JsonResponse({'result': False})
 
 
 if __name__ == "__main__":
