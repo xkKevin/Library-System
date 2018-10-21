@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', librarian_views.index, name="index"),
     url(r'^login/$', reader_views.login, name="login"),
+    url(r'^loginAdminRoot/$', administrator_views.login_adminRoot, name="loginAdminRoot"),
     url(r'^manage/$', librarian_views.manager_page, name="manage_page"),
     # 用户禁止注册 转由图书管理员注册读者 因而废弃该url
     # url(r'^register/$', reader_views.register, name="register"),

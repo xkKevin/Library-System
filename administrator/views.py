@@ -5,6 +5,29 @@ from django.urls import reverse
 
 from administrator.models import Administrator
 from administrator.models import LibRoot
+def login_adminRoot(request):
+    '''
+    超管denglu
+    :param request:
+    :return:
+    '''
+
+    if request.method == "GET":
+        try:
+            admin = request.GET["username"]
+            password = request.GET["psw"]
+            temp = LibRoot.objects.get(root_name=admin)
+
+            if temp:
+                if admin ==temp.root_name and password ==temp.password:
+                    response = JsonResponse({'result': True})
+            else:
+                response = JsonResponse({'result': False})
+            return response
+        except Exception as e:
+            return JsonResponse({'result': False})
+    else:
+        return HttpResponseRedirect(reverse("index"))
 
 
 def update_lib(request):
