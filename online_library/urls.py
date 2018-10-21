@@ -47,8 +47,10 @@ urlpatterns = [
     url(r'^isbn/api/$', librarian_views.book_message_api, name="isbn_api"),
     url(r'^add_book/api/$', librarian_views.add_book_api, name="add_book_api"),
     url(r'^update_book/api/$', librarian_views.update_book, name="update_book_api"),
+    url(r'^get_book/api/$', librarian_views.get_book, name="get_book_api"),
     url(r'^reserve/api/$', librarian_views.reserve_api, name="reserve_api"),
     url(r'^search_book/api/$', librarian_views.search_book_api, name="search_book_api"),
+    url(r'^changePsw/api/$', reader_views.sendEmailToChangePsw, name="change_reader_psw"),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
 ]
