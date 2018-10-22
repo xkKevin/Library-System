@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+{% load i18n %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>register</title>
+    <script src="/static/js/md5.js" type="text/javascript"></script>
+    <link rel="icon" href="/static/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery.min.js"> </script>
+    <style>
+        .form{background: rgba(255,255,255,0.2);width:400px;margin:120px auto;}
+    </style>
+
+    <style type="text/css">
+    body{
+        background-image:url("/static/images/register.jpg");
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    </style>
+
+    <script>
+        function checkUserName() {
+            var username = document.getElementById("username").value;
+            if (username.length === 0) {
+                document.getElementById("warn2").innerHTML="<font color='red'>{% trans '用户名不能为空' %}</font>";
+                return false;
+            }
+            return true;
+        }
+        function checkPassword() {
+            var password = document.getElementById("password").value;
+            if (password.length === 0) {
+                document.getElementById("warn3").innerHTML="<font color='red'>{% trans '密码不能为空' %}</font>";
+                return false;
+            }
+            return true;
+
+        }
+        </script>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;"> 
+        <div class="container"> 
+            <div class="navbar-header"> 
+                <a class="navbar-brand">图书馆</a> 
+            </div>    
+            <div> 
+                <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px"> 
+                    <li><a href="#"><span class="glyphicon glyphicon-home"></span> 返回首页</a></li> 
+                    <li><a href="#"><span class="glyphicon glyphicon-th-list"></span> 进入管理中心</a></li> 
+                </ul> 
+            </div>
+
+
+            <form action="{% url 'set_language' %}" method="post">
+                {% csrf_token %}
+            <input name="next" type="hidden" value="{{ redirect_to }}"/>
+                <select name="language">
+            {% for language in LANGUAGES %}
+                <option value="{{ language.0 }}"{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                    {{ language.1 }} ({{ language.0 }})
+            {% endfor %}
+                </select>
+            <input type="submit" value="Go"/>
+</form>
+            <div class="btn-group navbar-btn" data-toggle="buttons">
+                <form action="{% url 'set_language' %}" method="post">
+                {% csrf_token %}
+                <label class="btn btn-primary active">
+                    <input type="radio" name="options" value="zh-hans" id="option1">中文
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="options" value="en" id="option2" >English
+                </label>
+                </form>
+            </div>
+        </div> 
+    </nav>
+    <!--
+<form action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ redirect_to }}"/>
+    <select name="language">
+        {% for language in LANGUAGES %}
+            <option value="{{ language.0 }}"{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                {{ language.1 }} ({{ language.0 }})
+        {% endfor %}
+    </select>
+    <input type="submit" value="Go"/>
+</form>
+<div style="width: 400px;text-align:right;float:right;position: absolute;right: 200px;top:20px;">
+    <span class="h5"><a href="/">{% trans '返回主页' %}</a></span>|<span class="h5"><a href="{% url 'manage_page' %}">{% trans '进入管理中心' %}</a></span>
+</div>
+-->
+<div class="container">
+    <div class="form row">
+        <div class="form-horizontal col-md-offset-3" id="register_form">
+            <h3 class="form-title">{% trans '找回密码' %}</h3>
+            <div class="col-md-9">
+                <div class="form-group">
+                    <i class="fa fa-user fa-lg"></i>
+                    <input class="form-control required" type="text" placeholder="Username" id="username" name="username" autofocus="autofocus" maxlength="20"/>
+                    <span id="warn2"></span>
+                </div>
+
+                <div class="form-group col-md-offset-9">
+                    <button type="submit" class="btn pull-right" name="submit" onclick="send()">{% trans '获取密码' %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
+<br>
+Copyright &copy;2018 Library
+<br>
+<a href="#">xiaoxiongxiong@xiongxiong.com</a>
+</footer>
+<script>
+    $.ajaxSetup({
+    data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+});
+
+</script>
+<script>
+    function isEmail(strEmail) {
+        if (strEmail.search(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) != -1) {
+            document.getElementById("warn4").innerHTML="";
+            return true;
+        }
+        else{
+            document.getElementById("warn4").innerHTML="<font color='red'>{% trans '邮箱格式不正确' %}</font>";
+            return false;
+        }
+
+    }
+    function send() {
+        var username = $("#username").val();
+
+        $.get("/changePsw/api/",{"username":username},function (result,statue) {
+                if(statue === 'success') {
+                    if (result["result"] === true) {
+                        alert("{% trans '发送成功' %}");
+                        $(window).attr('location', '{% url 'index' %}');
+                    } else {
+                        alert("{% trans '发送失败!' %}")
+                    }
+                }
+        })
+
+    }
+    $("#password").bind('input propertychange', function () {
+        if ($(this).val() === ""){
+
+        }else {
+            document.getElementById('warn3').innerHTML = "";
+        }
+    });
+    $('#username').bind('input propertychange', function() {
+        if($(this).val()){
+            $.post('/test_user_name/api/',{'username':$(this).val()},function (result, statue) {
+                if (statue === 'success') {
+                    if (result["result"] === true) {
+                        document.getElementById("warn2").innerHTML = "<font color='green'>{% trans '不存在此用户' %}</font>";
+                    }
+                    else {
+                        document.getElementById("warn2").innerHTML = "<font color='red'>{% trans '用户名可用' %}</font>";
+                    }
+                }
+
+            })
+        }
+        else {
+            document.getElementById("warn2").innerHTML = "<font color='red'>{% trans '用户名不能为空' %}</font>";
+        }
+    }
+    );
+</script>
+<script>
+</script>
+</body>
+
+
+</html>

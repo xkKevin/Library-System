@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+{% load i18n %}
+<html>
+<head>
+<meta charset="UTF-8">
+<title>个人信息</title>
+ <link rel="icon" href="/static/images/favicon.ico">
+	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/bootstrap.min.js"></script>
+	<script src="/static/js/jquery.min.js"> </script>
+  <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style type="text/css">
+/* Custom Styles */
+    ul.nav-tabs{
+        width: 140px;
+        margin-top: 20px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);
+    }
+    ul.nav-tabs li{
+        margin: 0;
+        border-top: 1px solid #ddd;
+    }
+    ul.nav-tabs li:first-child{
+        border-top: none;
+    }
+    ul.nav-tabs li a{
+        margin: 0;
+        padding: 8px 16px;
+        border-radius: 0;
+    }
+    ul.nav-tabs li.active a, ul.nav-tabs li.active a:hover{
+        color: #fff;
+        background: #0088cc;
+        border: 1px solid #0088cc;
+    }
+    ul.nav-tabs li:first-child a{
+        border-radius: 4px 4px 0 0;
+    }
+    ul.nav-tabs li:last-child a{
+        border-radius: 0 0 4px 4px;
+    }
+    ul.nav-tabs.affix{
+        top: 30px; /* Set the top position of pinned element */
+    }
+
+	.setting-profile-title {
+        font-size: 30px;
+        color: #999;
+        line-height: 1;
+        padding-bottom: 11px;
+       border-bottom: solid 2px #f2f2f2;
+      }
+
+    .yahei {
+       font-family: "microsoft yahei","\5FAE\8F6F\96C5\9ED1",Tahoma,Arial,Helvetica,STHeiti;
+      }
+
+    #etting-profile-form {
+         color: #666;
+        font-size: 14px;
+        margin-top: 15px;
+     zoom: 1;
+    }
+
+		div {
+     display: block;
+   }
+		tr.t1{background:hsla(165,35%,50%,0.2);height:20px;}
+		tr.t2{background:hsla(165,35%,50%,0.4);height:20px;}
+		tr.t3{background:hsla(165,35%,50%,0.6);height:20px;}
+
+		#login_click{ margin-top:20px; height:30px;}
+		#login_click a {
+			text-decoration:none;
+			background:#2f435e;
+			color:#f2f2f2;
+			padding: 8px 20px 8px 20px;
+			font-size:16px;	font-family: 微软雅黑,宋体,Arial,Helvetica,Verdana,sans-serif;
+			font-weight:bold;
+			border-radius:3px;
+			-webkit-transition:all linear 0.30s;
+			-moz-transition:all linear 0.30s;
+			transition:all linear 0.30s;		}
+		#login_click a:hover { background:#385f9e; }
+
+		 #tab{font-size:16px;
+			 font-family:楷体;
+			 text-algn:right;
+			 border-color:black;
+			}
+
+
+
+</style>
+<script>
+$(document).ready(function(){
+    $("#myNav").affix({
+        offset: {
+            top: 125
+      }
+    });
+});
+</script>
+</head>
+
+
+<body data-spy="scroll" data-target="#myScrollspy">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand">图书馆</a>
+            </div>
+            <div>
+                <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px">
+                    <li><a href="#"><span class="glyphicon glyphicon-home"></span>{% trans "首页" %}</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-off"></span> 注销</a></li>
+                </ul>
+            </div>
+            <div class="btn-group navbar-btn" data-toggle="buttons">
+                <label class="btn btn-primary active">
+                    <input type="radio" name="options" id="option1">中文
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="options" id="option2">英文
+                </label>
+            </div>
+        </div>
+    </nav>
+
+    <div style="text-align:center;margin-top: 50px;">
+        <img src="librarian/static/images/Bibliosoft.png" style="vertical-align:middle;" width="210"  />
+    </div>
+
+
+<div class="container">
+
+    <div class="row" style="float: left;">
+        <div class="col-xs-3" id="myScrollspy">
+            <ul class="nav nav-tabs nav-stacked" id="myNav">
+                <li class="active"><a href="#section-1">生成账号</a></li>
+				<li><a href="#section-2">设置图书馆规则</a></li>
+                <li><a href="#section-3">管理图书管理员</a></li>
+				<li><a href="{% url 'admin_change_passwd' %}">修改本账户密码</a></li>
+
+
+
+
+          </ul>
+        </div>
+    </div>
+
+        <div class="col-xs-9 " style="float: right;">
+        <div id="section-1" style="position: relative;top: -50px;height: 0px;"></div>
+        <hr>
+        <h2 style="display:block; height:50px; width:350px;">生成账号</h2>
+
+
+	   <form id="profile" class="setting-profile-form" action=" ">
+    	 	 <table align="center"   width="40%" id="tab" >
+    		<tr class="t1"> <th width="30%" align="right">{% trans '管理员ID' %}:</th> <td class="line30" align="center"><input align="center" type="text" value="{{ lib_id  }}" name="user_id" placeholder="管理员id" readonly />
+         <tr class="t2"> <th width="25%" align="right">{% trans '管理员名' %}:</th> <td class="line30" align="center"><input  align="center" type="text" value="{{ lib_name }}" name="user_name" placeholder="管理员名" readonly />
+    		<tr class="t3"><th width="25%" align="right">{% trans '密码' %}:</th> <td class="line30" align="center"><input    type="password" name="password" value="{{ lib_password}}" placeholder="密码" readonly />
+    		</table>
+
+
+
+        	<div id="login_click" align="center">
+                <a id="btlogin" href="#">{% trans '注册' %}</a>
+            </div>
+        </form>
+        <div id="section-2" style="position: relative;top: -50px;"></div>
+		<hr>
+
+
+		<h2 style="display:block; height:50px; width:400px">设置图书馆规则</h2>
+
+		<form id="profile2" class="setting-profile-form" method="POST" action=" ">
+			<table align="center"   width="40%" id="tab" >
+				<tr class="t1"> <th width="30%" align="right">{% trans '逾期罚金为' %}:</th> <td class="line30" align="center"><input align="center" type="text"  name="user_id" placeholder="用户id" readonly />
+				<tr class="t2"> <th width="25%" align="right">{% trans '归还期限为' %}:</th> <td class="line30" align="center"><input  align="center" type="text"  name="user_name" placeholder="用户名" readonly />
+				<tr class="t3"><th width="25%" align="right">{% trans '保证金额度为' %}:</th> <td class="line30" align="center"><input    type="email" name="email" placeholder="邮箱" readonly />
+			</table>
+
+
+
+			<div id="login_click" align="center">
+				<a id="btlogin" href="#">{% trans '修改' %}</a>
+			</div>
+        </form>
+            <div id="section-3" style="position: relative;top: -50px;"></div>
+			<hr>
+			<h2 style="display:block; height:50px; width:400px">管理图书管理员</h2>
+
+           		<div class="input-group col-md-3" style="width: 600px;margin-left: auto;margin-right: auto" align="center">
+                    <input id="libname" type="text" class="form-control" placeholder="请输入管理员ID：" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-search"  onclick="searchLib()">查找</button>
+                    </span>
+            	</div>
+
+
+    <table align="center" id="tab" width="300px"  class="table table-striped">
+
+    	<thead>
+    		<tr >
+    			<th align="center">{% trans '管理员ID' %}</th>
+    			<th align="center">{% trans '管理员名' %}</th>
+    			<th align="center">{% trans '是否删除' %}</th>
+    			<th align="center">{%  trans '找回密码' %}</th>
+    		</tr>
+    	</thead>
+    	<tbody >
+    		<tr id="manageLib"  class="active">
+
+    		</tr>
+    	</tbody>
+    </table>
+
+            <hr>
+</div>
+</div>
+
+<footer style="background-color: #bdeab7;color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
+<br>
+Copyright &copy;2018 Library
+<br>
+<a href="#">xiaoxiongxiong@xiongxiong.com</a>
+</footer>
+
+
+
+
+</body>
+<script type="text/javascript">
+
+    function searchLib() {
+        var libname = $("#libname").val();
+         if(libname!=""){
+            $.get("/manager/get_adminPsw/",{"username":libname},function (result,statue) {
+                if(statue === 'success') {
+                    if (result["result"] === true) {
+                        add_admin_message(result)
+                    } else {
+                        alert("{% trans '获取失败!' %}")
+                    }
+                }
+            })
+        }
+    }
+
+    function delete_librarian(account) {
+
+    }
+    function see_passwd(passwd) {
+        var pwd = document.getElementById("pwd");
+        pwd.innerText = passwd;
+    }
+    function  add_admin_message(result) {
+        // 动态添加管理员信息
+        var lib = document.getElementById("manageLib");
+        var account_name = document.createElement("td");
+        account_name.innerText = result["account"];
+        var passwd = document.createElement("td");
+        passwd.setAttribute("id","pwd");
+        passwd.innerText = "********";
+        var delete_librarian = document.createElement("td");
+        var button_1 = document.createElement("button");
+        button_1.setAttribute("width", "100px");
+        button_1.innerText = "删除";
+        button_1.setAttribute("onclick", "delete_librarian(" +"\""+result["account"]+"\""+")");
+        delete_librarian.appendChild(button_1);
+        var see_passwd_button = document.createElement("td");
+        var button_2 = document.createElement("button");
+        button_2.setAttribute("width", "100px");
+        button_2.innerText = "查看密码";
+        button_2.setAttribute("onclick", "see_passwd(" + "\""+result["psw"]+"\""+ ")" );
+        see_passwd_button.appendChild(button_2);
+        lib.appendChild(account_name);
+        lib.appendChild(passwd);
+        lib.appendChild(delete_librarian);
+        lib.appendChild(see_passwd_button);
+
+    }
+</script>
+</html>

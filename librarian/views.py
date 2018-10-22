@@ -75,6 +75,8 @@ def add_reader(request):
         return render(request, 'add_reader.html')
     else:
         return HttpResponseRedirect(reverse("index"))
+
+
 def delete_reader(request):
     '''
     管理员删除读者
@@ -94,6 +96,69 @@ def delete_reader(request):
     else:
         return HttpResponseRedirect(reverse("index"))
 
+
+def update_reader_page(request):
+    '''
+
+    :param request:
+    :return:
+    '''
+
+    username = request.session.get('username', "None")
+    if username == 'root':
+        username = ""
+        email = ""
+        try:
+            username = request.GET["username"]
+            email = request.GET["email"]
+        except :
+            pass
+        return render(request, 'set_reader.html', {"username": username, "email": email})
+    else:
+        return HttpResponseRedirect(reverse("index"), )
+
+def update_readerByMe(request):
+    '''
+    管理员修改读者
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == "None" :
+        return HttpResponseRedirect(reverse("index"))
+    if request.method == "GET":
+
+        email = ""
+        new_username = ""
+        newPaw = ""
+        try:
+            try:
+                oldPsw = request.GET["oldPsw"]
+                newPaw = request.GET["newPaw"]
+                confirPsw = request.GET["confirPsw"]
+            except:
+                pass
+            temp = User.objects.get(user_name=username)
+            if temp:
+                if not email is "":
+                    temp.email = email
+                if not newPaw is "":
+                    if oldPsw == temp.password:
+                        temp.password = newPaw
+                if not new_username is "":
+                    temp.user_name = new_username
+                temp.save()
+                response = JsonResponse({'result': True})
+            else:
+                response = JsonResponse({'result': False})
+            return response
+        except Exception as e:
+            return JsonResponse({'result': False})
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
+
 def update_reader(request):
     '''
     管理员修改读者
@@ -103,17 +168,26 @@ def update_reader(request):
     username = request.session.get('username', "None")
     if username == 'root':
         if request.method == "GET":
+            username = ""
+            email = ""
+            new_username = ""
+            password = ""
             try:
-                username = request.GET["username"]
-                email = request.GET["email"]
-                password = request.GET["psw"]
+                try:
+                    username = request.GET["username"]
+                    email = request.GET["email"]
+                    new_username = request.GET["new_username"]
+                    password = request.GET["psw"]
+                except:
+                    pass
                 temp = User.objects.get(user_name=username)
-
                 if temp:
                     if not email is "":
                         temp.email = email
                     if not password is "":
                         temp.password = password
+                    if not new_username is "":
+                        temp.user_name = new_username
                     temp.save()
                     response = JsonResponse({'result': True})
                 else:
@@ -133,7 +207,6 @@ class DateEncoder(json.JSONEncoder):
             return obj.strftime("%Y-%m-%d")
         else:
             return json.JSONEncoder.default(self, obj)
-
 
 
 def get_reader_history(request):
@@ -160,6 +233,21 @@ def get_reader_history(request):
                 return response
     else:
         return HttpResponseRedirect(reverse("index"))
+
+
+def update_book_message_page(request):
+    '''
+    修改图书信息
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        if request.method == "GET":
+            return render(request, 'set_book.html')
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
 
 def search_book_api(request):
     '''
@@ -402,8 +490,9 @@ def borrow_book_api(request):
         reserve_order.isbn.save()
         reserve_order.save()
         return JsonResponse({"result": True, "expire": False})
-    except Exception:
-            return JsonResponse({"result": False, "msg": "Error!"})
+    except Exception as e:
+        print(e)
+        return JsonResponse({"result": False, "msg": "Error!"})
 
 
 def manage_user_api(request):
@@ -509,21 +598,26 @@ def add_book_api(request):
             return JsonResponse({'result': False, "msg": "数据库保存错误"})
     return JsonResponse({'result': True})
 
+
 def get_book(request):
     '''
-    管理员修改书的位置
+    获取书的信息
     :param request:
     :return:
     '''
     username = request.session.get('username', "None")
     if username == 'root':
         if request.method == "GET":
-
             isbn = request.GET["isbn"]
-            book = Book.objects.filter(isbn=isbn)
-            json_data = list(book)
-            book_json_data = json.dumps(json_data, cls=DateEncoder, ensure_ascii=False)
-            response = JsonResponse({'book': book_json_data})
+            try:
+                book = Book.objects.get(isbn=isbn)
+            except:
+                return JsonResponse({"result": False})
+            response = JsonResponse({'result': True, 'isbn': isbn, "price": book.price,
+                                     'author': book.author, 'book_name': book.book_name,
+                                     'place': book.place, "total_num": book.total_num,
+                                     'type': book.type
+                                     })
             return response
 
     else:
@@ -539,19 +633,9 @@ def update_book(request):
     username = request.session.get('username', "None")
     if username == 'root':
         if request.method == "GET":
-
                 isbn = request.GET["isbn"]
                 book = Book.objects.get(isbn=isbn)
-
-                '''
-                author = request.POST['author']
-                book_name = request.POST['book_name']
-                image_url = request.POST['image_url']
-                total_num = request.POST['total_num']
-                price = request.POST['price']
-                type = request.POST["type"]
-                image_result = requests.get(image_url)
-                '''
+                total_num = request.GET["total_num"]
                 place = request.GET['place']
                 type = request.GET['type']
                 if book:
@@ -559,11 +643,24 @@ def update_book(request):
                         book.place = place
                     if not type is "":
                         book.type = type
+                    if not total_num is "":
+                        add_num = int(total_num) - int(book.total_num)
+                        if add_num >= 0:
+                            try:
+                                all_book_list = list()
+                                for x in range(int(add_num)):
+                                    all_book_list.append(AllBook(isbn=book, is_available=True))
+                                AllBook.objects.bulk_create(all_book_list)
+                                book.total_num = total_num
+                            except:
+                                pass
+                        else:
+                            response = JsonResponse({'result': False, "msg": "The quantity should not be less than the previous quantity."})
+                            return response
                     book.save()
                     response = JsonResponse({'result': True})
                 else:
-                    response = JsonResponse({'result': False})
+                    response = JsonResponse({'result': False, "msg": "Unknown Error!"})
                 return response
-
     else:
         return HttpResponseRedirect(reverse("index"))

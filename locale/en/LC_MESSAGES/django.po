@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-11 20:48+0800\n"
+"POT-Creation-Date: 2018-10-22 17:52+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,97 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: .\administrator\templates\Adminlogin.html:63
+#: .\librarian\templates\add_reader.html:58
+#: .\librarian\templates\search_results.html:22
+#: .\reader\templates\login.html:40 .\reader\templates\register.html:75
+msgid "返回主页"
+msgstr "Return to the home page"
+
+#: .\administrator\templates\Adminlogin.html:68
+#: .\reader\templates\login.html:45
+msgid "登陆"
+msgstr "Sign in"
+
+#: .\administrator\templates\Adminlogin.html:72
+#: .\librarian\templates\add_reader.html:29
+#: .\librarian\templates\add_reader.html:147 .\reader\templates\login.html:49
+#: .\reader\templates\register.html:47 .\reader\templates\register.html:158
+msgid "用户名不能为空"
+msgstr "The username cannot be empty!"
+
+#: .\administrator\templates\Adminlogin.html:76
+#: .\librarian\templates\add_reader.html:37
+#: .\librarian\templates\add_reader.html:127 .\reader\templates\login.html:53
+#: .\reader\templates\register.html:55
+msgid "密码不能为空"
+msgstr "The password cannot be empty!"
+
+#: .\administrator\templates\Adminlogin.html:81
+#: .\librarian\templates\index.html:44
+msgid "登录"
+msgstr "Sign in"
+
+#: .\administrator\templates\Adminlogin.html:138
+#: .\reader\templates\login.html:112 .\reader\templates\login.html:138
+msgid "用户名或密码错误"
+msgstr "User name or password error"
+
+#: .\administrator\templates\admin2.html:119
+#: .\librarian\templates\manager_page.html:135
+#: .\reader\templates\user_message.html:122
+msgid "首页"
+msgstr "HomePage"
+
+#: .\administrator\templates\admin2.html:164
+#: .\administrator\templates\admin2.html:210
+msgid "管理员ID"
+msgstr ""
+
+#: .\administrator\templates\admin2.html:165
+#: .\administrator\templates\admin2.html:211
+#: .\librarian\templates\manager_page.html:246
+msgid "管理员名"
+msgstr ""
+
+#: .\administrator\templates\admin2.html:166
+msgid "密码"
+msgstr ""
+
+#: .\administrator\templates\admin2.html:172
+#: .\reader\templates\register.html:80 .\reader\templates\register.html:100
+msgid "注册"
+msgstr "registered"
+
+#: .\administrator\templates\admin2.html:183
+msgid "逾期罚金为"
+msgstr "Debt"
+
+#: .\administrator\templates\admin2.html:184
+msgid "归还期限为"
+msgstr "Due back Date"
+
+#: .\administrator\templates\admin2.html:185
+msgid "保证金额度为"
+msgstr ""
+
+#: .\administrator\templates\admin2.html:191
+#: .\reader\templates\user_message.html:158
+msgid "修改"
+msgstr "Edit"
+
+#: .\administrator\templates\admin2.html:212
+msgid "是否删除"
+msgstr ""
+
+#: .\administrator\templates\admin2.html:213
+msgid "找回密码"
+msgstr ""
+
+#: .\administrator\templates\admin2.html:249
+msgid "获取失败!"
+msgstr ""
 
 #: .\librarian\templates\add_book.html:28
 #: .\librarian\templates\add_reader.html:58 .\librarian\templates\index.html:37
@@ -33,8 +124,8 @@ msgid "作者"
 msgstr "author"
 
 #: .\librarian\templates\add_book.html:45
-#: .\librarian\templates\manager_page.html:174
-#: .\librarian\templates\manager_page.html:194
+#: .\librarian\templates\manager_page.html:205
+#: .\librarian\templates\manager_page.html:225
 #: .\reader\templates\user_message.html:211
 msgid "书名"
 msgstr "Book Name"
@@ -69,26 +160,8 @@ msgstr "Place"
 msgid "添加图书"
 msgstr "Add Book"
 
-#: .\librarian\templates\add_reader.html:29
-#: .\librarian\templates\add_reader.html:147 .\reader\templates\login.html:49
-#: .\reader\templates\register.html:47 .\reader\templates\register.html:158
-msgid "用户名不能为空"
-msgstr "The username cannot be empty!"
-
-#: .\librarian\templates\add_reader.html:37
-#: .\librarian\templates\add_reader.html:127 .\reader\templates\login.html:53
-#: .\reader\templates\register.html:55
-msgid "密码不能为空"
-msgstr "The password cannot be empty!"
-
-#: .\librarian\templates\add_reader.html:58
-#: .\librarian\templates\search_results.html:22
-#: .\reader\templates\login.html:40 .\reader\templates\register.html:75
-msgid "返回主页"
-msgstr "Return to the home page"
-
 #: .\librarian\templates\add_reader.html:63
-#: .\librarian\templates\manager_page.html:132
+#: .\librarian\templates\manager_page.html:155
 msgid "添加读者"
 msgstr "Add User Account"
 
@@ -136,10 +209,6 @@ msgstr "The current user"
 msgid "注销"
 msgstr "cancellation "
 
-#: .\librarian\templates\index.html:44
-msgid "登录"
-msgstr "Sign in"
-
 #: .\librarian\templates\index.html:59
 msgid "全部"
 msgstr "All"
@@ -168,83 +237,121 @@ msgstr "History"
 msgid "搜索"
 msgstr "Search"
 
-#: .\librarian\templates\manager_page.html:113
-#: .\reader\templates\user_message.html:122
-msgid "首页"
-msgstr "HomePage"
-
-#: .\librarian\templates\manager_page.html:113
+#: .\librarian\templates\manager_page.html:135
 #: .\reader\templates\user_message.html:122
 msgid "退出"
 msgstr "Quit"
 
-#: .\librarian\templates\manager_page.html:129
-#: .\librarian\templates\manager_page.html:146
+#: .\librarian\templates\manager_page.html:151
+#: .\librarian\templates\manager_page.html:173
 msgid "用户资料"
 msgstr "User Information"
 
-#: .\librarian\templates\manager_page.html:130
-#: .\librarian\templates\manager_page.html:164
+#: .\librarian\templates\manager_page.html:152
+#: .\librarian\templates\manager_page.html:195
 msgid "处理预约书籍"
 msgstr "Reserve Book"
 
-#: .\librarian\templates\manager_page.html:131
-#: .\librarian\templates\manager_page.html:186
+#: .\librarian\templates\manager_page.html:153
+#: .\librarian\templates\manager_page.html:217
 msgid "归还图书"
 msgstr "Return Book"
 
-#: .\librarian\templates\manager_page.html:135
+#: .\librarian\templates\manager_page.html:154
+#: .\librarian\templates\manager_page.html:238
+msgid "罚金缴纳记录"
+msgstr ""
+
+#: .\librarian\templates\manager_page.html:158
 msgid "添加书籍"
 msgstr "Add Book"
 
-#: .\librarian\templates\manager_page.html:141
+#: .\librarian\templates\manager_page.html:159
+msgid "删除书籍"
+msgstr ""
+
+#: .\librarian\templates\manager_page.html:160
+msgid "编辑书籍"
+msgstr ""
+
+#: .\librarian\templates\manager_page.html:161
+msgid "删除信息"
+msgstr ""
+
+#: .\librarian\templates\manager_page.html:162
+msgid "收入记录"
+msgstr ""
+
+#: .\librarian\templates\manager_page.html:168
 msgid "查找"
 msgstr "Search"
 
-#: .\librarian\templates\manager_page.html:152
+#: .\librarian\templates\manager_page.html:179
 #: .\reader\templates\user_message.html:151
 msgid "用户ID"
 msgstr "User ID"
 
-#: .\librarian\templates\manager_page.html:153
-#: .\librarian\templates\manager_page.html:175
-#: .\librarian\templates\manager_page.html:195
+#: .\librarian\templates\manager_page.html:180
+#: .\librarian\templates\manager_page.html:206
+#: .\librarian\templates\manager_page.html:226
+#: .\librarian\templates\manager_page.html:247
 #: .\reader\templates\user_message.html:152
 msgid "用户名"
 msgstr "User name"
 
-#: .\librarian\templates\manager_page.html:154
+#: .\librarian\templates\manager_page.html:181
 #: .\reader\templates\user_message.html:153
 msgid "邮箱"
 msgstr "Email"
 
-#: .\librarian\templates\manager_page.html:173
-#: .\librarian\templates\manager_page.html:193
+#: .\librarian\templates\manager_page.html:182
+msgid "罚金"
+msgstr ""
+
+#: .\librarian\templates\manager_page.html:183
+msgid "删除用户"
+msgstr ""
+
+#: .\librarian\templates\manager_page.html:184
+msgid "编辑"
+msgstr ""
+
+#: .\librarian\templates\manager_page.html:204
+#: .\librarian\templates\manager_page.html:224
+#: .\librarian\templates\manager_page.html:245
 #: .\reader\templates\user_message.html:171
 #: .\reader\templates\user_message.html:209
 msgid "订单号"
 msgstr "Order Id"
 
-#: .\librarian\templates\manager_page.html:176
-#: .\librarian\templates\manager_page.html:196
+#: .\librarian\templates\manager_page.html:207
+#: .\librarian\templates\manager_page.html:227
 #: .\reader\templates\user_message.html:212
 msgid "预约时间"
 msgstr "Reserve Time"
 
-#: .\librarian\templates\manager_page.html:177
+#: .\librarian\templates\manager_page.html:208
 msgid "是否借阅"
 msgstr "Is Reserve"
 
-#: .\librarian\templates\manager_page.html:197
+#: .\librarian\templates\manager_page.html:228
 msgid "欠费"
 msgstr "Debt"
 
-#: .\librarian\templates\manager_page.html:198
-#: .\librarian\templates\manager_page.html:359
+#: .\librarian\templates\manager_page.html:229
+#: .\librarian\templates\manager_page.html:389
 msgid "归还"
 msgstr "Return"
 
-#: .\librarian\templates\manager_page.html:328
+#: .\librarian\templates\manager_page.html:248
+msgid "缴纳时间"
+msgstr ""
+
+#: .\librarian\templates\manager_page.html:249
+msgid "缴纳金额"
+msgstr ""
+
+#: .\librarian\templates\manager_page.html:358
 msgid "借阅"
 msgstr "Reserve"
 
@@ -289,10 +396,6 @@ msgstr "Search"
 msgid "预约成功"
 msgstr "Successful"
 
-#: .\reader\templates\login.html:45
-msgid "登陆"
-msgstr "Sign in"
-
 #: .\reader\templates\login.html:57
 msgid "记住我"
 msgstr "Remember me"
@@ -305,10 +408,6 @@ msgstr "Reader"
 msgid "图书管理员"
 msgstr "Librarian"
 
-#: .\reader\templates\login.html:112 .\reader\templates\login.html:138
-msgid "用户名或密码错误"
-msgstr "User name or password error"
-
 #: .\reader\templates\register.html:34
 msgid "两次密码相同"
 msgstr "Same password twice"
@@ -316,10 +415,6 @@ msgstr "Same password twice"
 #: .\reader\templates\register.html:39
 msgid "两次密码不相同"
 msgstr "Two different passwords"
-
-#: .\reader\templates\register.html:80 .\reader\templates\register.html:100
-msgid "注册"
-msgstr "registered"
 
 #: .\reader\templates\user_message.html:138
 #: .\reader\templates\user_message.html:145
@@ -335,10 +430,6 @@ msgstr "Borrowed Record"
 #: .\reader\templates\user_message.html:202
 msgid "预约记录"
 msgstr "Reserve Record"
-
-#: .\reader\templates\user_message.html:158
-msgid "修改"
-msgstr "Edit"
 
 #: .\reader\templates\user_message.html:172
 msgid "借阅日期"

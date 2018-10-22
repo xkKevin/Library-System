@@ -5,9 +5,11 @@
 <meta charset="UTF-8">
 <title>manager</title>
  <link rel="icon" href="/static/images/favicon.ico">
-	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <script src="/static/js/bootstrap.min.js"></script>
-	<script src="/static/js/jquery.min.js"> </script>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="/static/js/jquery.min.js">
+    </script>
 <style type="text/css">
 /* Custom Styles */
     ul.nav-tabs{
@@ -94,7 +96,27 @@
 			
 </style>
 </head>
-
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;"> 
+    <div class="container"> 
+        <div class="navbar-header"> 
+            <a class="navbar-brand">图书馆</a> 
+        </div>    
+        <div> 
+            <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px"> 
+                <li><a href="#"><span class="glyphicon glyphicon-home"></span> 首页</a></li> 
+                <li><a href="#"><span class="glyphicon glyphicon-off"></span> 注销</a></li>  
+            </ul> 
+        </div> 
+        <div class="btn-group navbar-btn" data-toggle="buttons">
+            <label class="btn btn-primary active">
+                <input type="radio" name="options" id="option1">中文
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="options" id="option2">英文
+            </label>
+        </div>
+    </div> 
+</nav>
 
 <body data-spy="scroll" data-target="#myScrollspy">
 <form action="{% url 'set_language' %}" method="post">
@@ -129,10 +151,15 @@
                 <li class="active"><a href="#section-1">{% trans '用户资料' %}</a></li>
                 <li><a href="#section-2">{% trans '处理预约书籍' %}</a></li>
 				<li><a href="#section-3">{% trans '归还图书' %}</a></li>
+                <li><a href="#section-4">{% trans '罚金缴纳记录' %}</a></li>
 				<li><a href="{% url 'manager_add_reader' %}">{% trans '添加读者' %}</a></li>
 
 {#				<li><a href="#section-5">修改图书规则</a></li>#}
 				<li><a href="{% url 'add_book' %}">{% trans '添加书籍' %}</a></li>
+                <li><a >{% trans '删除书籍' %}</a></li>
+                <li><a href="{% url 'update_book_message' %}">{% trans '编辑书籍' %}</a></li>
+                <li><a >{% trans '删除信息' %}</a></li>
+                <li><a>{% trans '收入记录' %}</a></li>
             </ul>
         </div>
         <div class="input-group col-md-3" style="width: 600px;margin-left: auto;margin-right: auto" >
@@ -152,6 +179,9 @@
                     <th align="center">{% trans '用户ID' %}</th>
                     <th align="center">{% trans '用户名' %}</th>
                     <th align="center">{% trans '邮箱' %}</th>
+                    <th align="center">{% trans '罚金' %}</th>
+                    <th align="center">{% trans '删除用户' %}</th>
+                    <th align="center">{% trans '编辑' %}</th>
                 </tr>
 	        </thead>
 
@@ -160,6 +190,7 @@
                 </tr>
             </tbody>
         </table>
+
     <hr>
             <h2 id="section-2" style="display:block; height:50px; width:400px">{% trans '处理预约书籍' %}</h2>
            
@@ -184,77 +215,55 @@
 
             <hr>
             <h2 id="section-3" style="display:block; height:50px; width:400px">{% trans '归还图书' %}</h2>
-      
 
-<table align="center" id="tab" width="300px"  class="table table-striped">
-	
-	<thead>
-		<tr >
+
+    <table align="center" id="tab" width="300px"  class="table table-striped">
+
+        <thead>
+        <tr >
             <th align="center">{% trans '订单号' %}</th>
             <th align="center">{% trans '书名' %}</th>
             <th align="center">{% trans '用户名' %}</th>
-			<th align="center">{% trans '预约时间' %}</th>
-			<th align="center">{% trans '欠费' %}</th>
+            <th align="center">{% trans '预约时间' %}</th>
+            <th align="center">{% trans '欠费' %}</th>
             <th align="center">{%  trans '归还' %}</th>
-		</tr>
-	</thead>
+        </tr>
+        </thead>
 	<tbody id="return_book_tbody">
 
-            {#		<tr class="active">#}
-            {#			<td >图书1</td>#}
-            {#			<td >30/9/2018</td>#}
-            {#			<td>YES</td>#}
-            {#		</tr>#}
+
 
 	</tbody>
 </table>
+            <h2 id="section-4" style="display:block; height:50px; width:400px">{% trans '罚金缴纳记录' %}</h2>
 
-{#		<hr>#}
-{#		<h2 id="section-3" style="display:block; height:50px; width:400px">超时处理</h2>#}
-{##}
-{##}
-{#		<table align="center" id="tab" width="300px"  class="table table-striped">#}
-{##}
-{#			<thead>#}
-{#			<tr >#}
-{#				<th align="center">{% trans '书号' %}</th>#}
-{#				<th align="center">{% trans '预约时间' %}</th>#}
-{#				<th align="center">{% trans '是否有效' %}</th>#}
-{##}
-{#			</tr>#}
-{#			</thead>#}
-{#			<tbody >#}
-{#			<tr class="active">#}
-{#				<td >图书1</td>#}
-{#				<td >30/9/2018</td>#}
-{#				<td>YES</td>#}
-{##}
-{#			</tr>#}
-{#			<tr class="success">#}
-{#				<td>图书2</td>#}
-{#				<td>30/9/2018</td>#}
-{#				<td>NO</td>#}
-{##}
-{#			</tr>#}
-{#			<tr  class="active">#}
-{#				<td>图书1</td>#}
-{#				<td>30/9/2018</td>#}
-{#				<td>YES</td>#}
-{##}
-{#			</tr>#}
-{#			<tr  class="success">#}
-{#				<td>图书1</td>#}
-{#				<td>30/9/2018</td>#}
-{#				<td>YES</td>#}
-{##}
-{#			</tr>#}
-{##}
-{#			</tbody>#}
-{#		</table>#}
+
+            <table align="center" id="tab" width="300px"  class="table table-striped">
+
+                <thead>
+                <tr >
+                    <th align="center">{% trans '订单号' %}</th>
+                    <th align="center">{%  trans '管理员名' %}</th>
+                    <th align="center">{% trans '用户名' %}</th>
+                    <th align="center">{% trans '缴纳时间' %}</th>
+                    <th align="center">{% trans '缴纳金额' %}</th>
+
+                </tr>
+                </thead>
+            </table>
 
         </div>
     </div>
 </div>
+
+<footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
+<br>
+Copyright &copy;2018 Library
+<br>
+<a href="#">xiaoxiongxiong@xiongxiong.com</a>
+</footer>
+
 <script>
     var fn;
         $.ajaxSetup({
@@ -267,6 +276,20 @@
             }
         })
     });
+
+    function delete_reader(name) {
+        $.get("{% url 'manager_delete_reader' %}", {'username':name}, function(result){
+            if(result["result"] === true){
+                alert("{% trans "删除成功" %}");
+                document.getElementById("user_message_tr").innerText = "";
+                document.getElementById("reserve_table_body").innerText = "";
+                document.getElementById("return_book_tbody").innerText = "";
+            }else {
+                alert("Failed!\n message:");
+            }
+        });
+    }
+
     function return_book(order_id) {
         //归还图书函数
         $.post("{% url 'manage_return_book_api' %}", {'borrow_id':order_id}, function(result){
@@ -304,6 +327,24 @@
         var td_2 = document.createElement("td");
         td_2.innerText = user["email"];
         user_parent.appendChild(td_2);
+        var td_3 = document.createElement("td");
+        var debt_button = document.createElement("button");
+        debt_button.innerText = "罚金";
+        td_3.appendChild(debt_button);
+        var td_4 = document.createElement("td");
+        var delete_user_button = document.createElement("button");
+        delete_user_button.innerText = "删除";
+        delete_user_button.setAttribute("onclick", "delete_reader("+"\""+user["user_name"]+"\""+")");
+        td_4.appendChild(delete_user_button);
+        var td_5 = document.createElement("td");
+        var edit_user_button = document.createElement("button");
+        edit_user_button.innerText = "编辑";
+        edit_user_button.setAttribute("onclick", "$(window).attr('location', '/update_reader/?username="+user["user_name"]+"&email="+user["email"]+"');");
+        td_5.appendChild(edit_user_button);
+        user_parent.appendChild(td_3);
+        user_parent.appendChild(td_4);
+        user_parent.appendChild(td_5);
+
     }
     function  add_reserve_order(reserve_orders) {
         // 动态添加 预约 订单

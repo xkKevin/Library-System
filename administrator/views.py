@@ -2,9 +2,34 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 # Create your views here.
 from django.urls import reverse
-
+import time
 from administrator.models import Administrator
 from administrator.models import LibRoot
+
+
+def admin_change_password(request):
+    '''
+    管理员修改密码
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if not username == 'anti_man':
+        return render(request, 'index.html')
+    return render(request, 'admin_change_passwd.html')
+
+
+def login(request):
+    return render(request, 'Adminlogin.html')
+
+
+def Adminlogin(request):
+    username = request.session.get('username', "None")
+    if not username == 'anti_man':
+        return render(request, 'index.html')
+    return render(request, 'admin2.html')
+
+
 def login_adminRoot(request):
     '''
     超管denglu
@@ -19,11 +44,15 @@ def login_adminRoot(request):
             temp = LibRoot.objects.get(root_name=admin)
 
             if temp:
-                if admin ==temp.root_name and password ==temp.password:
-                    response = JsonResponse({'result': True})
+                if admin == temp.root_name and password == temp.password:
+
+                    request.session.set_expiry(0)
+                    request.session['username'] = 'anti_man'
+                    request.session['login_time'] = time.time()
+                    return JsonResponse({'result': True})
             else:
                 response = JsonResponse({'result': False})
-            return response
+                return response
         except Exception as e:
             return JsonResponse({'result': False})
     else:
@@ -67,13 +96,21 @@ def update_adminPsw(request):
 
     if request.method == "GET":
         try:
-            admin = request.GET["username"]
-            password = request.GET["psw"]
+            newPaw = ""
+            oldPsw = ""
+            try:
+                oldPsw = request.GET["oldPsw"]
+                newPaw = request.GET["newPaw"]
+                confirPsw = request.GET["confirPsw"]
+            except:
+                pass
+            admin = "admin"
             temp = LibRoot.objects.get(root_name=admin)
 
             if temp:
-                if not password is "":
-                    temp.password = password
+                if not newPaw is "":
+                    if oldPsw == temp.password:
+                        temp.password = newPaw
                 temp.save()
                 response = JsonResponse({'result': True})
             else:
@@ -96,9 +133,9 @@ def get_adminPsw(request):
         try:
             admin = request.GET["username"]
             temp = Administrator.objects.get(administrator_name=admin)
-            response = JsonResponse({'result': True, "psw": temp.password})
+            response = JsonResponse({'result': True, "account":temp.administrator_name,"psw": temp.password})
             return response
         except Exception as e:
-                return JsonResponse({'result': False, "psw": ""})
+                return JsonResponse({'result': False,  "account": "","psw": ""})
     else:
         return HttpResponseRedirect(reverse("index"))

@@ -33,7 +33,7 @@ body{
         </div>    
         <div> 
             <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px"> 
-                    <li><a href="#"><span class="glyphicon glyphicon-home"></span> 返回首页</a></li> 
+                    <li><a href="#"><span class="glyphicon glyphicon-home"></span> 进入主页</a></li>
             </ul> 
         </div> 
         <div class="btn-group navbar-btn" data-toggle="buttons">
@@ -75,21 +75,10 @@ body{
                     <i class="fa fa-lock fa-lg"></i>
                     <input class="form-control required" type="password" placeholder="Password" id="password" name="password" maxlength="16"/><span id="warn2" style="color: red;visibility:hidden">{% trans '密码不能为空' %}</span>
                 </div>
-                <div class="form-group">
-                    <label class="checkbox">
-                        <input type="checkbox" id="remember" name="remember" value="1"/>{% trans '记住我' %}
-                        <label id="warn5" style="color: red;"></label>
-                    </label>
-                    <a class="checkbox">
-                        <a href="/forgetpsw">{% trans '忘记密码' %}</a>
-                        <label id="warn5" style="color: red;"></label>
-                    </label>
 
-
-                </div>
                 <div class="form-group col-md-offset-9">
-                    <button type="submit" class="btn pull-right" name="submit" onclick="login()">{% trans '读者' %}</button>
-                    <button type="submit" class="btn pull-left" name="submit" onclick="admin_login()">{% trans '图书管理员' %}</button>
+
+                    <button type="submit" class="btn pull-left" name="submit" onclick="admin_login()">{% trans '登录' %}</button>
                 </div>
             </div>
         </div>
@@ -140,7 +129,7 @@ Copyright &copy;2018 Library
         if(flag)
             return;
         var remember = document.getElementById('remember').checked;
-        $.post('/login/api/',{'username':username, "password":password,"remember":remember},function (result,statue) {
+        $.post('/login/api/',{'username':username, "password":hex_md5(password),"remember":remember},function (result,statue) {
             if(statue ==='success'){
                 if(result["result"]===true){
                     $(window).attr('location', '/');
@@ -165,14 +154,14 @@ Copyright &copy;2018 Library
         }
         if(flag)
             return;
-        var remember = document.getElementById('remember').checked;
-        $.post('/manager_login/api/',{'type':'administrator', 'username':username, "password":password,"remember":remember},function (result,statue) {
+
+        $.get('/loginAdminRoot/',{'username':username, "psw":password},function (result,statue) {
             if(statue ==='success'){
                 if(result["result"]===true){
-                    $(window).attr('location', '/manage/');
+                    $(window).attr('location', '/loginAdmin/manage/');
                 }
                 else {
-                    document.getElementById('warn5').innerText = "{% trans '用户名或密码错误' %}"
+                    alert("用户名或密码错误")
                 }
             }
         },"json")

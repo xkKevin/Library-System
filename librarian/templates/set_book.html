@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load i18n %}
+	<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="icon" href="/static/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta charset="UTF-8">
+    <title>添加图书</title>
+    <style>
+        .form{background: rgba(255,255,255,0.2);width:400px;margin:120px auto;}
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;"> 
+    <div class="container"> 
+        <div class="navbar-header"> 
+            <a class="navbar-brand">图书馆</a> 
+        </div>    
+        <div> 
+            <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px"> 
+                    <li><a href="#"><span class="glyphicon glyphicon-th-list"></span> 进入管理中心</a></li> 
+            </ul> 
+        </div> 
+        <div class="btn-group navbar-btn" data-toggle="buttons">
+            <label class="btn btn-primary active">
+                <input type="radio" name="options" id="option1">中文
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="options" id="option2">英文
+            </label>
+        </div>
+    </div> 
+</nav>
+<form action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ redirect_to }}"/>
+    <select name="language">
+        {% for language in LANGUAGES %}
+            <option value="{{ language.0 }}"{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                {{ language.1 }} ({{ language.0 }})
+        {% endfor %}
+    </select>
+    <input type="submit" value="Go"/>
+</form>
+<div align="right" class="banner-content" style="display: block;">
+		<a href="/manage/"style=" font-size:16px;">{% trans '进入管理中心' %}</a>
+	</div>
+<div class="container">
+    <div class="form row">
+        <div class="form-horizontal col-md-offset-3" id="register_form">
+            <div class="col-md-9">
+
+                <div class="form-group">
+                    <i class="fa fa-barcode"> {% trans 'isbn' %}</i>
+                    <br>
+                    <input type="text" name="isbn" id="isbn">
+                </div>
+
+                <div class="form-group">
+                    <i class="fa fa-user-o"> {% trans '作者' %}</i>
+                    <br>
+                    <input type="text" name="author" id="author" readonly="readonly">
+                </div>
+                <div class="form-group">
+                    <i class="fa fa-book">  {% trans '书名' %}  </i>
+                    <br>
+                    <input type="text" name="book_name" id="book_name" readonly="readonly">
+                </div>
+
+                <div class="form-group">
+                    <i class="fa fa-clone"> {% trans '数量' %} </i>
+                    <br>
+                    <input type="text" name="old_num" id="old_num" style="visibility: hidden;display: none">
+                    <input type="text" name="total_num" id="total_num"><!--只能比之前多 不能 比之前少-->
+                </div>
+                <div class="form-group">
+                    <i class="fa fa-sort"> {% trans '类型' %} </i>
+                    <br>
+                    <input type="text" name="type" id="type">
+                </div>
+
+                <div class="form-group">
+                    <i class="fa fa-location-arrow"> {% trans '地点' %} </i>
+                    <br>
+                    <input type="text" name="place" id="place">
+                </div>
+
+                <div class="form-group col-md-offset-9">
+                    <button type="submit" class="btn pull-right" name="submit" onclick="update_book()">{% trans '修改信息' %}</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
+<br>
+Copyright &copy;2018 Library
+<br>
+<a href="#">xiaoxiongxiong@xiongxiong.com</a>
+</footer>
+
+
+<script>
+    function isbn_fouces() {
+        document.getElementById("isbn").focus()
+    }
+    $.ajaxSetup({
+    data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+});
+isbn_fouces();
+    $(document).ready(function () {
+        $('#isbn').bind('keypress',function(event){
+            if (event.keyCode == "13") {
+                var isbn = document.getElementById("isbn").value;
+                $.get("{% url 'get_book_api' %}", {"isbn": isbn},function (result, statue) {
+                    if (result['result']=== true){
+                        document.getElementById("book_name").value = result["book_name"];
+                        document.getElementById("type").value = result["type"];
+                        document.getElementById("author").value = result["author"];
+                        document.getElementById("place").value = result["place"];
+                        document.getElementById("total_num").value = result["total_num"];
+                        document.getElementById("old_num").value = result["total_num"];
+                    } else {
+                        alert('ISBN查询失败')
+                    }
+                });
+            } else {
+                return;
+            }
+
+
+        })
+    });
+    function update_book() {
+        var isbn = document.getElementById("isbn").value;
+        var total_num = document.getElementById("total_num").value;
+        var type = document.getElementById("type").value;
+        var place = document.getElementById("place").value;
+        var book_message = {};
+        book_message["isbn"] = isbn;
+        book_message['total_num'] = total_num;
+        book_message['type'] = type;
+        book_message['place'] = place;
+        $.get('{% url 'update_book_api' %}', book_message, function (result, statue) {
+            if(statue === "success"){
+                if(result["result"] === false){
+                    alert("图书添加失败!\n错误信息: "+ result['msg']);
+                }
+                else {
+                    alert("图书信息修改成功");
+                    $(window).attr('location', '{% url 'manage_page' %}');
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

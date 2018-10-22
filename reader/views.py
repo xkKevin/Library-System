@@ -11,7 +11,19 @@ from django.urls import reverse
 from librarian.models import ReserveOrder, BorrowOrder
 # import datetime
 # from datetime import timedelta
+def forget_passwd_page(request):
+    return render(request, 'forget_passwd.html')
 
+def change_passwd_page(request):
+    '''
+    修改密码
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == "None":
+        return HttpResponseRedirect(reverse("login"))
+    return render(request, 'change_passwd.html')
 
 def login(request):
     '''
@@ -130,6 +142,7 @@ def user_message(request):
     except:
         return HttpResponseRedirect(reverse("login"))
 
+
 def sendEmailToChangePsw(request):
     if request.method == "GET":
         try:
@@ -144,7 +157,7 @@ def sendEmailToChangePsw(request):
                 salt = ''.join(sa)
                 code = salt
                 s = SendEmail()
-                s.send("图书管理系统密码修改", code, "825662106@qq.com")
+                s.send("图书管理系统密码修改", temp.password, temp.email)
                 s.close_smtp()
                 response = JsonResponse({'result': True, "code": code})
             else:
