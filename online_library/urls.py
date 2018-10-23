@@ -65,6 +65,7 @@ urlpatterns = [
     url(r'^search_book/api/$', librarian_views.search_book_api, name="search_book_api"),
     url(r'^changePsw/api/$', reader_views.sendEmailToChangePsw, name="change_reader_psw"),
     url(r'^forgetpsw/$', reader_views.forget_passwd_page, name="forget_reader_psw"),
+    url(r'^createLib/$', administrator_views.create_lib, name="create_lib"),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
 ]

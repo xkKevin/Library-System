@@ -3,10 +3,45 @@
 <link rel="stylesheet" href="/static/css/exlchi.css" type="text/css">
         <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
     <link rel="icon" href="/static/images/favicon.ico">
+    	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/bootstrap.min.js"></script>
+	<script src="/static/js/jquery.min.js"> </script>
+  <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <title>Search Results</title>
 </head>
 {% load i18n %}
 <body id="body">
+
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand">Bibliosoft</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px">
+                <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home"></span> {% trans '返回首页' %}</a></li>
+                <li><a href="/user_message/"><span class="h5"></span>{% trans '个人中心' %}</a></li>
+            </ul>
+        </div>
+        <div class="btn-group navbar-btn" data-toggle="buttons">
+                <form action="{% url 'set_language' %}" method="post" id="lang">
+                {% csrf_token %}
+                <input type="hidden" id="lang_s" name="language" value="en">
+                <input name="next" type="hidden" value="{{ redirect_to }}"/>
+                <label class="btn btn-primary active"  onclick="test('zh-hans')">
+                    中文
+                </label>
+                <label class="btn btn-primary" onclick="test('en')">
+                    English
+                </label>
+                </form>
+        </div>
+    </div>
+</nav>
+
+<!--
 <form action="{% url 'set_language' %}" method="post">
     {% csrf_token %}
     <input name="next" type="hidden" value="{{ redirect_to }}"/>
@@ -22,37 +57,36 @@
     <span class="h5"><a href="/">{% trans '返回主页' %}</a></span>|
     <span class="h5"><a href="/user_message/">{% trans '个人中心' %}</a></span>
 </div>
-<div id="search">
-<img id="logo" style="width: 165px" src="/static/images/book_logo.png">
-<br>
-<br>
-<table id="search" >
-    <tbody>
-        <tr>
-            <td id="col1"></td>
-            <td id="col2">
-                    <form name="cclform" >
-                        <input style="width: 300px;visibility: hidden"  >
-                            <select name="find_code" id="find_code">
-                                <option value="all_type">{% trans '所有字段' %}</option>
-{#                                <option value="author">作者</option>#}
-{#                                <option value="isbn">ISBN</option>#}
-                                <option value="history">{% trans '历史' %}</option>
-                                <option value="literature">{% trans '文学' %}</option>
-                                <option value="philosophy">{% trans '哲学' %}</option>
-                                <option value="computer">{% trans '计算机' %}</option>
-                            </select>
-                        <input autocomplete="off" style="width:30%" name="request" value="" id="find_text"> &nbsp;
-                        <span id="refine"></span>
-                        <input id="lookup" type="button" value="{% trans '检索' %}" onclick="result_search()">
-                        </form>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div align="center" style="margin-top:50px;"><img width="160px" src="/static/images/book_logo.png" /></div>
+-->
 
-<span><br></span>
-<span><br></span>
+<div id="search" style="margin-top:40px;" align="center">
+    <img width="160px" src="/static/images/book_logo.png" />
+    <table id="search" >
+        <tbody>
+            <tr>
+                <td id="col2">
+                        <form name="cclform" >
+                            <input style="width: 410px;visibility: hidden"  >
+                                <select name="find_code" id="find_code">
+                                    <option value="all_type">{% trans '所有字段' %}</option>
+    {#                                <option value="author">作者</option>#}
+    {#                                <option value="isbn">ISBN</option>#}
+                                    <option value="history">{% trans '历史' %}</option>
+                                    <option value="literature">{% trans '文学' %}</option>
+                                    <option value="philosophy">{% trans '哲学' %}</option>
+                                    <option value="computer">{% trans '计算机' %}</option>
+                                </select>
+                            <input autocomplete="off" style="width:30%" name="request" value="" id="find_text"> &nbsp;
+                            <span id="refine"></span>
+                            <input id="lookup" type="button" value="{% trans '检索' %}" onclick="result_search()">
+                            </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+<br/>
 </div>
 <hr class="itemsep" size="20">
 <div id="result">
@@ -110,6 +144,13 @@
 {% endfor %}
 
 </div>
+<footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
+<br>
+Copyright &copy;2018 Library
+<br>
+<a href="#">xiaoxiongxiong@xiongxiong.com</a>
+</footer>
 <script type="application/javascript">
     $("#body").on('click', '.button' ,function(){
         var id = $(this).attr("id");
@@ -163,6 +204,12 @@
             }
         })
     });
+    function test(str){
+        var li=document.getElementById("lang").getElementsByTagName("input");
+        li[1].value=str;
+        document.getElementById("lang").submit();
+        //submit
+    }
 </script>
 </body>
 </html>

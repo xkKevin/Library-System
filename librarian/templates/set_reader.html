@@ -44,17 +44,21 @@
         </div>    
         <div> 
             <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px"> 
-                    <li><a href="#"><span class="glyphicon glyphicon-home"></span> 返回首页</a></li> 
-                    <li><a href="#"><span class="glyphicon glyphicon-th-list"></span> 进入管理中心</a></li> 
+                <li><a href="/manage/"><span class="glyphicon glyphicon-th-list"></span> {% trans '进入管理中心' %}</a></li>
             </ul> 
         </div> 
         <div class="btn-group navbar-btn" data-toggle="buttons">
-            <label class="btn btn-primary active">
-                <input type="radio" name="options" id="option1">中文
-            </label>
-            <label class="btn btn-primary">
-                <input type="radio" name="options" id="option2">英文
-            </label>
+                <form action="{% url 'set_language' %}" method="post" id="lang">
+                {% csrf_token %}
+                <input type="hidden" id="lang_s" name="language" value="en">
+                <input name="next" type="hidden" value="{{ redirect_to }}"/>
+                <label class="btn btn-primary active"  onclick="test('zh-hans')">
+                    中文
+                </label>
+                <label class="btn btn-primary" onclick="test('en')">
+                    English
+                </label>
+                </form>
         </div>
     </div> 
 </nav>
@@ -114,7 +118,7 @@ Copyright &copy;2018 Library
     function update_reader() {
         var new_username = document.getElementById("username").value;
         if(new_username === ""){
-            alert("{% trans "用户名不能空!" %}");
+            alert("{% trans "用户名不能为空!" %}");
             return
         }
         var email = document.getElementById("email").value;
@@ -185,8 +189,12 @@ Copyright &copy;2018 Library
         }
     }
     );
-</script>
-<script>
+        function test(str){
+        var li=document.getElementById("lang").getElementsByTagName("input");
+        li[1].value=str;
+        document.getElementById("lang").submit();
+        //submit
+    }
 </script>
 </body>
 

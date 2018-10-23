@@ -99,21 +99,26 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;"> 
     <div class="container"> 
         <div class="navbar-header"> 
-            <a class="navbar-brand">图书馆</a> 
+            <a class="navbar-brand">Bibliosoft</a>
         </div>    
         <div> 
-            <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px"> 
-                <li><a href="#"><span class="glyphicon glyphicon-home"></span> 首页</a></li> 
-                <li><a href="#"><span class="glyphicon glyphicon-off"></span> 注销</a></li>  
+            <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px">
+                <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home"></span> {% trans '返回首页' %}</a></li>
+
             </ul> 
         </div> 
         <div class="btn-group navbar-btn" data-toggle="buttons">
-            <label class="btn btn-primary active">
-                <input type="radio" name="options" id="option1">中文
-            </label>
-            <label class="btn btn-primary">
-                <input type="radio" name="options" id="option2">英文
-            </label>
+                <form action="{% url 'set_language' %}" method="post" id="lang">
+                {% csrf_token %}
+                <input type="hidden" id="lang_s" name="language" value="en">
+                <input name="next" type="hidden" value="{{ redirect_to }}"/>
+                <label class="btn btn-primary active"  onclick="test('zh-hans')">
+                    中文
+                </label>
+                <label class="btn btn-primary" onclick="test('en')">
+                    English
+                </label>
+                </form>
         </div>
     </div> 
 </nav>
@@ -136,13 +141,8 @@
 	
 	</div>
     <div style="text-align:center;"><img src="/static/images/book_logo.png" style="vertical-align:middle;" width="210"  /></div>
+	<br>
 
-		
-	<br>
-	<br>
-	<br>
-	
-	
 <div class="container">
    
     <div class="row">
@@ -163,7 +163,7 @@
             </ul>
         </div>
         <div class="input-group col-md-3" style="width: 600px;margin-left: auto;margin-right: auto" >
-			<input type="text" class="form-control" id="search_input"  placeholder="请输入用户名：" />
+			<input type="text" class="form-control" id="search_input"  placeholder="{% trans '请输入用户名：' %}" />
 			<span class="input-group-btn">
 				<button class="btn btn-info btn-search" onclick="search_user_message()">{% trans '查找' %}</button>
 			</span>
@@ -193,9 +193,7 @@
 
     <hr>
             <h2 id="section-2" style="display:block; height:50px; width:400px">{% trans '处理预约书籍' %}</h2>
-           
-           
-	
+
 
 <table align="center" id="tab" width="300px"  class="table table-striped">
 	
@@ -329,16 +327,16 @@ Copyright &copy;2018 Library
         user_parent.appendChild(td_2);
         var td_3 = document.createElement("td");
         var debt_button = document.createElement("button");
-        debt_button.innerText = "罚金";
+        debt_button.innerText = "{% trans '罚金' %}";
         td_3.appendChild(debt_button);
         var td_4 = document.createElement("td");
         var delete_user_button = document.createElement("button");
-        delete_user_button.innerText = "删除";
+        delete_user_button.innerText = "{% trans '删除' %}";
         delete_user_button.setAttribute("onclick", "delete_reader("+"\""+user["user_name"]+"\""+")");
         td_4.appendChild(delete_user_button);
         var td_5 = document.createElement("td");
         var edit_user_button = document.createElement("button");
-        edit_user_button.innerText = "编辑";
+        edit_user_button.innerText = "{% trans '编辑' %}";
         edit_user_button.setAttribute("onclick", "$(window).attr('location', '/update_reader/?username="+user["user_name"]+"&email="+user["email"]+"');");
         td_5.appendChild(edit_user_button);
         user_parent.appendChild(td_3);
@@ -424,7 +422,12 @@ Copyright &copy;2018 Library
                 }
         });
     }
-
+        function test(str){
+        var li=document.getElementById("lang").getElementsByTagName("input");
+        li[1].value=str;
+        document.getElementById("lang").submit();
+        //submit
+    }
 </script>
 </body>
 </html>

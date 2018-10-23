@@ -17,20 +17,25 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;"> 
     <div class="container"> 
         <div class="navbar-header"> 
-            <a class="navbar-brand">图书馆</a> 
+            <a class="navbar-brand">Bibliosoft</a>
         </div>    
         <div> 
             <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px"> 
-                    <li><a href="#"><span class="glyphicon glyphicon-th-list"></span> 进入管理中心</a></li> 
+                    <li><a href="/manage/"><span class="glyphicon glyphicon-th-list"></span> {% trans '进入管理中心' %}</a></li>
             </ul> 
         </div> 
         <div class="btn-group navbar-btn" data-toggle="buttons">
-            <label class="btn btn-primary active">
-                <input type="radio" name="options" id="option1">中文
-            </label>
-            <label class="btn btn-primary">
-                <input type="radio" name="options" id="option2">英文
-            </label>
+                <form action="{% url 'set_language' %}" method="post" id="lang">
+                {% csrf_token %}
+                <input type="hidden" id="lang_s" name="language" value="en">
+                <input name="next" type="hidden" value="{{ redirect_to }}"/>
+                <label class="btn btn-primary active"  onclick="test('zh-hans')">
+                    中文
+                </label>
+                <label class="btn btn-primary" onclick="test('en')">
+                    English
+                </label>
+                </form>
         </div>
     </div> 
 </nav>
@@ -157,6 +162,12 @@ isbn_fouces();
                 }
             }
         })
+    }
+        function test(str){
+        var li=document.getElementById("lang").getElementsByTagName("input");
+        li[1].value=str;
+        document.getElementById("lang").submit();
+        //submit
     }
 </script>
 </body>

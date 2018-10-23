@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>个人信息</title>
+<title>Admin Page</title>
  <link rel="icon" href="/static/images/favicon.ico">
 	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <script src="/static/js/bootstrap.min.js"></script>
@@ -66,7 +66,7 @@
      zoom: 1;
     }
 
-		div {
+    div {
      display: block;
    }
 		tr.t1{background:hsla(165,35%,50%,0.2);height:20px;}
@@ -112,27 +112,35 @@ $(document).ready(function(){
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand">图书馆</a>
+                <a class="navbar-brand">Bibliosoft</a>
             </div>
             <div>
                 <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px">
-                    <li><a href="#"><span class="glyphicon glyphicon-home"></span>{% trans "首页" %}</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-off"></span> 注销</a></li>
+                    <li><a href="{% url 'admin_login' %}"><span class="glyphicon glyphicon-home"></span> {% trans '返回登录页面' %}</a></li>
                 </ul>
             </div>
             <div class="btn-group navbar-btn" data-toggle="buttons">
-                <label class="btn btn-primary active">
-                    <input type="radio" name="options" id="option1">中文
+                <form action="{% url 'set_language' %}" method="post" id="lang">
+                {% csrf_token %}
+                <input type="hidden" id="lang_s" name="language" value="en">
+                <input name="next" type="hidden" value="{{ redirect_to }}"/>
+                <label class="btn btn-primary active"  onclick="test('zh-hans')">
+                    中文
                 </label>
-                <label class="btn btn-primary">
-                    <input type="radio" name="options" id="option2">英文
+                <label class="btn btn-primary" onclick="test('en')">
+                    English
                 </label>
-            </div>
+                </form>
+        </div>
         </div>
     </nav>
+    <br/>
+    <br/>
+    <br/>
+    <div class="title" align="center" tyle="margin-top: 50px;">
 
-    <div style="text-align:center;margin-top: 50px;">
-        <img src="librarian/static/images/Bibliosoft.png" style="vertical-align:middle;" width="210"  />
+                    <img src="/static/Bibliosoft.png" height="108"/>
+
     </div>
 
 
@@ -141,10 +149,10 @@ $(document).ready(function(){
     <div class="row" style="float: left;">
         <div class="col-xs-3" id="myScrollspy">
             <ul class="nav nav-tabs nav-stacked" id="myNav">
-                <li class="active"><a href="#section-1">生成账号</a></li>
-				<li><a href="#section-2">设置图书馆规则</a></li>
-                <li><a href="#section-3">管理图书管理员</a></li>
-				<li><a href="{% url 'admin_change_passwd' %}">修改本账户密码</a></li>
+                <li class="active"><a href="#section-1">{% trans '生成账号' %}</a></li>
+				<li><a href="#section-2">{% trans '设置图书馆规则' %}</a></li>
+                <li><a href="#section-3">{% trans '管理图书管理员' %}</a></li>
+				<li><a href="{% url 'admin_change_passwd' %}">{% trans '修改本账户密码' %}</a></li>
 
 
 
@@ -156,36 +164,34 @@ $(document).ready(function(){
         <div class="col-xs-9 " style="float: right;">
         <div id="section-1" style="position: relative;top: -50px;height: 0px;"></div>
         <hr>
-        <h2 style="display:block; height:50px; width:350px;">生成账号</h2>
+        <h2 style="display:block; height:50px; width:350px;">{% trans '生成账号' %}</h2>
 
 
 	   <form id="profile" class="setting-profile-form" action=" ">
     	 	 <table align="center"   width="40%" id="tab" >
-    		<tr class="t1"> <th width="30%" align="right">{% trans '管理员ID' %}:</th> <td class="line30" align="center"><input align="center" type="text" value="{{ lib_id  }}" name="user_id" placeholder="管理员id" readonly />
-         <tr class="t2"> <th width="25%" align="right">{% trans '管理员名' %}:</th> <td class="line30" align="center"><input  align="center" type="text" value="{{ lib_name }}" name="user_name" placeholder="管理员名" readonly />
-    		<tr class="t3"><th width="25%" align="right">{% trans '密码' %}:</th> <td class="line30" align="center"><input    type="password" name="password" value="{{ lib_password}}" placeholder="密码" readonly />
+    		<tr class="t1"> <th width="30%" align="right">{% trans '管理员ID' %}:</th> <td class="line30" align="center"><input align="center" type="text" value="{{ lib_id  }}" name="user_id" placeholder="{% trans '管理员ID' %}"  readonly/>
+         <tr class="t2"> <th width="25%" align="right">{% trans '管理员名' %}:</th> <td class="line30" align="center"><input  id="user_name" align="center" type="text" value="{{ lib_name }}" name="user_name" placeholder="{% trans '管理员名' %}"  />
+    		<tr class="t3"><th width="25%" align="right">{% trans '密码' %}:</th> <td class="line30" align="center"><input  id="psw"  type="password" name="password" value="{{ lib_password}}" placeholder="{% trans '密码' %}" />
     		</table>
 
 
 
         	<div id="login_click" align="center">
-                <a id="btlogin" href="#">{% trans '注册' %}</a>
+                <a id="btlogin" onclick="createLib()">{% trans '注册' %}</a>
             </div>
         </form>
         <div id="section-2" style="position: relative;top: -50px;"></div>
 		<hr>
 
 
-		<h2 style="display:block; height:50px; width:400px">设置图书馆规则</h2>
+		<h2 style="display:block; height:50px; width:400px">{% trans '设置图书馆规则' %}</h2>
 
 		<form id="profile2" class="setting-profile-form" method="POST" action=" ">
-			<table align="center"   width="40%" id="tab" >
-				<tr class="t1"> <th width="30%" align="right">{% trans '逾期罚金为' %}:</th> <td class="line30" align="center"><input align="center" type="text"  name="user_id" placeholder="用户id" readonly />
-				<tr class="t2"> <th width="25%" align="right">{% trans '归还期限为' %}:</th> <td class="line30" align="center"><input  align="center" type="text"  name="user_name" placeholder="用户名" readonly />
-				<tr class="t3"><th width="25%" align="right">{% trans '保证金额度为' %}:</th> <td class="line30" align="center"><input    type="email" name="email" placeholder="邮箱" readonly />
+			<table align="center"   width="45%" id="tab" >
+                <tr class="t1"> <th width="30%" align="right">{% trans '逾期罚金为' %}:</th> <td class="line30" align="center"><input align="center" type="text"  name="overdue_fine" placeholder="1"/><span style="width:45px;display:inline-block;">￥/{% trans '天' %}</span></td>
+                <tr class="t2"> <th width="30%" align="right">{% trans '归还期限为' %}:</th> <td class="line30" align="center"><input  align="center" type="text"  name="return_days" placeholder="30"/><span style="width:45px;display:inline-block;">{% trans '天' %}</span></td>
+                <tr class="t3"><th width="30%" align="right">{% trans '保证金额度为' %}:</th> <td class="line30" align="center"><input align="center" type="text" name="deposit_amount" placeholder="300"/><span style="width:45px;display:inline-block;">￥</span></td>
 			</table>
-
-
 
 			<div id="login_click" align="center">
 				<a id="btlogin" href="#">{% trans '修改' %}</a>
@@ -193,12 +199,12 @@ $(document).ready(function(){
         </form>
             <div id="section-3" style="position: relative;top: -50px;"></div>
 			<hr>
-			<h2 style="display:block; height:50px; width:400px">管理图书管理员</h2>
+			<h2 style="display:block; height:50px; width:400px">{% trans '管理图书管理员' %}</h2>
 
            		<div class="input-group col-md-3" style="width: 600px;margin-left: auto;margin-right: auto" align="center">
-                    <input id="libname" type="text" class="form-control" placeholder="请输入管理员ID：" />
+                    <input id="libname" type="text" class="form-control" placeholder="{% trans '请输入管理员ID：' %}" />
                     <span class="input-group-btn">
-                        <button class="btn btn-info btn-search"  onclick="searchLib()">查找</button>
+                        <button class="btn btn-info btn-search"  onclick="searchLib()">{% trans '查找' %}</button>
                     </span>
             	</div>
 
@@ -237,6 +243,23 @@ Copyright &copy;2018 Library
 
 </body>
 <script type="text/javascript">
+    function createLib() {
+        var name = $("#user_name").val();
+        var psw = $("#psw").val();
+        if(name!=""&&psw!=""){
+            $.get("/createLib/",{"name":name,"psw":psw},function (result,statue) {
+                if(statue === 'success') {
+                    if (result["result"] === true) {
+                        alert("{% trans '注册成功!' %}")
+                    } else {
+                        alert("{% trans '注册失败!' %}")
+                    }
+                }
+            })
+        }else {
+            alert("不能为空");
+        }
+    }
 
     function searchLib() {
         var libname = $("#libname").val();
@@ -285,6 +308,12 @@ Copyright &copy;2018 Library
         lib.appendChild(delete_librarian);
         lib.appendChild(see_passwd_button);
 
+    }
+    function test(str){
+        var li=document.getElementById("lang").getElementsByTagName("input");
+        li[1].value=str;
+        document.getElementById("lang").submit();
+        //submit
     }
 </script>
 </html>

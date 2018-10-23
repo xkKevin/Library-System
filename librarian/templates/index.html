@@ -8,6 +8,11 @@
     <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
     <link href="/static/css/style.css" rel="stylesheet" type="text/css">
     <link href="/static/css/index.css" rel="stylesheet" type="text/css">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="icon" href="/static/images/favicon.ico">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href=/static/font/css/font-awesome.min.css rel="stylesheet">
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <style type="text/css">
     body{
@@ -20,18 +25,48 @@
 </style>
 </head>
 <body>
-<form action="{% url 'set_language' %}" method="post">
-    {% csrf_token %}
-    <input name="next" type="hidden" value="{{ redirect_to }}"/>
-    <select name="language">
-        {% for language in LANGUAGES %}
-            <option value="{{ language.0 }}"{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
-                {{ language.1 }} ({{ language.0 }})
-        {% endfor %}
-    </select>
-    <input type="submit" value="Go"/>
-</form>
-<div style="width: 400px;text-align:right;float:right;position: absolute;right: 200px;top:0px;">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;">
+    <div class="container">
+	    <div class="navbar-header">
+	        <a class="navbar-brand">Bibliosoft</a>
+	    </div>
+	    <div>
+	        <ul class="nav navbar-nav navbar-right" style="left:0px; top:0px">
+                <!--
+	            <li><a href="/login/"><span class="glyphicon glyphicon-user"></span> 登录</a></li>
+	            <li><a href="#"><span class="glyphicon glyphicon-off"></span> 注销</a></li>
+                -->
+                {% if login == True %}
+                    {% if username == 'root' %}
+                    <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-user"></span>{% trans '进入管理中心' %}</a></li>
+                    {% else %}
+                    <li><a href="/user_message/"><span></span>{% trans '当前用户' %}:{{ username }}</a></li>
+                {% endif %}
+
+                    <li><a href="/clear_message/">| <span class="glyphicon glyphicon-off"></span> {% trans '注销' %}</a></li>
+                 {% else %}
+                     <li><a href="/login/"><span class="glyphicon glyphicon-user"></span>{% trans '登录' %}</a></li>
+            {#         <span><a href="/register/">{% trans '注册' %}</a></span>#}
+                 {% endif %}
+	        </ul>
+	    </div>
+    	<div class="btn-group navbar-btn" data-toggle="buttons">
+                <form action="{% url 'set_language' %}" method="post" id="lang">
+                {% csrf_token %}
+                <input type="hidden" id="lang_s" name="language" value="en">
+                <input name="next" type="hidden" value="{{ redirect_to }}"/>
+                <label class="btn btn-primary active"  onclick="test('zh-hans')">
+                    中文
+                </label>
+                <label class="btn btn-primary" onclick="test('en')">
+                    English
+                </label>
+                </form>
+        </div>
+    </div>
+</nav>
+<!--
+<div style="width: 400px;text-align:right;float:right;position: absolute;right: 200px;margin-top:50px;">
      {% if login == True %}
          {% if username == 'root' %}
              <span><a href="{% url 'manage_page' %}">{% trans '进入管理中心' %}</a></span>
@@ -46,14 +81,16 @@
      {% endif %}
 
 </div>
+-->
 <div id="container">
 	<div id="bd">
         <div id="main">
-        	<h1 class="title">
+        	<div class="title" align="center">
 
-                    <img src="/static/images/logo.png" height="108" width="519"/>
+                    <img src="/static/images/Bibliosoft.png" height="108"/>
 
-            </h1>
+            </div>
+            <br/><br/>
             <div class="nav ue-clear">
             	<ul class="searchList">
                     <li class="searchItem current" data-type="all_type">{% trans '全部' %}</li>
@@ -65,12 +102,19 @@
             </div>
             <div class="inputArea">
                 <input type="text" class="searchInput" style="vertical-align:middle;width:600px;height:35px;" id="search_text">
-                    <button type="button" class="btn btn-success btn-lg" onclick="search()">{% trans '搜索' %}</button>
+                    <button class="btn btn-success"  onclick="search()">{% trans '搜索' %}</button>
             </div>
 
 </div>
     </div>
 </div>
+<footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
+<br>
+Copyright &copy;2018 Library
+<br>
+<a href="#">xiaoxiongxiong@xiongxiong.com</a>
+</footer>
 <script type="text/javascript" src="/static/js/jquery.js"></script>
 <script type="text/javascript" src="/static/js/global.js"></script>
 <script type="text/javascript">
@@ -110,6 +154,12 @@
             }
         })
     });
+        function test(str){
+        var li=document.getElementById("lang").getElementsByTagName("input");
+        li[1].value=str;
+        document.getElementById("lang").submit();
+        //submit
+    }
 </script>
 </body>
 

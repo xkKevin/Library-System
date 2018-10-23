@@ -145,6 +145,8 @@ def update_readerByMe(request):
                 if not newPaw is "":
                     if oldPsw == temp.password:
                         temp.password = newPaw
+                    else:
+                        return JsonResponse({'result': False})
                 if not new_username is "":
                     temp.user_name = new_username
                 temp.save()

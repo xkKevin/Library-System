@@ -111,6 +111,8 @@ def update_adminPsw(request):
                 if not newPaw is "":
                     if oldPsw == temp.password:
                         temp.password = newPaw
+                    else:
+                        return JsonResponse({"result": False})
                 temp.save()
                 response = JsonResponse({'result': True})
             else:
@@ -121,6 +123,20 @@ def update_adminPsw(request):
     else:
         return HttpResponseRedirect(reverse("index"))
 
+def create_lib(request):
+    username = request.session.get('username', "None")
+    if username == 'anti_man':
+        if request.method == "GET":
+            libname = request.GET["name"];
+            psw = request.GET["psw"];
+            lib = Administrator();
+            lib.administrator_name = libname;
+            lib.password = psw;
+            lib.authority = 1;
+            lib.save();
+            return JsonResponse({'result': True})
+    else:
+        return JsonResponse({'result': False, "msg": "数据库保存错误"})
 
 def get_adminPsw(request):
     '''

@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>register</title>
+    <title>forget passwd</title>
     <script src="/static/js/md5.js" type="text/javascript"></script>
     <link rel="icon" href="/static/images/favicon.ico">
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -47,35 +47,24 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;"> 
         <div class="container"> 
             <div class="navbar-header"> 
-                <a class="navbar-brand">图书馆</a> 
+                <a class="navbar-brand">Bibliosoft</a>
             </div>    
             <div> 
                 <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px"> 
-                    <li><a href="#"><span class="glyphicon glyphicon-home"></span> 返回首页</a></li> 
-                    <li><a href="#"><span class="glyphicon glyphicon-th-list"></span> 进入管理中心</a></li> 
+                    <li><a href="/manage/"><span class="glyphicon glyphicon-th-list"></span> {% trans '返回登录界面' %}</a></li>
                 </ul> 
             </div>
 
-
-            <form action="{% url 'set_language' %}" method="post">
-                {% csrf_token %}
-            <input name="next" type="hidden" value="{{ redirect_to }}"/>
-                <select name="language">
-            {% for language in LANGUAGES %}
-                <option value="{{ language.0 }}"{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
-                    {{ language.1 }} ({{ language.0 }})
-            {% endfor %}
-                </select>
-            <input type="submit" value="Go"/>
-</form>
             <div class="btn-group navbar-btn" data-toggle="buttons">
-                <form action="{% url 'set_language' %}" method="post">
+                <form action="{% url 'set_language' %}" method="post" id="lang">
                 {% csrf_token %}
-                <label class="btn btn-primary active">
-                    <input type="radio" name="options" value="zh-hans" id="option1">中文
+                <input type="hidden" id="lang_s" name="language" value="en">
+                <input name="next" type="hidden" value="{{ redirect_to }}"/>
+                <label class="btn btn-primary active"  onclick="test('zh-hans')">
+                    中文
                 </label>
-                <label class="btn btn-primary">
-                    <input type="radio" name="options" value="en" id="option2" >English
+                <label class="btn btn-primary" onclick="test('en')">
+                    English
                 </label>
                 </form>
             </div>
@@ -182,8 +171,12 @@ Copyright &copy;2018 Library
         }
     }
     );
-</script>
-<script>
+        function test(str){
+        var li=document.getElementById("lang").getElementsByTagName("input");
+        li[1].value=str;
+        document.getElementById("lang").submit();
+        //submit
+    }
 </script>
 </body>
 
