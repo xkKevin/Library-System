@@ -101,8 +101,9 @@
                 </ul>
             </div>
             <div class="inputArea">
-                <input type="text" class="searchInput" style="vertical-align:middle;width:600px;height:35px;" id="search_text">
+                <input type="text" class="searchInput" style="vertical-align:middle;width:600px;height:35px;" id="search_text" />
                     <button class="btn btn-success"  onclick="search()">{% trans '搜索' %}</button>
+                <div id="warn1"></div>
             </div>
 
 </div>
@@ -131,6 +132,14 @@ Copyright &copy;2018 Library
     $.ajaxSetup({
     data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
 });
+
+    {#function checkBookName(obj) {#}
+    {#    if(obj.value===""){#}
+    {#        document.getElementById("warn1").innerHTML="<font color='red'>{% trans '请输入书名！' %}</font>";#}
+    {#    }else{#}
+    {#        document.getElementById("warn1").innerHTML="";#}
+    {#    }#}
+    {#}#}
     function search() {
         var type_attr = $('.current').attr('data-type');
         var type_dic = {"computer":"计算机","literature":"哲学" ,
@@ -140,6 +149,7 @@ Copyright &copy;2018 Library
 
         var book_name = $('.searchInput').val();
         if(book_name===""){
+            alert("{% trans '请输入书名！' %}");
             return;
         }
         {#var get_data = {"book_type":type_dic[type_attr],"book_name":book_name};#}

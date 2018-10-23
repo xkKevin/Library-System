@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-23 11:48+0800\n"
+"POT-Creation-Date: 2018-10-23 15:25+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -86,16 +86,9 @@ msgstr "管理图书管理员"
 msgid "修改本账户密码"
 msgstr "修改本账户密码"
 
-#: .\administrator\templates\admin2.html:172
-#: .\administrator\templates\admin2.html:216
-msgid "管理员ID"
-msgstr "管理员ID"
-
 #: .\administrator\templates\admin2.html:173
-#: .\administrator\templates\admin2.html:217
-#: .\librarian\templates\manager_page.html:244
-msgid "管理员名"
-msgstr "管理员名"
+msgid "图书管理员名"
+msgstr "图书管理员名"
 
 #: .\administrator\templates\admin2.html:174
 msgid "密码"
@@ -132,26 +125,76 @@ msgid "修改"
 msgstr "修改"
 
 #: .\administrator\templates\admin2.html:205
-msgid "请输入管理员ID："
-msgstr "请输入管理员ID"
+msgid "请输入管理员账户名："
+msgstr "请输入管理员账户名："
 
 #: .\administrator\templates\admin2.html:207
 #: .\librarian\templates\manager_page.html:168
 msgid "查找"
 msgstr "查找"
 
+#: .\administrator\templates\admin2.html:216
+#: .\librarian\templates\manager_page.html:244
+msgid "管理员名"
+msgstr "管理员名"
+
+#: .\administrator\templates\admin2.html:217
+msgid "管理员密码"
+msgstr "管理员密码"
+
 #: .\administrator\templates\admin2.html:218
+msgid "是否编辑"
+msgstr "是否编辑"
+
+#: .\administrator\templates\admin2.html:219
 msgid "是否删除"
 msgstr "是否删除"
 
-#: .\administrator\templates\admin2.html:219
+#: .\administrator\templates\admin2.html:220
 #: .\reader\templates\forget_passwd.html:92
 msgid "找回密码"
 msgstr "找回密码"
 
-#: .\administrator\templates\admin2.html:255
+#: .\administrator\templates\admin2.html:254
+msgid "注册成功!"
+msgstr "注册成功!"
+
+#: .\administrator\templates\admin2.html:256
+#: .\librarian\templates\add_reader.html:158
+#: .\reader\templates\register.html:136
+msgid "注册失败!"
+msgstr "注册失败！"
+
+#: .\administrator\templates\admin2.html:262
+#, fuzzy
+#| msgid "用户名不能为空"
+msgid "用户名不能为空！"
+msgstr "用户名不能为空"
+
+#: .\administrator\templates\admin2.html:264
+#, fuzzy
+#| msgid "密码不能为空"
+msgid "密码不能为空！"
+msgstr "密码不能为空"
+
+#: .\administrator\templates\admin2.html:281
 msgid "获取失败!"
 msgstr "获取失败!"
+
+#: .\administrator\templates\admin2.html:317
+#: .\librarian\templates\manager_page.html:184
+#: .\librarian\templates\manager_page.html:339
+msgid "编辑"
+msgstr "编辑"
+
+#: .\administrator\templates\admin2.html:323
+#: .\librarian\templates\manager_page.html:334
+msgid "删除"
+msgstr "删除"
+
+#: .\administrator\templates\admin2.html:329
+msgid "查看密码"
+msgstr "查看密码"
 
 #: .\administrator\templates\admin_change_passwd.html:35
 #: .\librarian\templates\add_book.html:24
@@ -274,11 +317,6 @@ msgstr "邮箱格式不正确"
 msgid "添加成功"
 msgstr "添加成功"
 
-#: .\librarian\templates\add_reader.html:158
-#: .\reader\templates\register.html:136
-msgid "注册失败!"
-msgstr "注册失败！"
-
 #: .\librarian\templates\add_reader.html:163
 msgid "注册信息错误"
 msgstr "注册信息错误"
@@ -332,6 +370,10 @@ msgstr "历史"
 msgid "搜索"
 msgstr "检索"
 
+#: .\librarian\templates\index.html:137 .\librarian\templates\index.html:151
+msgid "请输入书名！"
+msgstr "请输入书名！"
+
 #: .\librarian\templates\manager_page.html:106
 #: .\librarian\templates\search_results.html:24
 #: .\reader\templates\login.html:36 .\reader\templates\user_message.html:113
@@ -381,7 +423,6 @@ msgid "编辑书籍"
 msgstr "编辑书籍"
 
 #: .\librarian\templates\manager_page.html:161
-#: .\librarian\templates\set_reader.html:169
 msgid "删除信息"
 msgstr "删除信息"
 
@@ -419,11 +460,6 @@ msgstr "罚金"
 #: .\librarian\templates\manager_page.html:183
 msgid "删除用户"
 msgstr "删除用户"
-
-#: .\librarian\templates\manager_page.html:184
-#: .\librarian\templates\manager_page.html:339
-msgid "编辑"
-msgstr "编辑"
 
 #: .\librarian\templates\manager_page.html:202
 #: .\librarian\templates\manager_page.html:222
@@ -463,10 +499,6 @@ msgstr "缴纳金额"
 #: .\librarian\templates\manager_page.html:281
 msgid "删除成功"
 msgstr "删除成功"
-
-#: .\librarian\templates\manager_page.html:334
-msgid "删除"
-msgstr "删除"
 
 #: .\librarian\templates\manager_page.html:367
 msgid "借阅"
@@ -535,6 +567,12 @@ msgstr "修改成功"
 #: .\librarian\templates\set_reader.html:164
 msgid "修改失败!"
 msgstr "修改失败!"
+
+#: .\librarian\templates\set_reader.html:169
+#, fuzzy
+#| msgid "注册信息错误"
+msgid "信息错误"
+msgstr "注册信息错误"
 
 #: .\reader\templates\forget_passwd.html:54
 msgid "返回登录界面"
@@ -627,6 +665,9 @@ msgstr "书号"
 #: .\reader\templates\user_message.html:230
 msgid "是否有效"
 msgstr "是否有效"
+
+#~ msgid "管理员ID"
+#~ msgstr "管理员ID"
 
 #~ msgid "管理中心"
 #~ msgstr "管理中心"
