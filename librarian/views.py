@@ -1,9 +1,9 @@
 import datetime
 import json
 
-from django.core import serializers
+from tool.bar_code import BarCode
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, FileResponse
 from django.urls import reverse
 from django.utils import timezone
 from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder, Role
@@ -117,6 +117,27 @@ def update_reader_page(request):
     else:
         return HttpResponseRedirect(reverse("index"), )
 
+
+def download_book_bar_code_api(request, bar_num):
+    '''
+    下载条形码
+    :param request
+    :param bar_num:
+    :return:
+    '''
+    try:
+        result = BarCode.create_bar_code(bar_num)
+        if not result[0]:
+            return JsonResponse(request, {'result': False})
+        file = open(result[3], 'rb')
+        response = FileResponse(file)
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="%d.png"' % int(bar_num)
+        return response
+    except Exception as e:
+        return JsonResponse({'result': False, 'msg': str(e)})
+
+
 def update_readerByMe(request):
     '''
     管理员修改读者
@@ -195,7 +216,6 @@ def update_readerByMeInfo(request):
         return HttpResponseRedirect(reverse("index"))
 
 
-
 def update_reader(request):
     '''
     管理员修改读者
@@ -265,8 +285,7 @@ def get_reader_history(request):
                 resHis = ReserveOrder.objects.filter(user=person[0]['user_id']).values()
                 json_data = list(resHis)
                 resHis_json_data = json.dumps(json_data, cls=DateEncoder, ensure_ascii=False)
-
-                response = JsonResponse({'person': person_json_data,'borHis': bor_json_data, 'resHis': resHis_json_data})
+                response = JsonResponse({'person': person_json_data, 'borHis': bor_json_data, 'resHis': resHis_json_data})
                 return response
     else:
         return HttpResponseRedirect(reverse("index"))
@@ -325,7 +344,7 @@ def search_book(request):
     is_administrator = False
     username = request.session.get('username', "None")
     if username == "None":
-        return JsonResponse({"result": False, "msg": "未登录"})
+        return HttpResponseRedirect(reverse("login"))
     elif username == "root":
         is_administrator = True
     book_type = request.GET.get('book_type', None)

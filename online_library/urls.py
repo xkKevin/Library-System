@@ -18,7 +18,8 @@ from django.contrib import admin
 import librarian.views as librarian_views
 import reader.views as reader_views
 import administrator.views as administrator_views
-
+from online_library import settings
+from django.views.static import serve
 
 urlpatterns = [
     # 网页 url
@@ -33,6 +34,10 @@ urlpatterns = [
     url(r'^change_passwd/$', reader_views.change_passwd_page, name="change_passwd"),
     # 用户禁止注册 转由图书管理员注册读者 因而废弃该url
     # url(r'^register/$', reader_views.register, name="register"),
+    # 媒体目录 访问 书的条形码
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    # 下载书的条形码
+    url(r'^download/(\d+)/$', librarian_views.download_book_bar_code_api, name="download_bar_code"),
     url(r'^clear_message/$', librarian_views.clear_message, name="logout"),
     url(r'^user_message/$', reader_views.user_message, name="user_message"),
     url(r'^add_book/$', librarian_views.add_book, name="add_book"),
