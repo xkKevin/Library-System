@@ -1,4 +1,4 @@
-dp.sqlite3
+db.sqlite3
 __pycache__/
 m3u8/
 *.pyc
