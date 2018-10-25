@@ -3,16 +3,17 @@ import random
 from django.shortcuts import render
 from django.http import JsonResponse
 
-from reader.changePsw import SendEmail
+from tool.changePsw import SendEmail
 from reader.models import User
 import time
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from librarian.models import ReserveOrder, BorrowOrder
-# import datetime
-# from datetime import timedelta
+
+
 def forget_passwd_page(request):
     return render(request, 'forget_passwd.html')
+
 
 def change_passwd_page(request):
     '''
@@ -24,6 +25,7 @@ def change_passwd_page(request):
     if username == "None":
         return HttpResponseRedirect(reverse("login"))
     return render(request, 'change_passwd.html')
+
 
 def login(request):
     '''
@@ -165,26 +167,33 @@ def sendEmailToChangePsw(request):
             return response
         except:
             return JsonResponse({'result': False})
-def update_psw(request):
-        if request.method == "GET":
-            try:
-                username = request.GET["username"]
-                email = request.GET["email"]
-                password = request.GET["psw"]
-                temp = User.objects.get(user_name=username)
 
-                if temp:
-                    if not email is "":
-                        temp.email = email
-                    if not password is "":
-                        temp.password = password
-                    temp.save()
-                    response = JsonResponse({'result': True})
-                else:
-                    response = JsonResponse({'result': False})
-                return response
-            except Exception as e:
-                return JsonResponse({'result': False})
+
+def update_psw(request):
+    '''
+    更新密码
+    :param request:
+    :return:
+    '''
+    if request.method == "GET":
+        try:
+            username = request.GET["username"]
+            email = request.GET["email"]
+            password = request.GET["psw"]
+            temp = User.objects.get(user_name=username)
+
+            if temp:
+                if not email is "":
+                    temp.email = email
+                if not password is "":
+                    temp.password = password
+                temp.save()
+                response = JsonResponse({'result': True})
+            else:
+                response = JsonResponse({'result': False})
+            return response
+        except Exception as e:
+            return JsonResponse({'result': False})
 
 
 if __name__ == "__main__":
