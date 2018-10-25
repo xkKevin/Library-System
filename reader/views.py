@@ -25,6 +25,17 @@ def change_passwd_page(request):
         return HttpResponseRedirect(reverse("login"))
     return render(request, 'change_passwd.html')
 
+def change_passwd_page(request):
+    '''
+    修改密码
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == "None":
+        return HttpResponseRedirect(reverse("login"))
+    return render(request, 'change_passwd.html')
+
 def login(request):
     '''
     登陆

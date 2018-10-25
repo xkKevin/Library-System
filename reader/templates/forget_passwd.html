@@ -157,10 +157,10 @@ Copyright &copy;2018 Library
             $.post('/test_user_name/api/',{'username':$(this).val()},function (result, statue) {
                 if (statue === 'success') {
                     if (result["result"] === true) {
-                        document.getElementById("warn2").innerHTML = "<font color='green'>{% trans '不存在此用户' %}</font>";
+                        document.getElementById("warn2").innerHTML = "<font color='red'>{% trans '不存在此用户' %}</font>";
                     }
                     else {
-                        document.getElementById("warn2").innerHTML = "<font color='red'>{% trans '用户名可用' %}</font>";
+                        document.getElementById("warn2").innerHTML = "<font color='green'>{% trans '用户名可用' %}</font>";
                     }
                 }
 

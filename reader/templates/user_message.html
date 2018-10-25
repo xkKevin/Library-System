@@ -167,20 +167,21 @@ $(document).ready(function(){
 	
 	<form id="profile" class="setting-profile-form" method="POST" action=" ">
 	 <table align="center"   width="40%" id="tab" >
-		<tr class="t1"> <th width="30%" align="right">{% trans '用户ID' %}:</th> <td class="line30" align="center"><input align="center" type="text" value="{{ user_id  }}" name="user_id" placeholder="用户id" readonly />
-        <tr class="t2"> <th width="25%" align="right">{% trans '用户名' %}:</th> <td class="line30" align="center"><input  align="center" type="text" value="{{ user_name }}" name="user_name" placeholder="用户名" readonly />
-		<tr class="t3"><th width="25%" align="right">{% trans '邮箱' %}:</th> <td class="line30" align="center"><input    type="email" name="email" value="{{ user_email }}" placeholder="邮箱" readonly />
+         <tr class="t1"> <th width="30%" align="right">{% trans '用户ID' %}:</th> <td class="line30" align="center"><input align="center" type="text" value="{{ user_id  }}" name="user_id" placeholder="用户id" readonly /></td>
+         <tr class="t2"> <th width="25%" align="right">{% trans '用户名' %}:</th> <td class="line30" align="center"><input  align="center" type="text" value="{{ user_name }}" name="user_name" id="user_name" placeholder="用户名" /></td>
+         <tr class="t3"><th width="25%" align="right">{% trans '邮箱' %}:</th> <td class="line30" align="center"><input type="email" name="email" value="{{ user_email }}"  id="email" placeholder="邮箱"  /></td>
+         <input style="display: none" type="text" value="{{ user_name }}" name="user_name" id="old_name" />
 		</table>
 
     </form>
 	<div id="login_click" align="center">
-        <a id="btlogin" href="#">{% trans '修改' %}</a>
+        <a id="btlogin" onclick="changeInfo()">{% trans '修改' %}</a>
     </div>
             <hr>
             <h2 id="section-2" style="display:block; height:50px; width:400px">{% trans  '借阅记录' %}</h2>
 
            
-	<h4 style="display:block; height:50px; width:400px">{% trans  '罚金总额：' %}<span id="all_fine">0￥</span></h4>
+	<h4 style="display:block; height:50px; width:400px">{% trans  '罚金总额：' %}&nbsp;&nbsp;&nbsp;<span id="all_fine">0</span>&nbsp;￥</h4>
 
 <table align="center" id="tab" width="300px"  class="table table-striped">
 
@@ -261,7 +262,40 @@ Copyright &copy;2018 Library
 
 </body>
 <script type="text/javascript">
-        function test(str){
+    function isEmail(strEmail) {
+        if (strEmail.search(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) != -1) {
+            //document.getElementById("warn4").innerHTML="";
+            return true;
+        }
+        else{
+            //document.getElementById("warn4").innerHTML="<font color='red'>{% trans '邮箱格式不正确' %}</font>";
+            return false;
+        }
+    }
+    function changeInfo() {
+        var new_name = $("#user_name").val();
+        var email = $("#email").val();
+        var old_name = $("#old_name").val();
+        if(isEmail(email)==false){
+            alert("{% trans '邮箱格式不正确' %}");
+            return;
+        }
+        $.get("/manager/update_readerByMeInfo/",{"user_name":new_name,"email":email},function (result,statue) {
+            if(statue === 'success') {
+                if (result["result"] === true) {
+                    alert("{% trans '修改成功' %}");
+                    //页面跳转
+                    //$(window).attr('location', '{% url 'manager_add_reader' %}');
+                    if(old_name != new_name){
+                        $(window).attr('location', '{% url 'login' %}');
+                    }
+                } else {
+                    alert("{% trans '修改失败!' %}")
+                }
+            }
+        })
+    }
+    function test(str){
         var li=document.getElementById("lang").getElementsByTagName("input");
         li[1].value=str;
         document.getElementById("lang").submit();

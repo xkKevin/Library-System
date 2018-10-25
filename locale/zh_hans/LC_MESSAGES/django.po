@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-23 15:25+0800\n"
+"POT-Creation-Date: 2018-10-25 13:52+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgstr "系统管理员登录"
 
 #: .\administrator\templates\Adminlogin.html:66
 #: .\librarian\templates\add_reader.html:30
-#: .\librarian\templates\add_reader.html:188
+#: .\librarian\templates\add_reader.html:191
 #: .\librarian\templates\set_reader.html:30
 #: .\librarian\templates\set_reader.html:188
 #: .\reader\templates\forget_passwd.html:30
@@ -46,7 +46,7 @@ msgstr "用户名不能为空"
 #: .\administrator\templates\Adminlogin.html:70
 #: .\administrator\templates\admin_change_passwd.html:142
 #: .\librarian\templates\add_reader.html:38
-#: .\librarian\templates\add_reader.html:168
+#: .\librarian\templates\add_reader.html:171
 #: .\reader\templates\change_passwd.html:127
 #: .\reader\templates\forget_passwd.html:38 .\reader\templates\login.html:82
 #: .\reader\templates\register.html:55
@@ -160,7 +160,7 @@ msgid "注册成功!"
 msgstr "注册成功!"
 
 #: .\administrator\templates\admin2.html:256
-#: .\librarian\templates\add_reader.html:158
+#: .\librarian\templates\add_reader.html:161
 #: .\reader\templates\register.html:136
 msgid "注册失败!"
 msgstr "注册失败！"
@@ -200,7 +200,8 @@ msgstr "查看密码"
 #: .\librarian\templates\add_book.html:24
 #: .\librarian\templates\add_book.html:44
 #: .\librarian\templates\add_reader.html:54
-#: .\librarian\templates\add_reader.html:85 .\librarian\templates\index.html:41
+#: .\librarian\templates\add_reader.html:85
+#: .\librarian\templates\del_book.html:24 .\librarian\templates\index.html:41
 #: .\librarian\templates\index.html:72 .\librarian\templates\set_book.html:24
 #: .\librarian\templates\set_book.html:54
 #: .\librarian\templates\set_reader.html:47
@@ -233,11 +234,13 @@ msgid "两次密码不相同"
 msgstr "两次密码不相同"
 
 #: .\librarian\templates\add_book.html:51
+#: .\librarian\templates\del_book.html:53
 #: .\librarian\templates\set_book.html:62
 msgid "isbn"
 msgstr "ISBN"
 
 #: .\librarian\templates\add_book.html:56
+#: .\librarian\templates\del_book.html:59
 #: .\librarian\templates\result_json.html:13
 #: .\librarian\templates\search_results.html:104
 #: .\librarian\templates\set_book.html:68
@@ -245,6 +248,7 @@ msgid "作者"
 msgstr "作者"
 
 #: .\librarian\templates\add_book.html:61
+#: .\librarian\templates\del_book.html:64
 #: .\librarian\templates\manager_page.html:203
 #: .\librarian\templates\manager_page.html:223
 #: .\librarian\templates\set_book.html:73
@@ -286,10 +290,12 @@ msgid "添加图书"
 msgstr "添加图书"
 
 #: .\librarian\templates\add_book.html:125
+#: .\librarian\templates\set_book.html:134
 msgid "ISBN查询失败"
 msgstr "ISBN查询失败"
 
 #: .\librarian\templates\add_book.html:156
+#: .\librarian\templates\set_book.html:157
 msgid "图书添加失败!\\n错误信息: "
 msgstr "图书添加失败!\\n错误信息: "
 
@@ -313,26 +319,47 @@ msgstr "添加读者"
 msgid "邮箱格式不正确"
 msgstr "邮箱格式不正确"
 
-#: .\librarian\templates\add_reader.html:155
+#: .\librarian\templates\add_reader.html:158
 msgid "添加成功"
 msgstr "添加成功"
 
-#: .\librarian\templates\add_reader.html:163
+#: .\librarian\templates\add_reader.html:166
 msgid "注册信息错误"
 msgstr "注册信息错误"
 
-#: .\librarian\templates\add_reader.html:178
+#: .\librarian\templates\add_reader.html:181
 #: .\librarian\templates\set_reader.html:178
 #: .\reader\templates\forget_passwd.html:163
 #: .\reader\templates\register.html:148
 msgid "用户名可用"
 msgstr "用户名可用"
 
-#: .\librarian\templates\add_reader.html:181
+#: .\librarian\templates\add_reader.html:184
 #: .\librarian\templates\set_reader.html:181
 #: .\reader\templates\register.html:151
 msgid "用户名不可用"
 msgstr "用户名不可用"
+
+#: .\librarian\templates\del_book.html:48
+msgid "书籍ID"
+msgstr "书籍ID"
+
+#: .\librarian\templates\del_book.html:69
+msgid "删书缘由"
+msgstr "删书缘由"
+
+#: .\librarian\templates\del_book.html:72
+msgid "损坏"
+msgstr "损坏"
+
+#: .\librarian\templates\del_book.html:74
+msgid "丢失"
+msgstr "丢失"
+
+#: .\librarian\templates\del_book.html:80
+#: .\librarian\templates\manager_page.html:159
+msgid "删除书籍"
+msgstr "删除书籍"
 
 #: .\librarian\templates\index.html:43 .\librarian\templates\index.html:74
 msgid "当前用户"
@@ -370,7 +397,23 @@ msgstr "历史"
 msgid "搜索"
 msgstr "检索"
 
-#: .\librarian\templates\index.html:137 .\librarian\templates\index.html:151
+#: .\librarian\templates\index.html:113
+msgid "通知栏"
+msgstr "通知栏"
+
+#: .\librarian\templates\index.html:117
+msgid "标题"
+msgstr "标题"
+
+#: .\librarian\templates\index.html:118
+msgid "发布者"
+msgstr "发布者"
+
+#: .\librarian\templates\index.html:119
+msgid "发布日期"
+msgstr "发布日期"
+
+#: .\librarian\templates\index.html:181
 msgid "请输入书名！"
 msgstr "请输入书名！"
 
@@ -413,10 +456,6 @@ msgstr "罚金缴纳记录"
 #: .\librarian\templates\manager_page.html:158
 msgid "添加书籍"
 msgstr "添加图书"
-
-#: .\librarian\templates\manager_page.html:159
-msgid "删除书籍"
-msgstr "删除书籍"
 
 #: .\librarian\templates\manager_page.html:160
 msgid "编辑书籍"
@@ -550,6 +589,10 @@ msgstr "预约成功"
 msgid "修改信息"
 msgstr "修改信息"
 
+#: .\librarian\templates\set_book.html:160
+msgid "图书信息修改成功"
+msgstr "图书信息修改成功"
+
 #: .\librarian\templates\set_reader.html:82
 msgid "编辑用户"
 msgstr "编辑用户"
@@ -560,11 +603,13 @@ msgstr "用户名不能为空！"
 
 #: .\librarian\templates\set_reader.html:129
 #: .\librarian\templates\set_reader.html:161
+#: .\reader\templates\user_message.html:271
 msgid "修改成功"
 msgstr "修改成功"
 
 #: .\librarian\templates\set_reader.html:132
 #: .\librarian\templates\set_reader.html:164
+#: .\reader\templates\user_message.html:274
 msgid "修改失败!"
 msgstr "修改失败!"
 

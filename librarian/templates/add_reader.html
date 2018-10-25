@@ -141,14 +141,16 @@ Copyright &copy;2018 Library
             document.getElementById("warn4").innerHTML="<font color='red'>{% trans '邮箱格式不正确' %}</font>";
             return false;
         }
-
     }
     function add_reader() {
         var username = $("#username").val();
         var password = $("#password").val();
+        //var password = document.getElementById("password").value;
+        //alert(password+"askdjh");
         var email = $("#email").val();
         if(checkUserName()&&checkPassword()&&isEmail(email)){
-            password = hex_md5(password);
+            //password = hex_md5(password);
+
             $.post("/register/api/",{"password":password,"username":username, "email":email},function (result,statue) {
                 if(statue === 'success') {
                     if (result["result"] === true) {

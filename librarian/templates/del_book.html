@@ -8,22 +8,22 @@
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <meta charset="UTF-8">
-    <title>添加图书</title>
+    <title>delete book</title>
     <style>
         .form{background: rgba(255,255,255,0.2);width:400px;margin:120px auto;}
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;"> 
-    <div class="container"> 
-        <div class="navbar-header"> 
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;">
+    <div class="container">
+        <div class="navbar-header">
             <a class="navbar-brand">Bibliosoft</a>
-        </div>    
-        <div> 
-            <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px"> 
-                    <li><a href="/manage/"><span class="glyphicon glyphicon-th-list"></span> {% trans '进入管理中心' %}</a></li>
-            </ul> 
-        </div> 
+        </div>
+        <div>
+            <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px">
+                <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-th-list"></span> {% trans '进入管理中心' %}</a></li>
+            </ul>
+        </div>
         <div class="btn-group navbar-btn" data-toggle="buttons">
                 <form action="{% url 'set_language' %}" method="post" id="lang">
                 {% csrf_token %}
@@ -37,27 +37,18 @@
                 </label>
                 </form>
         </div>
-    </div> 
+    </div>
 </nav>
-<form action="{% url 'set_language' %}" method="post">
-    {% csrf_token %}
-    <input name="next" type="hidden" value="{{ redirect_to }}"/>
-    <select name="language">
-        {% for language in LANGUAGES %}
-            <option value="{{ language.0 }}"{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
-                {{ language.1 }} ({{ language.0 }})
-        {% endfor %}
-    </select>
-    <input type="submit" value="Go"/>
-</form>
-<div align="right" class="banner-content" style="display: block;">
-		<a href="/manage/"style=" font-size:16px;">{% trans '进入管理中心' %}</a>
-	</div>
+
 <div class="container">
     <div class="form row">
         <div class="form-horizontal col-md-offset-3" id="register_form">
             <div class="col-md-9">
-
+                <div class="form-group">
+                    <i class="fa fa-info-circle"> {% trans '书籍ID' %}</i>
+                    <br>
+                    <input type="text" name="book_id" id="book_id">
+                </div>
                 <div class="form-group">
                     <i class="fa fa-barcode"> {% trans 'isbn' %}</i>
                     <br>
@@ -67,36 +58,27 @@
                 <div class="form-group">
                     <i class="fa fa-user-o"> {% trans '作者' %}</i>
                     <br>
-                    <input type="text" name="author" id="author" readonly="readonly">
+                    <input type="text" name="author" id="author">
                 </div>
                 <div class="form-group">
                     <i class="fa fa-book">  {% trans '书名' %}  </i>
                     <br>
-                    <input type="text" name="book_name" id="book_name" readonly="readonly">
+                    <input type="text" name="book_name" id="book_name">
+                </div>
+                <div class="form-group">
+                    <i class="fa fa-book">  {% trans '删书缘由' %}  </i>
+                    <br>
+                    <td>
+						<label class="btn btn-primary"><input type="radio" name="del_reason" value="damage" checked="checked">{% trans '损坏' %}</label>
+                        &nbsp;
+                        <label class="btn btn-primary"><input type="radio" name="del_reason" value="loss">{% trans '丢失' %}</label>
+					</td>
                 </div>
 
-                <div class="form-group">
-                    <i class="fa fa-clone"> {% trans '数量' %} </i>
-                    <br>
-                    <input type="text" name="old_num" id="old_num" style="visibility: hidden;display: none">
-                    <input type="text" name="total_num" id="total_num"><!--只能比之前多 不能 比之前少-->
-                </div>
-                <div class="form-group">
-                    <i class="fa fa-sort"> {% trans '类型' %} </i>
-                    <br>
-                    <input type="text" name="type" id="type">
-                </div>
-
-                <div class="form-group">
-                    <i class="fa fa-location-arrow"> {% trans '地点' %} </i>
-                    <br>
-                    <input type="text" name="place" id="place">
-                </div>
 
                 <div class="form-group col-md-offset-9">
-                    <button type="submit" class="btn pull-right" name="submit" onclick="update_book()">{% trans '修改信息' %}</button>
+                    <button type="submit" class="btn pull-right" name="submit" onclick="del_book()">{% trans '删除书籍' %}</button>
                 </div>
-
             </div>
         </div>
     </div>
@@ -108,8 +90,6 @@ Copyright &copy;2018 Library
 <br>
 <a href="#">xiaoxiongxiong@xiongxiong.com</a>
 </footer>
-
-
 <script>
     function isbn_fouces() {
         document.getElementById("isbn").focus()
@@ -121,17 +101,16 @@ isbn_fouces();
     $(document).ready(function () {
         $('#isbn').bind('keypress',function(event){
             if (event.keyCode == "13") {
-                var isbn = document.getElementById("isbn").value;
-                $.get("{% url 'get_book_api' %}", {"isbn": isbn},function (result, statue) {
+                url = '/isbn/api/?isbn='+$(this).val();
+                $.get(url, function (result, statue) {
                     if (result['result']=== true){
                         document.getElementById("book_name").value = result["book_name"];
+                        document.getElementById("image_url").value = result["image_url"];
                         document.getElementById("type").value = result["type"];
                         document.getElementById("author").value = result["author"];
-                        document.getElementById("place").value = result["place"];
-                        document.getElementById("total_num").value = result["total_num"];
-                        document.getElementById("old_num").value = result["total_num"];
+                        document.getElementById("price").value = result["price"];
                     } else {
-                        alert('{% trans 'ISBN查询失败' %}')
+                        alert('ISBN查询失败')
                     }
                 });
             } else {
@@ -141,29 +120,40 @@ isbn_fouces();
 
         })
     });
-    function update_book() {
+   /* function add_book() {
         var isbn = document.getElementById("isbn").value;
+        var author = document.getElementById("author").value;
+        var book_name = document.getElementById("book_name").value;
+        var image_url = document.getElementById("image_url").value;
         var total_num = document.getElementById("total_num").value;
         var type = document.getElementById("type").value;
         var place = document.getElementById("place").value;
+        var price = document.getElementById("price").value;
         var book_message = {};
         book_message["isbn"] = isbn;
+        book_message['author'] = author;
+        book_message['image_url'] = image_url;
+        book_message['book_name'] = book_name;
         book_message['total_num'] = total_num;
         book_message['type'] = type;
         book_message['place'] = place;
-        $.get('{% url 'update_book_api' %}', book_message, function (result, statue) {
+        book_message['price'] = price;
+        $.post('/add_book/api/', book_message, function (result, statue) {
             if(statue === "success"){
                 if(result["result"] === false){
-                    alert("{% trans '图书添加失败!\n错误信息: ' %}"+ result['msg']);
+                    alert("图书添加失败!\n错误信息: "+ result['msg']);
                 }
                 else {
-                    alert("{% trans '图书信息修改成功' %}");
-                    $(window).attr('location', '{% url 'manage_page' %}');
+                    window.location.href = ''
                 }
             }
         })
-    }
-        function test(str){
+    }*/
+   function del_book() {
+       alert("还没有加逻辑！")
+   }
+
+    function test(str){
         var li=document.getElementById("lang").getElementsByTagName("input");
         li[1].value=str;
         document.getElementById("lang").submit();

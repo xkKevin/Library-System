@@ -159,6 +159,41 @@ def update_readerByMe(request):
     else:
         return HttpResponseRedirect(reverse("index"))
 
+def update_readerByMeInfo(request):
+    '''
+
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == "None" :
+        return HttpResponseRedirect(reverse("index"))
+    if request.method == "GET":
+
+        email = ""
+        new_username = ""
+        try:
+            try:
+                email = request.GET["email"]
+                new_username = request.GET["user_name"]
+            except:
+                pass
+            temp = User.objects.get(user_name=username)
+            if temp:
+                if not email is "":
+                    temp.email = email
+                if not new_username is "":
+                    temp.user_name = new_username
+                temp.save()
+                response = JsonResponse({'result': True})
+            else:
+                response = JsonResponse({'result': False})
+            return response
+        except Exception as e:
+            return JsonResponse({'result': False})
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
 
 
 def update_reader(request):
@@ -306,6 +341,19 @@ def search_book(request):
 
     except :
         return JsonResponse({"result": False, "msg": "查询出错"})
+
+
+def delete_book(request):
+    '''
+    删除书籍
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        return render(request, 'del_book.html')
+    else:
+        return HttpResponseRedirect(reverse("index"))
 
 
 def reserve_api(request):

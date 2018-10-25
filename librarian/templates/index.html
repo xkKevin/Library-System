@@ -106,8 +106,37 @@
                 <div id="warn1"></div>
             </div>
 
-</div>
+        </div>
     </div>
+</div>
+<div style="margin:0 auto;width:700px;height:300px;padding-top: 0px;margin-top:100px;">
+	<h3 style="text-align: center;">{% trans '通知栏' %}</h3>
+	<table class="table table-striped">
+	    <thead>
+	    <tr>
+	        <th style="text-align: center;">{% trans '标题' %}</th>
+	        <th>{% trans '发布者' %}</th>
+	        <th style="text-align: center;">{% trans '发布日期' %}</th>
+	    </tr>
+	    </thead>
+	    <tbody>
+	    <tr>
+	        <td style="text-align: center;"><a href="#">计算机组成新到3本</td>
+	        <td>Librian1</td>
+	        <td style="text-align: center;">2018-9-11</td>
+	    </tr>
+	    <tr>
+	        <td style="text-align: center;"><a href="#">今天暂停借书</td>
+	        <td>Librian2</td>
+	        <td style="text-align: center;">2018-9-20</td>
+	    </tr>
+	    <tr>
+	        <td style="text-align: center;"><a href="#">今天下架书籍《数据结构C语言版》</td>
+	        <td>Librian1</td>
+	        <td style="text-align: center;">2018-10-11</td>
+	    </tr>
+	    </tbody>
+	</table>
 </div>
 <footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
 京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
@@ -164,9 +193,10 @@ Copyright &copy;2018 Library
             }
         })
     });
-        function test(str){
-        var li=document.getElementById("lang").getElementsByTagName("input");
-        li[1].value=str;
+
+    function test(str) {
+        var li = document.getElementById("lang").getElementsByTagName("input");
+        li[1].value = str;
         document.getElementById("lang").submit();
         //submit
     }
