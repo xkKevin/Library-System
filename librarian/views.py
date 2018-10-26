@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse, FileResponse
 from django.urls import reverse
 from django.utils import timezone
-from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder, Role
+from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder, Role, Notice
 from reader.models import User
 from administrator.models import Administrator
 import time
@@ -21,11 +21,12 @@ def index(request):
     '''
 
     username = request.session.get('username', "None")
+    notices = Notice.objects.filter(expire=False)
     if username != "None":
-        message = {'login': True, "username": username}
+        message = {'login': True, "username": username, 'notices': notices}
     else:
-        message = {'login': False, "username": username}
-    return render(request, 'index.html', message)
+        message = {'login': False, "username": username, 'notices': notices}
+    return render(request, 'index.html', message, )
 
 
 def manager_page(request):
@@ -356,7 +357,8 @@ def search_book(request):
             result = Book.objects.filter(book_name__contains=book_name)
         else:
             result = Book.objects.filter(book_name__contains=book_name, type__contains=book_type)
-        return render(request, 'search_results.html', {"book_list": result, "administrator": is_administrator})
+        return render(request, 'search_results.html', {"book_list": result, "administrator": is_administrator,
+                                                       'search_text': book_name})
 
     except :
         return JsonResponse({"result": False, "msg": "查询出错"})

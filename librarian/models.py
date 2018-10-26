@@ -1,5 +1,6 @@
 from django.db import models
 from reader.models import User
+from administrator.models import Administrator
 
 
 class Book(models.Model):
@@ -65,3 +66,27 @@ class Role(models.Model):
 
     def __str__(self):
         return str(self.books_limit)
+
+
+class Notice(models.Model):
+
+    title = models.TextField(null=False)
+    content = models.TextField(null=False)
+    author = models.ForeignKey(Administrator, related_name="Notices")
+    expire = models.BooleanField(null=False)
+    issue_time = models.DateField(null=False, auto_now_add=True)
+
+    def __str__(self):
+        return str(self.title)
+
+
+class MoneyOrder(models.Model):
+
+    teller = models.ForeignKey(Administrator, null=False, related_name="MoneyOrder")
+    order_type = models.IntegerField(null=False)
+    user_id = models.ForeignKey(User, null=False, related_name="_Money_order")
+    num = models.IntegerField(null=False)
+    order_time = models.DateField(null=False, auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
