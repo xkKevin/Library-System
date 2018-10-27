@@ -177,8 +177,16 @@ $(document).ready(function(){
 	   <form id="profile" class="setting-profile-form" action=" ">
     	 	 <table align="center"   width="45%" id="tab" >
 
-                 <tr class="t2"> <th width="30%" align="right">{% trans '图书管理员名' %}:</th> <td class="line30" align="center"><input  id="user_name" align="center" type="text" value="{{ lib_name }}" name="user_name" placeholder="{% trans '图书管理员名' %}"  /></td>
-                 <tr class="t3"><th width="30%" align="right">{% trans '密码' %}:</th> <td class="line30" align="center"><input  id="psw"  type="password" name="password" value="{{ lib_password}}" placeholder="{% trans '密码' %}" /></td>
+                 <tr class="t2">
+                     <th width="30%" align="right">{% trans '图书管理员名' %}:</th>
+                     <td class="line30" align="center">
+                         <input  id="user_name" align="center" type="text" value="{{ lib_name }}" name="user_name" placeholder="{% trans '图书管理员名' %}"  />
+                     </td>
+                 <tr class="t3">
+                    <th width="30%" align="right">{% trans '密码' %}:</th>
+                    <td class="line30" align="center">
+                        <input  id="psw"  type="password" name="password" value="{{ lib_password}}" placeholder="{% trans '密码' %}" />
+                    </td>
     		</table>
 
 
@@ -195,13 +203,28 @@ $(document).ready(function(){
 
 		<form id="profile2" class="setting-profile-form" method="POST" action=" ">
 			<table align="center"   width="45%" id="tab" >
-                <tr class="t1"> <th width="30%" align="right">{% trans '逾期罚金为' %}:</th> <td class="line30" align="center"><input align="center" type="text"  name="overdue_fine" placeholder="1"/><span style="width:45px;display:inline-block;">￥/{% trans '天' %}</span></td>
-                <tr class="t2"> <th width="30%" align="right">{% trans '归还期限为' %}:</th> <td class="line30" align="center"><input  align="center" type="text"  name="return_days" placeholder="30"/><span style="width:45px;display:inline-block;">{% trans '天' %}</span></td>
-                <tr class="t3"><th width="30%" align="right">{% trans '保证金额度为' %}:</th> <td class="line30" align="center"><input align="center" type="text" name="deposit_amount" placeholder="300"/><span style="width:45px;display:inline-block;">￥</span></td>
+                <tr class="t1">
+                    <th width="30%" align="right">{% trans '逾期罚金为' %}:</th>
+                    <td class="line30" align="center">
+                        <input align="center" type="text" id="overdue_fine" name="overdue_fine" placeholder={{ rule.fine }} />
+                        <span style="width:45px;display:inline-block;">￥/{% trans '天' %}</span>
+                    </td>
+                <tr class="t2">
+                    <th width="30%" align="right">{% trans '归还期限为' %}:</th>
+                    <td class="line30" align="center">
+                        <input  align="center" type="text" id="return_days" name="return_days" placeholder={{ rule.days_limit }} />
+                        <span style="width:45px;display:inline-block;">{% trans '天' %}</span>
+                    </td>
+                <tr class="t3">
+                    <th width="30%" align="right">{% trans '保证金额度为' %}:</th>
+                    <td class="line30" align="center">
+                        <input align="center" type="text" id="deposit_amount" name="deposit_amount" placeholder={{ rule.deposit }} />
+                        <span style="width:45px;display:inline-block;">￥</span>
+                    </td>
 			</table>
 
 			<div id="login_click" align="center">
-				<a id="btlogin" href="#">{% trans '修改' %}</a>
+				<a id="btlogin" onclick="editRules()">{% trans '修改' %}</a>
 			</div>
         </form>
             <div id="section-3" style="position: relative;top: -50px;"></div>
@@ -238,7 +261,7 @@ $(document).ready(function(){
 </div>
 </div>
 
-<footer style="background-color: #bdeab7;color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+<footer style="background-color: #bdeab7;color: #000000;font-weight: normal;font-size: .60em;font-style: italic;text-align: center;">
 京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
 <br>
 Copyright &copy;2018 Library
@@ -259,6 +282,7 @@ Copyright &copy;2018 Library
                 if(statue === 'success') {
                     if (result["result"] === true) {
                         alert("{% trans '注册成功!' %}")
+                         window.location.reload();
                     } else {
                         alert("{% trans '注册失败!' %}")
                     }
@@ -279,7 +303,7 @@ Copyright &copy;2018 Library
     }
     function searchLib() {
         var libname = $("#libname").val();
-         if(libname!=""){
+         if(libname != ""){
             $.get("/manager/get_adminPsw/",{"username":libname},function (result,statue) {
                 if(statue === 'success') {
                     if (result["result"] === true) {
@@ -291,11 +315,19 @@ Copyright &copy;2018 Library
             })
         }
     }
-    function edit_librarian(account) {
-        alert(account);
-    }
     function delete_librarian(account) {
-        alert(account);
+        if(account != ""){
+            $.get("/manager/delete_librarian/", {"lib_name": account}, function (result,statue) {
+                if(statue === 'success') {
+                    if (result["result"] === true) {
+                        alert("{% trans '删除成功!' %}");
+                        window.location.reload();
+                    } else {
+                        alert("{% trans '删除失败!' %}");
+                    }
+                }
+            })
+        }
     }
     function see_passwd(passwd) {
         var pwd = document.getElementById("pwd");
@@ -306,7 +338,7 @@ Copyright &copy;2018 Library
         var lib = document.getElementById("manageLib");
         var lib_child = lib.getElementsByTagName("td");
         var len = lib_child.length;
-        if(len>0){
+        if(len>0){  //删除之前的结果
             for (i=0;i<len;){
                 i++;
                 lib.removeChild(lib_child[len-i]);
@@ -319,11 +351,13 @@ Copyright &copy;2018 Library
         passwd.setAttribute("id","pwd");
         passwd.innerText = "********";
         var edit_librarian = document.createElement("td");
-        var button_2 = document.createElement("button");
-        button_2.setAttribute("width", "100px");
-        button_2.innerText = "{% trans '编辑' %}";
-        button_2.setAttribute("onclick", "edit_librarian(" +"\""+result["account"]+"\""+")");
-        edit_librarian.appendChild(button_2);
+        var edit_href = document.createElement("a");
+        var button_3 = document.createElement("button");
+        button_3.setAttribute("width", "100px");
+        button_3.innerText = "{% trans '编辑' %}";
+        edit_href.setAttribute("href", "/manager/edit_librarian/");
+        edit_href.appendChild(button_3);
+        edit_librarian.appendChild(edit_href);
         var delete_librarian = document.createElement("td");
         var button_1 = document.createElement("button");
         button_1.setAttribute("width", "100px");
@@ -348,6 +382,26 @@ Copyright &copy;2018 Library
         li[1].value=str;
         document.getElementById("lang").submit();
         //submit
+    }
+    function editRules() {
+        var overdue_fine = $("#overdue_fine").val();
+        var return_days = $("#return_days").val();
+        var deposit_amount = $("#deposit_amount").val();
+        if(overdue_fine!=""&&return_days!=""&&deposit_amount!=""){
+            $.get("/manager/edit_rules/", {"overdue_fine": overdue_fine, "return_days":return_days,
+            "deposit_amount":deposit_amount}, function (result,statue) {
+                if(statue === 'success') {
+                    if (result["result"] === true) {
+                        alert("{% trans '修改成功!' %}");
+                        window.location.reload();
+                    } else {
+                        alert("{% trans '修改失败!' %}");
+                    }
+                }
+            })
+        }
+        else
+            alert("全不能为空！")
     }
 </script>
 </html>

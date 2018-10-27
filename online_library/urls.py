@@ -75,5 +75,10 @@ urlpatterns = [
     url(r'^forgetpsw/$', reader_views.forget_passwd_page, name="forget_reader_psw"),
     url(r'^createLib/$', administrator_views.create_lib, name="create_lib"),
     url(r'^i18n/', include('django.conf.urls.i18n')),
+    url(r'^manager/edit_librarian/$', administrator_views.edit_librarian, name="edit_librarian"),
+    url(r'^manager/manager_edit_librarian/$', administrator_views.manager_edit_librarian,
+        name="manager_edit_librarian"),
+    url(r'^manager/delete_librarian/$', administrator_views.delete_librarian, name="delete_librarian"),
+    url(r'^manager/edit_rules/$', administrator_views.edit_rules, name="edit_rules"),
 
 ]
