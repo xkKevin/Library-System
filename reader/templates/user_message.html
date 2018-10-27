@@ -116,7 +116,7 @@ $(document).ready(function(){
             <a class="navbar-brand">Bibliosoft</a>
         </div>    
         <div> 
-            <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px">  
+            <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px">
                 <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home"></span> {% trans '返回首页' %}</a></li>
             </ul> 
         </div> 
@@ -187,8 +187,8 @@ $(document).ready(function(){
             <hr>
             <h2 id="section-2" style="display:block; height:50px; width:400px">{% trans  '借阅记录' %}</h2>
 
-           
-	<h4 style="display:block; height:50px; width:400px">{% trans  '罚金总额：' %}&nbsp;&nbsp;&nbsp;<span id="all_fine">0</span>&nbsp;￥</h4>
+
+	<h4 style="display:block; height:50px; width:400px">{% trans  '罚金总额：' %}&nbsp;&nbsp;&nbsp;<span id="all_fine">{{ all_fine }}</span>&nbsp;￥</h4>
 
 <table align="center" id="tab" width="300px"  class="table table-striped">
 
@@ -259,7 +259,7 @@ $(document).ready(function(){
         </div>
     </div>
 </div>
-<footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+<footer style="color: #000000;font-weight: normal;font-size: .60em;font-style: italic;text-align: center;">
 京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
 <br>
 Copyright &copy;2018 Library

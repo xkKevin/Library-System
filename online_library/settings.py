@@ -132,4 +132,4 @@ LOCALE_PATHS = (
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(os.path.join(BASE_DIR, 'media'),)
-MEDIA_URL = '/meida/'
+MEDIA_URL = '/media/'

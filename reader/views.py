@@ -144,11 +144,18 @@ def user_message(request):
         if user:
             borrow_order_list = BorrowOrder.objects.filter(user_id=user.user_id)
             reserve_order_list = ReserveOrder.objects.filter(user_id=user.user_id, )
+
+            # 计算全部罚金
+            all_fine = 0
+            for borrow_order in borrow_order_list:
+                all_fine += borrow_order.debt
+
             return render(request, 'user_message.html', {'user_id': user.user_id,
                                                          'user_email': user.email,
                                                          'user_name': user.user_name,
                                                          'reserve_order_list': reserve_order_list,
-                                                         'borrow_order_list': borrow_order_list
+                                                         'borrow_order_list': borrow_order_list,
+                                                         'all_fine': all_fine
                                                          }
                           )
         else:
