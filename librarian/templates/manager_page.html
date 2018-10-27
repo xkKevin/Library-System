@@ -226,6 +226,7 @@
             <th align="center">{% trans '预约时间' %}</th>
             <th align="center">{% trans '欠费' %}</th>
             <th align="center">{%  trans '归还' %}</th>
+            <th align="center">{%  trans '归还提醒' %}</th>
         </tr>
         </thead>
 	<tbody id="return_book_tbody">
@@ -312,6 +313,18 @@ Copyright &copy;2018 Library
             }
         });
     }
+     function send_mail(order_id) {
+        //向逾期用户发送邮件提醒
+        $.post("{% url 'manage_send_mail_api' %}", {'borrow_id':order_id}, function(result){
+            if(result["result"] === true){
+                {#search_user_message();  //这是啥意思？#}
+                alert("Successful!\n message:"+result["msg"])
+            }else {
+                alert("Failed!\n message:"+result["msg"])
+            }
+        });
+    }
+
     function  add_user_message(user) {
         // 动态添加读者信息
         //
@@ -388,22 +401,29 @@ Copyright &copy;2018 Library
             var td_3 = document.createElement("td");
             var td_4 = document.createElement("td");
             var td_5 = document.createElement("td");
+            var td_6 = document.createElement("td");
             td.innerText = borrow_orders[i]["borrow_order_id"];
             td_1.innerText = borrow_orders[i]["borrow_book_name"];
             td_2.innerText = borrow_orders[i]["borrow_user_name"];
             td_3.innerText = borrow_orders[i]["borrow_time"];
             td_4.innerText = borrow_orders[i]["debt"];
             td_5.setAttribute("width","100px");
+            td_6.setAttribute("width","100px");
             var button = document.createElement("button");
             button.setAttribute("onclick", "return_book("+borrow_orders[i]["borrow_order_id"].toString()+")");
             button.innerText = "{%  trans '归还' %}";
+            var button1 = document.createElement("button");
+            button1.setAttribute("onclick", "send_mail("+borrow_orders[i]["borrow_order_id"].toString()+")");
+            button1.innerText = "{%  trans '发邮件' %}";
             td_5.appendChild(button);
+            td_6.appendChild(button1);
             tr.appendChild(td);
             tr.appendChild(td_1);
             tr.appendChild(td_2);
             tr.appendChild(td_3);
             tr.appendChild(td_4);
             tr.appendChild(td_5);
+            tr.appendChild(td_6);
             parent.appendChild(tr);
         }
     }

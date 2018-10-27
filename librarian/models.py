@@ -90,3 +90,9 @@ class MoneyOrder(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+# 用于每天自动更新一次数据库borrower表的debt，更新后添加一条数据
+class AutoUpdateDB(models.Model):
+    is_updated = models.BooleanField()
+    updated_date = models.DateField(auto_now_add=True)

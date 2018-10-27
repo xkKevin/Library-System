@@ -6,12 +6,13 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse, FileResponse
 from django.urls import reverse
 from django.utils import timezone
-from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder, Role, Notice
+from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder, Role, Notice, AutoUpdateDB
 from reader.models import User
 from administrator.models import Administrator
 import time
 import requests
 
+from tool.changePsw import SendEmail
 
 def index(request):
     '''
@@ -19,6 +20,32 @@ def index(request):
     :param request:
     :return:
     '''
+    try:
+        AutoUpdateDB.objects.get(updated_date=datetime.date.today())
+    except:
+        # 每天第一次访问主页将自动更新每本书的罚金
+        all_borrow_orders = BorrowOrder.objects.all()
+        role = Role.objects.first()
+        for each in all_borrow_orders:
+            if not each.is_return:  # 如果图书没有归还
+                if timezone.now() - each.borrow_time > timezone.timedelta(days=role.days_limit):
+                    expire_days = (timezone.now() - each.borrow_time -
+                                   timezone.timedelta(days=role.days_limit)).days
+                    each.debt = role.fine * expire_days  # 罚金
+                    if not each.expire:  # 如果没设置到期
+                        each.expire = True
+                    each.save()
+
+                    # 向逾期等于1（图书刚到期）的用户自动发送邮件
+                    if expire_days == 1:
+                        content = '您所借的图书《' + each.book.isbn.book_name + '》已到期，现罚金为' \
+                                  + str(each.debt) + '元，请及时归还图书并缴纳罚金，谢谢！'
+                        s = SendEmail()
+                        if s:  # 如果登录成功
+                            s.send("图书到期提醒", content, each.user.email)
+                            s.close_smtp()
+
+        AutoUpdateDB.objects.create(is_updated=True)
 
     username = request.session.get('username', "None")
     notices = Notice.objects.filter(expire=False)
@@ -436,7 +463,7 @@ def return_book_api(request):
         except:
             return JsonResponse({"result": False, "msg": "Borrow_order_id is invalid"})
         borrow_order.return_time = timezone.now()
-        borrow_order.expire = True
+        borrow_order.is_return = True
         borrow_order.book.is_available = True
         if borrow_order.book.isbn.available_num < borrow_order.book.isbn.total_num:
             borrow_order.book.isbn.available_num = borrow_order.book.isbn.available_num + 1
@@ -448,6 +475,36 @@ def return_book_api(request):
     except Exception:
         return JsonResponse({"result": False, "msg": "Error!"})
 
+
+def send_mail_api(request):
+    if request.method != "POST":
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    # username = request.session.get('username', "None")
+    # if not username == 'root':
+    #     return JsonResponse({"result": False, "msg": "Forbidden"})
+    try:
+        borrow_id = request.POST["borrow_id"]
+    except:
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+
+    try:
+        borrow_order = BorrowOrder.objects.get(order_id=borrow_id)
+    except:
+        return JsonResponse({"result": False, "msg": "Borrow_order_id is invalid"})
+
+    try:
+        if borrow_order.debt <= 0:  # 图书未到期
+            return JsonResponse({"result": False, "msg": "This borrower_order is't expire"})
+        else:
+            content = '您所借的图书《' + borrow_order.book.isbn.book_name + '》已到期，现罚金为' \
+                      + str(borrow_order.debt) + '元，请及时归还图书并缴纳罚金，谢谢！'
+            s = SendEmail()
+            if s:  # 如果登录成功
+                s.send("图书到期提醒", content, borrow_order.user.email)
+                s.close_smtp()
+                return JsonResponse({"result": True, "msg": "Send email successful!"})
+    except:
+        return JsonResponse({"result": False, "msg": "Send email failure!"})
 
 def book_message_api(request):
     '''
@@ -587,7 +644,7 @@ def manage_user_api(request):
         except:
             return JsonResponse({"result": False, "msg": "User Name Invalid!"})
         reserve_order_list = ReserveOrder.objects.filter(user_id=user_id, expire=False, )
-        borrow_order_list = BorrowOrder.objects.filter(user_id=user_id, expire=False)
+        borrow_order_list = BorrowOrder.objects.filter(user_id=user_id, is_return=False)
         user_dict = {
             "user_name": user.user_name,
             "user_id": user.user_id,
