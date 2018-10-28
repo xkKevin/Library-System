@@ -151,15 +151,15 @@
             <ul class="nav nav-tabs nav-stacked" id="myNav">
                 <li class="active"><a href="#section-1">{% trans '用户资料' %}</a></li>
                 <li><a href="#section-2">{% trans '处理预约书籍' %}</a></li>
-				<li><a href="#section-3">{% trans '归还图书' %}</a></li>
-                <li><a href="#section-4">{% trans '罚金缴纳记录' %}</a></li>
+				<li><a href="#section-3">{% trans '未归还图书' %}</a></li>
+                <li><a href="#section-4">{% trans '付费记录' %}</a></li>
 				<li><a href="{% url 'manager_add_reader' %}">{% trans '添加读者' %}</a></li>
 
 {#				<li><a href="#section-5">修改图书规则</a></li>#}
 				<li><a href="{% url 'add_book' %}">{% trans '添加书籍' %}</a></li>
                 <li><a href="{% url 'manager_delete_book' %}">{% trans '删除书籍' %}</a></li>
                 <li><a href="{% url 'update_book_message' %}">{% trans '编辑书籍' %}</a></li>
-                <li><a >{% trans '删除信息' %}</a></li>
+                <li><a >{% trans '删除记录' %}</a></li>
                 <li><a>{% trans '收入记录' %}</a></li>
             </ul>
         </div>
@@ -180,7 +180,7 @@
                     <th align="center">{% trans '用户ID' %}</th>
                     <th align="center">{% trans '用户名' %}</th>
                     <th align="center">{% trans '邮箱' %}</th>
-                    <th align="center">{% trans '罚金' %}</th>
+                    <th align="center">{% trans '缴纳罚金' %}</th>
                     <th align="center">{% trans '删除用户' %}</th>
                     <th align="center">{% trans '编辑' %}</th>
                 </tr>
@@ -213,7 +213,7 @@
 </table>
 
             <hr>
-            <h2 id="section-3" style="display:block; height:50px; width:400px">{% trans '归还图书' %}</h2>
+            <h2 id="section-3" style="display:block; height:50px; width:400px">{% trans '未归还图书' %}</h2>
 
 
     <table align="center" id="tab" width="300px"  class="table table-striped">
@@ -235,7 +235,7 @@
 
 	</tbody>
 </table>
-            <h2 id="section-4" style="display:block; height:50px; width:400px">{% trans '罚金缴纳记录' %}</h2>
+            <h2 id="section-4" style="display:block; height:50px; width:400px">{% trans '付费记录' %}</h2>
 
 
             <table align="center" id="tab" width="300px"  class="table table-striped">
@@ -243,7 +243,7 @@
                 <thead>
                 <tr >
                     <th align="center">{% trans '订单号' %}</th>
-                    <th align="center">{%  trans '管理员名' %}</th>
+                    <th align="center">{% trans '付费类型' %}</th>
                     <th align="center">{% trans '用户名' %}</th>
                     <th align="center">{% trans '缴纳时间' %}</th>
                     <th align="center">{% trans '缴纳金额' %}</th>

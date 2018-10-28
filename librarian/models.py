@@ -80,13 +80,14 @@ class Notice(models.Model):
         return str(self.title)
 
 
+# 图书馆收入记录
 class MoneyOrder(models.Model):
+    TYPE = (('D', 'DEPOSIT'), ('F', 'FINE'))
 
-    teller = models.ForeignKey(Administrator, null=False, related_name="MoneyOrder")
-    order_type = models.IntegerField(null=False)
-    user_id = models.ForeignKey(User, null=False, related_name="_Money_order")
+    user = models.ForeignKey(User, null=False, related_name="money_orders")
+    order_type = models.CharField(max_length=1, choices=TYPE)
     num = models.IntegerField(null=False)
-    order_time = models.DateField(null=False, auto_now_add=True)
+    order_time = models.DateTimeField(null=False, auto_now_add=True)
 
     def __str__(self):
         return str(self.id)
@@ -96,3 +97,15 @@ class MoneyOrder(models.Model):
 class AutoUpdateDB(models.Model):
     is_updated = models.BooleanField()
     updated_date = models.DateField(auto_now_add=True)
+
+
+# 图书删除记录
+class BookDelHistory(models.Model):
+    book_id = models.IntegerField()
+    book_isbn = models.IntegerField()
+    book_name = models.CharField(max_length=100)
+    book_author = models.CharField(max_length=50)
+    deleted_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)

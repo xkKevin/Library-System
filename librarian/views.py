@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse, FileResponse
 from django.urls import reverse
 from django.utils import timezone
-from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder, Role, Notice, AutoUpdateDB
+from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder, Role, Notice, AutoUpdateDB, BookDelHistory
 from reader.models import User
 from administrator.models import Administrator
 import time
@@ -413,16 +413,23 @@ def delete_book_api(request):
         else:
             try:
                 del_book = AllBook.objects.get(book_id=book_id)
-                # 此图书总数减1
                 book = Book.objects.get(isbn=del_book.isbn.isbn)
+                # 添加删除记录
+                delhistory = BookDelHistory()
+                delhistory.book_id = book_id
+                delhistory.book_name = book.book_name
+                delhistory.book_isbn = book.isbn
+                delhistory.book_author = book.author
+
                 if book.total_num == 1:  # 如果只剩这一本
                     book.delete()
                 else:
-                    book.total_num -= 1
+                    book.total_num -= 1  # 此图书总数减1
                     book.available_num -= 1
                     book.save()
                 # 删除这本图书
                 del_book.delete()
+                delhistory.save()
                 return JsonResponse({"result": True})
             except:
                 return JsonResponse({"result": False, "msg": "请输入正确id"})
@@ -806,6 +813,7 @@ def update_book(request):
                                     all_book_list.append(AllBook(isbn=book, is_available=True))
                                 AllBook.objects.bulk_create(all_book_list)
                                 book.total_num = total_num
+                                book.available_num += add_num
                             except:
                                 pass
                         else:
