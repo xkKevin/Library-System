@@ -405,6 +405,18 @@ def delete_book(request):
         return HttpResponseRedirect(reverse("index"))
 
 
+def del_record(request):
+    '''
+    删除书籍记录
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        return render(request, 'del_message.html')
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
 def delete_book_api(request):
     if request.method == "GET":
         book_id = request.GET.get("book_id", None)
@@ -433,6 +445,45 @@ def delete_book_api(request):
                 return JsonResponse({"result": True})
             except:
                 return JsonResponse({"result": False, "msg": "请输入正确id"})
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
+def post_news_record(request):
+    '''
+    推送消息记录
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        return render(request, 'post_news_record.html')
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
+def post_news(request):
+    '''
+    推送消息
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        return render(request, 'post_news.html')
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
+def income_record(request):
+    '''
+    推送消息
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        return render(request, 'income_record.html')
     else:
         return HttpResponseRedirect(reverse("index"))
 

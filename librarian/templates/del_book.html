@@ -79,6 +79,7 @@
 
                 <div class="form-group col-md-offset-9">
                     <button type="submit" class="btn pull-right" name="submit" onclick="del_book()">{% trans '删除书籍' %}</button>
+                    <button class="btn pull-left" name="submit" onclick="javascript:window.location.href='{% url 'manager_del_record' %}'">{% trans '删除记录' %}</button>
                 </div>
             </div>
         </div>
@@ -155,10 +156,10 @@ book_id_fouces();
         $.get('/manager/delete_book/api/', {"book_id": book_id}, function (result, statue) {
             if(statue === "success"){
                 if(result["result"] === false){
-                    alert("图书删除失败!\n错误信息: "+ result['msg']);
+                    alert("{% trans '图书删除失败!\n错误信息: ' %}"+ result['msg']);
                 }
                 else {
-                    alert("图书删除成功！\n")
+                    alert("{% trans '图书删除成功！' %}")
                     window.location.reload();
                 }
             }
