@@ -28,6 +28,7 @@ def index(request):
         role = Role.objects.first()
         for each in all_borrow_orders:
             if not each.is_return:  # 如果图书没有归还
+                # 如果逾期
                 if timezone.now() - each.borrow_time > timezone.timedelta(days=role.days_limit):
                     expire_days = (timezone.now() - each.borrow_time -
                                    timezone.timedelta(days=role.days_limit)).days
@@ -36,8 +37,8 @@ def index(request):
                         each.expire = True
                     each.save()
 
-                    # 向逾期等于1（图书刚到期）的用户自动发送邮件
-                    if expire_days == 1:
+                    # 向逾期等于0（图书刚到期）的用户自动发送邮件
+                    if expire_days == 0:
                         content = '您所借的图书《' + each.book.isbn.book_name + '》已到期，现罚金为' \
                                   + str(each.debt) + '元，请及时归还图书并缴纳罚金，谢谢！'
                         s = SendEmail()
@@ -400,6 +401,31 @@ def delete_book(request):
     username = request.session.get('username', "None")
     if username == 'root':
         return render(request, 'del_book.html')
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
+def delete_book_api(request):
+    if request.method == "GET":
+        book_id = request.GET.get("book_id", None)
+        if book_id is None:
+            return JsonResponse({"result": False, "msg": "Book ID 不能为空！"})
+        else:
+            try:
+                del_book = AllBook.objects.get(book_id=book_id)
+                # 此图书总数减1
+                book = Book.objects.get(isbn=del_book.isbn.isbn)
+                if book.total_num == 1:  # 如果只剩这一本
+                    book.delete()
+                else:
+                    book.total_num -= 1
+                    book.available_num -= 1
+                    book.save()
+                # 删除这本图书
+                del_book.delete()
+                return JsonResponse({"result": True})
+            except:
+                return JsonResponse({"result": False, "msg": "请输入正确id"})
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -792,3 +818,25 @@ def update_book(request):
                 return response
     else:
         return HttpResponseRedirect(reverse("index"))
+
+
+def get_book_info_by_id_api(request):
+    book_id = request.GET.get('book_id', None)
+    result_json = {}
+    if book_id:
+        try:
+            the_book = AllBook.objects.get(book_id=book_id)
+            book = Book.objects.get(isbn=the_book.isbn.isbn)
+            result_json['isbn'] = book.isbn
+            result_json['author'] = book.author
+            result_json['book_name'] = book.book_name
+            result_json['result'] = True
+
+        except:
+            result_json['result'] = False
+            result_json["msg"] = "数据库操作失败！"
+
+        return JsonResponse(result_json)
+
+    else:
+        return JsonResponse({"result": False})

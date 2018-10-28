@@ -92,26 +92,26 @@ Copyright &copy;2018 Library
 <a href="#">xiaoxiongxiong@xiongxiong.com</a>
 </footer>
 <script>
-    function isbn_fouces() {
-        document.getElementById("isbn").focus()
+    function book_id_fouces() {
+        document.getElementById("book_id").focus()
     }
     $.ajaxSetup({
     data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
 });
-isbn_fouces();
+book_id_fouces();
     $(document).ready(function () {
-        $('#isbn').bind('keypress',function(event){
+        $('#book_id').bind('keypress',function(event){
             if (event.keyCode == "13") {
-                url = '/isbn/api/?isbn='+$(this).val();
+                url = '/get_book_info_by_id/api/?book_id='+$(this).val();
                 $.get(url, function (result, statue) {
-                    if (result['result']=== true){
-                        document.getElementById("book_name").value = result["book_name"];
-                        document.getElementById("image_url").value = result["image_url"];
-                        document.getElementById("type").value = result["type"];
-                        document.getElementById("author").value = result["author"];
-                        document.getElementById("price").value = result["price"];
-                    } else {
-                        alert('ISBN查询失败')
+                    if(statue === "success") {
+                        if (result['result'] === true) {
+                            document.getElementById("book_name").value = result["book_name"];
+                            document.getElementById("isbn").value = result["isbn"];
+                            document.getElementById("author").value = result["author"];
+                        } else {
+                            alert('请输入正确ID！')
+                        }
                     }
                 });
             } else {
@@ -151,7 +151,18 @@ isbn_fouces();
         })
     }*/
    function del_book() {
-       alert("还没有加逻辑！")
+       var book_id = $("#book_id").val();
+        $.get('/manager/delete_book/api/', {"book_id": book_id}, function (result, statue) {
+            if(statue === "success"){
+                if(result["result"] === false){
+                    alert("图书删除失败!\n错误信息: "+ result['msg']);
+                }
+                else {
+                    alert("图书删除成功！\n")
+                    window.location.reload();
+                }
+            }
+        })
    }
 
     function test(str){

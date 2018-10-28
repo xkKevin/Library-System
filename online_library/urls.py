@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^add_book/$', librarian_views.add_book, name="add_book"),
     url(r'^search_book/$', librarian_views.search_book, name="search_book"),
     url(r'^manager/delete_book/$', librarian_views.delete_book, name="manager_delete_book"),
+    url(r'^manager/delete_book/api/$', librarian_views.delete_book_api, name='delete_book_api'),
     url(r'^manager/add_reader/$', librarian_views.add_reader, name="manager_add_reader"),
     url(r'^manager/delete_reader/$', librarian_views.delete_reader, name="manager_delete_reader"),
     url(r'^manager/update_reader/$', librarian_views.update_reader, name="manager_update_reader"),
@@ -75,10 +76,14 @@ urlpatterns = [
     url(r'^forgetpsw/$', reader_views.forget_passwd_page, name="forget_reader_psw"),
     url(r'^createLib/$', administrator_views.create_lib, name="create_lib"),
     url(r'^i18n/', include('django.conf.urls.i18n')),
+    # 系统管理员编辑图书管理员信息
     url(r'^manager/edit_librarian/$', administrator_views.edit_librarian, name="edit_librarian"),
     url(r'^manager/manager_edit_librarian/$', administrator_views.manager_edit_librarian,
         name="manager_edit_librarian"),
+    # 系统管理员删除图书管理员
     url(r'^manager/delete_librarian/$', administrator_views.delete_librarian, name="delete_librarian"),
+    # 系统管理员编辑图书馆罚金等规则
     url(r'^manager/edit_rules/$', administrator_views.edit_rules, name="edit_rules"),
-
+    # 通过书id获得书的其他信息
+    url(r'^get_book_info_by_id/api/$', librarian_views.get_book_info_by_id_api, name='get_book_info_by_id_api'),
 ]
