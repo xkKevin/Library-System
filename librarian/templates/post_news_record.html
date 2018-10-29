@@ -131,11 +131,13 @@
 <div class="container">
         <div class="input-group col-md-3" style="width: 600px;margin-left: auto;margin-right: auto" >
             <span class="input-group-btn">
-				<button class="btn btn-info btn-search" onclick="all_message()">{% trans '全部' %}</button>
+                <a href="{% url 'manager_post_news_record' %}">
+                    <button class="btn btn-info btn-search">{% trans '全部' %}</button>
+                </a>
 			</span>
-			<input type="text" class="form-control" id="search_input"  placeholder="{% trans '请输入公告标题：' %}" />
+			<input type="text" class="form-control" id="search_notices"  placeholder="{% trans '请输入公告标题：' %}" />
 			<span class="input-group-btn">
-				<button class="btn btn-info btn-search" onclick="search_user_message()">{% trans '查找' %}</button>
+				<button class="btn btn-info btn-search" onclick="search_notices_by_title()">{% trans '查找' %}</button>
 			</span>
 
             <span class="input-group-btn">
@@ -159,9 +161,32 @@
                 </tr>
 	        </thead>
 
-            <tbody >
-                <tr class="active" id="user_message_tr">
+            <tbody id="notice_records">
+            {% for notice in all_notices %}
+                <tr class="active">
+                    <td>{{ notice.id }}</td>
+                    <td>
+                        <a href="{% url 'view_notice_content' notice.id %}">{{ notice.title }}</a>
+                    </td>
+                    <td>
+                        {% if notice.content|length > 20 %}
+                            {{ notice.content|slice:'20' }}
+                        {% else %}
+                            {{ notice.content }}
+                        {% endif %}
+                    </td>
+                    <td>{{ notice.updated_time }}</td>
+                    <td>{{ notice.author.administrator_name }}</td>
+                    <td>
+                        <a href="{% url 'edit_notice' notice.id %}">
+                            <button type="button" >Edit</button>
+                        </a>
+                    </td>
+                    <td>
+                        <button type="button" onclick="delete_notice({{ notice.id }})" >Delete</button>
+                    </td>
                 </tr>
+            {% endfor %}
             </tbody>
         </table>
         </div>
@@ -174,6 +199,93 @@ Copyright &copy;2018 Library
 <a href="#">xiaoxiongxiong@xiongxiong.com</a>
 </footer>
 <script>
+     $.ajaxSetup({
+    data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+});
+
+    function delete_notice(notice_id){
+
+        $.post("{% url 'delete_notice_api' %}", {'notice_id':notice_id}, function(result) {
+            if (result["result"] === true) {
+                alert("公告删除成功!");
+                window.location.reload();
+            } else {
+                alert("公告删除失败!");
+            }
+        });
+
+    }
+    $(document).ready(function () {
+        $('#search_notices').bind('keypress',function(event){
+            if (event.keyCode == "13") {
+               search_notices_by_title();
+            }
+        })
+    });
+    function add_notice(notices) {
+        var parent = document.getElementById("notice_records");
+        //删除全部显示内容
+        while (parent.hasChildNodes()){
+            parent.removeChild(parent.firstChild);
+        }
+
+        parent.innerText = "";
+        for( var i=0;i<notices.length;i++){
+            var tr = document.createElement("tr");
+            tr.setAttribute("class", "active");
+            var td = document.createElement("td");
+            var td_1 = document.createElement("td");
+            var td_2 = document.createElement("td");
+            var td_3 = document.createElement("td");
+            var td_4 = document.createElement("td");
+            var td_5 = document.createElement("td");
+            var td_6 = document.createElement("td");
+
+            var a_2 = document.createElement("a");
+            a_2.setAttribute("href", "/view_notice_content/"+ notices[i]["id"] +"/");
+            a_2.innerText = notices[i]["title"];
+            td_1.appendChild(a_2);
+            td.innerText = notices[i]["id"];
+            td_2.innerText = notices[i]["content"].substring(0,20);
+            td_3.innerText = notices[i]["updated_time"];
+            td_4.innerText = notices[i]["librarian_name"];
+            td_5.setAttribute("width","100px");
+            td_6.setAttribute("width","100px");
+
+            var a_1 = document.createElement("a");
+            a_1.setAttribute("href", "/manager/edit_notice/"+ notices[i]["id"] +"/");
+            var button = document.createElement("button");
+            button.innerText = "Edit";
+            var button1 = document.createElement("button");
+            button1.setAttribute("onclick", "delete_notice("+notices[i]["id"].toString()+")");
+            button1.innerText = "Delete";
+            a_1.appendChild(button);
+            td_5.appendChild(a_1);
+            td_6.appendChild(button1);
+
+            tr.appendChild(td);
+            tr.appendChild(td_1);
+            tr.appendChild(td_2);
+            tr.appendChild(td_3);
+            tr.appendChild(td_4);
+            tr.appendChild(td_5);
+            tr.appendChild(td_6);
+
+            parent.appendChild(tr);
+        }
+    }
+    function search_notices_by_title() {
+         var title = $("#search_notices").val();
+        $.post('{% url 'search_notices_api' %}',{"title": title},function(result){
+                if(result["result"] === true){
+                        var notices = result["notices"];
+                        add_notice(notices);
+
+                }else {
+                    alert("Failed!\n message:"+result["msg"])
+                }
+        });
+    }
     function test(str){
         var li=document.getElementById("lang").getElementsByTagName("input");
         li[1].value=str;

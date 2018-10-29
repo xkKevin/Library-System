@@ -6,7 +6,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse, FileResponse
 from django.urls import reverse
 from django.utils import timezone
-from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder, Role, Notice, AutoUpdateDB, BookDelHistory
+from librarian.models import Book, AllBook, BorrowOrder, ReserveOrder, Role, Notice, AutoUpdateDB, BookDelHistory, \
+    MoneyOrder
 from reader.models import User
 from administrator.models import Administrator
 import time
@@ -49,7 +50,8 @@ def index(request):
         AutoUpdateDB.objects.create(is_updated=True)
 
     username = request.session.get('username', "None")
-    notices = Notice.objects.filter(expire=False)
+    # 获取最近5条通知
+    notices = Notice.objects.filter().order_by('-updated_time')[:5]
     if username != "None":
         message = {'login': True, "username": username, 'notices': notices}
     else:
@@ -122,6 +124,41 @@ def delete_reader(request):
                 return response
             except Exception as e:
                 return JsonResponse({'result': False})
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
+# 图书管理员缴纳罚金
+def manager_pay_debt_api(request):
+    username = request.session.get('username', "None")
+    if username == 'root':
+        if request.method == "GET":
+            try:
+                username = request.GET["username"]
+                librarian_name = request.session["admin_name"]
+                librarian = Administrator.objects.get(administrator_name=librarian_name)
+                user = User.objects.get(user_name=username)
+                debt_orders = BorrowOrder.objects.filter(user=user, is_return=True)
+
+                # 将罚金置为0
+                all_fine = 0
+                for debt_order in debt_orders:
+                    if debt_order.debt > 0:
+                        all_fine += debt_order.debt
+                        debt_order.debt = 0
+                        debt_order.save()
+
+                # 如果没有欠费
+                if all_fine == 0:
+                    return JsonResponse({'result': False, 'msg': 'No Debt!'})
+                else:
+                    # 添加交易记录
+                    MoneyOrder.objects.create(user=user, order_type='F',
+                                              num=all_fine, librarian=librarian)
+
+                    return JsonResponse({'result': True})
+            except Exception as e:
+                return JsonResponse({'result': False, 'msg': "Error!"})
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -413,13 +450,26 @@ def del_record(request):
     '''
     username = request.session.get('username', "None")
     if username == 'root':
-        return render(request, 'del_message.html')
+        all_del_history = BookDelHistory.objects.all().order_by('-deleted_time')
+        return render(request, 'del_message.html', {'all_del_history': all_del_history})
     else:
         return HttpResponseRedirect(reverse("index"))
+
 
 def delete_book_api(request):
     if request.method == "GET":
         book_id = request.GET.get("book_id", None)
+        delreason = request.GET.get("del_reason", None)
+        libraian_name = request.session["admin_name"]
+        libraian = Administrator.objects.get(administrator_name=libraian_name)
+
+        if delreason == 'damaged':
+            del_reason = 'D'
+        elif delreason == 'lost':
+            del_reason = 'L'
+        else:
+            del_reason = None
+
         if book_id is None:
             return JsonResponse({"result": False, "msg": "Book ID 不能为空！"})
         else:
@@ -432,6 +482,8 @@ def delete_book_api(request):
                 delhistory.book_name = book.book_name
                 delhistory.book_isbn = book.isbn
                 delhistory.book_author = book.author
+                delhistory.librarian = libraian
+                delhistory.del_reason = del_reason
 
                 if book.total_num == 1:  # 如果只剩这一本
                     book.delete()
@@ -457,7 +509,8 @@ def post_news_record(request):
     '''
     username = request.session.get('username', "None")
     if username == 'root':
-        return render(request, 'post_news_record.html')
+        all_notices = Notice.objects.all().order_by("-updated_time")
+        return render(request, 'post_news_record.html', {'all_notices': all_notices})
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -470,20 +523,23 @@ def post_news(request):
     '''
     username = request.session.get('username', "None")
     if username == 'root':
-        return render(request, 'post_news.html')
+        librarian_name = request.session["admin_name"]
+        librarian = Administrator.objects.get(administrator_name=librarian_name)
+
+        return render(request, 'post_news.html', {'librarian': librarian})
     else:
         return HttpResponseRedirect(reverse("index"))
 
 
 def income_record(request):
-    '''
-    推送消息
-    :param request:
-    :return:
-    '''
     username = request.session.get('username', "None")
     if username == 'root':
-        return render(request, 'income_record.html')
+        all_money_orders = MoneyOrder.objects.all().order_by('-order_time')
+        all_money = 0
+        for order in all_money_orders:
+            all_money += order.num
+        return render(request, 'income_record.html',
+                      {'all_money_orders': all_money_orders, 'all_money': all_money})
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -729,11 +785,15 @@ def manage_user_api(request):
             return JsonResponse({"result": False, "msg": "User Name Invalid!"})
         reserve_order_list = ReserveOrder.objects.filter(user_id=user_id, expire=False, )
         borrow_order_list = BorrowOrder.objects.filter(user_id=user_id, is_return=False)
+        returned_order_list = BorrowOrder.objects.filter(user_id=user_id, is_return=True)
+        money_order_list = MoneyOrder.objects.filter(user=user)
+
         user_dict = {
             "user_name": user.user_name,
             "user_id": user.user_id,
             "email": user.email
         }
+
         reserve_orders = list()
         for reserve_order in reserve_order_list:
             order = {
@@ -743,6 +803,7 @@ def manage_user_api(request):
                 "reserve_time": reserve_order.borrow_time
             }
             reserve_orders.append(order)
+
         borrow_orders = list()
         for borrow_order in borrow_order_list:
             order = {
@@ -753,11 +814,41 @@ def manage_user_api(request):
                 "debt": borrow_order.debt
             }
             borrow_orders.append(order)
+
+        returned_orders = list()
+        all_fine = 0  # 总罚金
+        for returned_order in returned_order_list:
+            all_fine += returned_order.debt
+            order = {
+                'borrow_order_id': returned_order.order_id,
+                "borrow_book_name": returned_order.book.isbn.book_name,
+                "borrow_user_name": user.user_name,
+                "return_time": returned_order.return_time,
+                "debt": returned_order.debt
+            }
+            returned_orders.append(order)
+
+        # 交易记录
+        money_orders = list()
+        for money_order in money_order_list:
+            order = {
+                'id': money_order.id,
+                "order_type": money_order.get_order_type_display(),
+                "user_name": money_order.user.user_name,
+                "order_time": money_order.order_time,
+                "librarian": money_order.librarian.administrator_name,
+                "num": money_order.num
+            }
+            money_orders.append(order)
+
         return JsonResponse(
                             {'result': True,
                              'user_message': user_dict,
                              'reserve_orders': reserve_orders,
-                             'borrow_orders': borrow_orders
+                             'borrow_orders': borrow_orders,
+                             'returned_orders': returned_orders,
+                             'all_fine': all_fine,
+                             'money_orders': money_orders
                              }
                             )
     except Exception:
@@ -899,3 +990,194 @@ def get_book_info_by_id_api(request):
 
     else:
         return JsonResponse({"result": False})
+
+
+# 管理员查找删书记录
+def search_del_history_api(request):
+    if request.method != "POST":
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    username = request.session.get('username', "None")
+    if not username == 'root':
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    try:
+        isbn = request.POST["book_isbn"]
+
+        del_history_list = BookDelHistory.objects.filter(book_isbn=isbn).order_by('-deleted_time')
+
+        del_historys = list()
+        for del_history in del_history_list:
+            history = {
+                "book_id": del_history.book_id,
+                "book_name": del_history.book_name,
+                "book_isbn": del_history.book_isbn,
+                "deleted_time": del_history.deleted_time,
+                "del_reason": del_history.get_del_reason_display(),
+                "librarian_name": del_history.librarian.administrator_name
+            }
+            del_historys.append(history)
+
+        return JsonResponse({'result': True, 'del_historys': del_historys})
+    except Exception:
+        return JsonResponse({"result": False, "msg": "Error!"})
+
+
+# 发布新的通知
+def add_new_notice(request):
+
+    if request.method == "POST":
+        try:
+            title = request.POST["title"]
+            content = request.POST["content"]
+            author_name = request.POST['author_name']
+            librarian = Administrator.objects.get(administrator_name=author_name)
+            if librarian:
+                Notice.objects.create(author=librarian, title=title, content=content)
+                response = JsonResponse({'result': True})
+            else:
+                response = JsonResponse({'result': False, 'mag': 'db error!'})
+            return response
+        except:
+            return JsonResponse({'result': False, 'msg': 'Error!'})
+
+
+# 跳转到编辑通知页面
+def edit_notice(request, notice_id):
+    username = request.session.get('username', "None")
+    if username == 'root':
+        librarian_name = request.session['admin_name']
+
+        librarian = Administrator.objects.get(administrator_name=librarian_name)
+        notice = Notice.objects.get(id=notice_id)
+
+        return render(request, 'edit_news.html', {'notice': notice, 'librarian': librarian})
+
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
+# 数据库编辑通知
+def edit_notice_api(request):
+    if request.method == "POST":
+        try:
+            notice_id = request.POST["notice_id"]
+            title = request.POST["title"]
+            content = request.POST["content"]
+            author_name = request.POST['author_name']
+            notice = Notice.objects.get(id=notice_id)
+            librarian = Administrator.objects.get(administrator_name=author_name)
+            if librarian and notice:
+                notice.title = title
+                notice.author = librarian
+                notice.content = content
+                notice.save()
+                response = JsonResponse({'result': True})
+            else:
+                response = JsonResponse({'result': False, 'mag': 'db error!'})
+            return response
+        except:
+            return JsonResponse({'result': False, 'msg': 'Error!'})
+
+
+# 数据库删除通知
+def delete_notice_api(request):
+    if request.method != "POST":
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    username = request.session.get('username', "None")
+    if not username == 'root':
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    try:
+        notice_id = request.POST["notice_id"]
+    except:
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    try:
+        try:
+            Notice.objects.get(id=notice_id).delete()
+        except:
+            return JsonResponse({"result": False, "msg": "Error!"})
+
+        return JsonResponse({"result": True})
+    except Exception:
+        return JsonResponse({"result": False, "msg": "Error!"})
+
+
+def search_notices_api(request):
+    if request.method != "POST":
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    username = request.session.get('username', "None")
+    if not username == 'root':
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    try:
+        title = request.POST["title"]
+
+        notice_list = Notice.objects.filter(title=title).order_by('-updated_time')
+
+        notices = list()
+        for notice in notice_list:
+            search_notice = {
+                "id": notice.id,
+                "title": notice.title,
+                "content": notice.content,
+                "updated_time": notice.updated_time,
+                "librarian_name": notice.author.administrator_name
+            }
+            notices.append(search_notice)
+
+        return JsonResponse({'result': True, 'notices': notices})
+    except Exception:
+        return JsonResponse({"result": False, "msg": "Error!"})
+
+
+# 查看通知正文
+def view_notice_content(request, notice_id):
+    notice = Notice.objects.get(id=notice_id)
+    return render(request, 'view_news.html', {"notice": notice})
+
+
+# 查找指定月 周 日的收入
+def search_income_record_api(request):
+    if request.method != "POST":
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    username = request.session.get('username', "None")
+    if not username == 'root':
+        return JsonResponse({"result": False, "msg": "Forbidden"})
+    try:
+        date1 = request.POST["date"]
+        way = request.POST["way"]
+
+        year = int(date1.split('-')[0])
+        month = int(date1.split('-')[1])
+        day = int(date1.split('-')[2])
+
+        d = datetime.datetime(year, month, day)
+
+        if way == 'day':
+            income_record_list = MoneyOrder.objects.filter(
+                order_time__year=d.year, order_time__month=d.month, order_time__day=d.day).order_by('-order_time')
+        elif way == 'month':
+            income_record_list = MoneyOrder.objects.filter(
+                order_time__year=d.year, order_time__month=d.month).order_by('-order_time')
+        elif way == 'week':
+            week_start = d - datetime.timedelta(days=d.weekday())
+            week_end = week_start + datetime.timedelta(days=7)
+            income_record_list = MoneyOrder.objects.filter(
+                order_time__range=[week_start, week_end]).order_by('-order_time')
+        else:
+            return JsonResponse({"result": False, "msg": "Error!"})
+
+        income_records = list()
+        income_num = 0
+        for incomerecord in income_record_list:
+            income_num += incomerecord.num
+            record = {
+                "id": incomerecord.id,
+                "user_name": incomerecord.user.user_name,
+                "order_time": incomerecord.order_time,
+                "order_type": incomerecord.get_order_type_display(),
+                "librarian_name": incomerecord.librarian.administrator_name,
+                "num": incomerecord.num
+            }
+            income_records.append(record)
+
+        return JsonResponse({'result': True, 'income_records': income_records, 'income_num': income_num})
+    except Exception:
+        return JsonResponse({"result": False, "msg": "Error!"})

@@ -70,11 +70,11 @@ class Role(models.Model):
 
 class Notice(models.Model):
 
-    title = models.TextField(null=False)
-    content = models.TextField(null=False)
-    author = models.ForeignKey(Administrator, related_name="Notices")
-    expire = models.BooleanField(null=False)
-    issue_time = models.DateField(null=False, auto_now_add=True)
+    title = models.CharField(max_length=100)
+    content = models.TextField(max_length=2000)
+    author = models.ForeignKey(Administrator, related_name="notices")
+    issue_time = models.DateTimeField(auto_now_add=True)
+    updated_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.title)
@@ -88,6 +88,8 @@ class MoneyOrder(models.Model):
     order_type = models.CharField(max_length=1, choices=TYPE)
     num = models.IntegerField(null=False)
     order_time = models.DateTimeField(null=False, auto_now_add=True)
+    librarian = models.ForeignKey(Administrator, related_name='money_orders',
+                                  null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return str(self.id)
@@ -101,11 +103,16 @@ class AutoUpdateDB(models.Model):
 
 # 图书删除记录
 class BookDelHistory(models.Model):
+    REASON = (('D', 'DAMAGED'), ('L', 'LOST'))
     book_id = models.IntegerField()
     book_isbn = models.IntegerField()
     book_name = models.CharField(max_length=100)
     book_author = models.CharField(max_length=50)
     deleted_time = models.DateTimeField(auto_now_add=True)
+    # 删除管理员时管理员设置为空
+    librarian = models.ForeignKey(Administrator, related_name='deleted_books',
+                                  null=True, on_delete=models.SET_NULL)
+    del_reason = models.CharField(max_length=1, choices=REASON)
 
     def __str__(self):
         return str(self.id)

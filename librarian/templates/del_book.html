@@ -70,9 +70,9 @@
                     <i class="fa fa-book">  {% trans '删书缘由' %}  </i>
                     <br>
                     <td>
-						<label class="btn btn-primary"><input type="radio" name="del_reason" value="damage" checked="checked">{% trans '损坏' %}</label>
+						<label class="btn btn-primary"><input type="radio" name="del_reason" value="damaged" checked="checked">{% trans '损坏' %}</label>
                         &nbsp;
-                        <label class="btn btn-primary"><input type="radio" name="del_reason" value="loss">{% trans '丢失' %}</label>
+                        <label class="btn btn-primary"><input type="radio" name="del_reason" value="lost">{% trans '丢失' %}</label>
 					</td>
                 </div>
 
@@ -153,7 +153,14 @@ book_id_fouces();
     }*/
    function del_book() {
        var book_id = $("#book_id").val();
-        $.get('/manager/delete_book/api/', {"book_id": book_id}, function (result, statue) {
+       var delreasons = document.getElementsByName("del_reason");
+       var del_reason;
+       for(var i=0;i<delreasons.length;i++){
+                if(delreasons[i].checked){
+                    del_reason = delreasons[i].value;
+                }
+            }
+        $.get('/manager/delete_book/api/', {"book_id": book_id, "del_reason": del_reason}, function (result, statue) {
             if(statue === "success"){
                 if(result["result"] === false){
                     alert("{% trans '图书删除失败!\n错误信息: ' %}"+ result['msg']);

@@ -131,11 +131,13 @@
 <div class="container">
         <div class="input-group col-md-3" style="width: 600px;margin-left: auto;margin-right: auto" >
             <span class="input-group-btn">
-				<button class="btn btn-info btn-search" onclick="all_message()">{% trans '全部' %}</button>
+                <a href="{% url 'manager_del_record' %}">
+                    <button class="btn btn-info btn-search">{% trans '全部' %}</button>
+                </a>
 			</span>
-			<input type="text" class="form-control" id="search_input"  placeholder="{% trans '请输入已删除书名：' %}" />
+			<input type="text" class="form-control" id="search_del_book_input"  placeholder="{% trans '请输入书的ISBN' %}" />
 			<span class="input-group-btn">
-				<button class="btn btn-info btn-search" onclick="search_user_message()">{% trans '查找' %}</button>
+				<button class="btn btn-info btn-search" onclick="search_del_history_by_isbn()">{% trans '查找' %}</button>
 			</span>
         </div>
         <br/>
@@ -155,9 +157,17 @@
                 </tr>
 	        </thead>
 
-            <tbody >
-                <tr class="active" id="user_message_tr">
+            <tbody id="del_history">
+            {% for del_history in all_del_history %}
+                <tr class="active">
+                    <td>{{ del_history.book_id }}</td>
+                    <td>{{ del_history.book_name }}</td>
+                    <td>{{ del_history.book_isbn }}</td>
+                    <td>{{ del_history.deleted_time }}</td>
+                    <td>{{ del_history.get_del_reason_display }}</td>
+                    <td>{{ del_history.librarian.administrator_name }}</td>
                 </tr>
+            {% endfor %}
             </tbody>
         </table>
         </div>
@@ -170,6 +180,63 @@ Copyright &copy;2018 Library
 <a href="#">xiaoxiongxiong@xiongxiong.com</a>
 </footer>
 <script>
+    $.ajaxSetup({
+    data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+});
+    $(document).ready(function () {
+        $('#search_del_book_input').bind('keypress',function(event){
+            if (event.keyCode == "13") {
+               search_del_history_by_isbn();
+            }
+        })
+    });
+    function add_del_history(del_historys) {
+        var parent = document.getElementById("del_history");
+        //删除全部显示内容
+        while (parent.hasChildNodes()){
+            parent.removeChild(parent.firstChild);
+        }
+
+        parent.innerText = "";
+        for( var i=0;i<del_historys.length;i++){
+            var tr = document.createElement("tr");
+            tr.setAttribute("class", "active");
+            var td = document.createElement("td");
+            var td_1 = document.createElement("td");
+            var td_2 = document.createElement("td");
+            var td_3 = document.createElement("td");
+            var td_4 = document.createElement("td");
+            var td_5 = document.createElement("td");
+
+            td.innerText = del_historys[i]["book_id"];
+            td_1.innerText = del_historys[i]["book_name"];
+            td_2.innerText = del_historys[i]["book_isbn"];
+            td_3.innerText = del_historys[i]["deleted_time"];
+            td_4.innerText = del_historys[i]["del_reason"];
+            td_5.innerText = del_historys[i]["librarian_name"];
+
+            tr.appendChild(td);
+            tr.appendChild(td_1);
+            tr.appendChild(td_2);
+            tr.appendChild(td_3);
+            tr.appendChild(td_4);
+            tr.appendChild(td_5);
+
+            parent.appendChild(tr);
+        }
+    }
+    function search_del_history_by_isbn() {
+         var book_isbn = $("#search_del_book_input").val();
+        $.post('{% url 'search_del_history_api' %}',{"book_isbn": book_isbn},function(result){
+                if(result["result"] === true){
+                        var del_historys = result["del_historys"];
+                        add_del_history(del_historys);
+
+                }else {
+                    alert("Failed!\n message:"+result["msg"])
+                }
+        });
+    }
     function test(str){
         var li=document.getElementById("lang").getElementsByTagName("input");
         li[1].value=str;

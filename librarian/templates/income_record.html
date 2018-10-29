@@ -143,25 +143,34 @@
                     {% trans '月' %}
                 </label>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <h4 id="" style="display:inline; height:50px; width:350px;text-align:right;">{% trans '收入总金额为：' %}&nbsp;&nbsp;<span id="all_fine" style="text-align: right">300</span>&nbsp;￥</h4>
+                <h4 id="" style="display:inline; height:50px; width:350px;text-align:right;">{% trans '收入总金额为：' %}&nbsp;&nbsp;<span id="all_fine" style="text-align: right">{{ all_money }}</span>&nbsp;￥</h4>
             </form>
             </div>
 	    <table align="center" id="tab" width="300px"  class="table table-striped">
 
 	        <thead>
                 <tr>
-                    <th align="center">{% trans '管理员ID' %}</th>
-                    <th align="center">{% trans '用户ID' %}</th>
+                    <th align="center">{% trans '订单号' %}</th>
+                    <th align="center">{% trans '用户名' %}</th>
                     <th align="center">{% trans '订单时间' %}</th>
                     <th align="center">{% trans '收入类型' %}</th>
+                    <th align="center">{% trans '收款人' %}</th>
                     <th align="center">{% trans '收入金额' %}</th>
 
                 </tr>
 	        </thead>
 
-            <tbody >
-                <tr class="active" id="user_message_tr">
+            <tbody id="money_orders">
+            {% for money_order in all_money_orders %}
+                <tr class="active">
+                    <td>{{ money_order.id }}</td>
+                    <td>{{ money_order.user.user_name }}</td>
+                    <td>{{ money_order.order_time }}</td>
+                    <td>{{ money_order.get_order_type_display }}</td>
+                    <td>{{ money_order.librarian.administrator_name }}</td>
+                    <td>{{ money_order.num }}</td>
                 </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
@@ -175,6 +184,9 @@ Copyright &copy;2018 Library
 </footer>
 
 <script>
+    $.ajaxSetup({
+    data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+});
     $(document).ready(function () {
         document.getElementById('date_info').valueAsDate = new Date();
         /*
@@ -191,10 +203,49 @@ Copyright &copy;2018 Library
         document.getElementById("lang").submit();
         //submit
     }
+    function add_income_record(income_num, income_records){
+        var all_fine = document.getElementById("all_fine");
+        all_fine.innerText = income_num;
+        var parent = document.getElementById("money_orders");
+        parent.innerText = "";
+        for( var i=0;i<income_records.length;i++){
+            var tr = document.createElement("tr");
+            tr.setAttribute("class", "active");
+            var td = document.createElement("td");
+            var td_1 = document.createElement("td");
+            var td_2 = document.createElement("td");
+            var td_3 = document.createElement("td");
+            var td_4 = document.createElement("td");
+            var td_5 = document.createElement("td");
+
+            td.innerText = income_records[i]["id"];
+            td_1.innerText = income_records[i]["user_name"];
+            td_2.innerText = income_records[i]["order_time"];
+            td_3.innerText = income_records[i]["order_type"];
+            td_4.innerText = income_records[i]["librarian_name"];
+            td_5.innerText = income_records[i]["num"];
+
+            tr.appendChild(td);
+            tr.appendChild(td_1);
+            tr.appendChild(td_2);
+            tr.appendChild(td_3);
+            tr.appendChild(td_4);
+            tr.appendChild(td_5);
+
+            parent.appendChild(tr);
+        }
+    }
     function find_way(str){
         var date = document.getElementById("date_info").value;
-        alert(date + str);
-        //document.getElementById("income").submit();
+        $.post("{% url 'search_income_record_api' %}", {"date": date, "way": str}, function(result){
+            if(result){
+                var income_num = result["income_num"];
+                var income_records = result["income_records"];
+                add_income_record(income_num, income_records);
+            }
+            else
+                alert("Error!")
+        });
     }
 </script>
 </body>

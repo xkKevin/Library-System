@@ -135,20 +135,24 @@
             <div class="col-md-9">
                 <div class="form-group">
                     <i class="fa fa-lock fa-lg"></i>
+                    <input class="form-control required" type="text"  id="notice_id" value="{{ notice.id }}" readonly="readonly" />
+                </div>
+                <div class="form-group">
+                    <i class="fa fa-lock fa-lg"></i>
                     <input class="form-control required" type="text"  id="author_name" value="{{ librarian.administrator_name }}" readonly="readonly" />
                 </div>
 
                 <div class="form-group">
                     <i class="fa fa-lock fa-lg"></i>
-                    <input class="form-control required" type="text" placeholder="Title" id="title" maxlength="16"/><span id="warn1"></span>
+                    <input class="form-control required" type="text" id="title" maxlength="16" value="{{ notice.title }}" /><span id="warn1"></span>
                 </div>
                 <div class="form-group">
                     <i class="fa fa-lock fa-lg"></i>
-                    <textarea class="form-control required" placeholder="Content" id="content" rows="12"></textarea><span id="warn2"></span>
+                    <textarea class="form-control required" id="content" rows="12">{{ notice.content }}</textarea><span id="warn2"></span>
                 </div>
 
                 <div class="form-group col-md-offset-9">
-                    <button type="submit" class="btn pull-right" name="submit" onclick="add_new_notice()">{% trans '提交' %}</button>
+                    <button type="submit" class="btn pull-right" name="submit" onclick="edit_notice()">{% trans '提交' %}</button>
                 </div>
             </div>
         </div>
@@ -167,19 +171,20 @@ Copyright &copy;2018 Library
     data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
 });
 
-    function add_new_notice() {
+    function edit_notice() {
+        var notice_id = $("#notice_id").val();
+        var author_name = $("#author_name").val();
         var title = $("#title").val();
         var content = $("#content").val();
-        var author_name = $("#author_name").val();
 
-        $.post("{% url 'add_new_notice' %}",{"title":title,"content":content, "author_name":author_name},
+        $.post("{% url 'edit_notice_api' %}",{"notice_id":notice_id, "title":title,"content":content, "author_name":author_name},
             function (result,statue) {
             if(statue === 'success') {
                 if (result["result"] === true) {
-                    alert("{% trans '发布成功' %}");
+                    alert("{% trans '修改成功' %}");
                     $(window).attr('location', '{% url 'manager_post_news_record' %}');
                 } else {
-                    alert("{% trans '发布失败!' %}" + result["msg"]);
+                    alert("{% trans '修改失败!' %}" + result["msg"]);
                 }
             }
         })

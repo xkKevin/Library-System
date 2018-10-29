@@ -46,7 +46,7 @@ urlpatterns = [
     url(r'^manager/delete_record/$', librarian_views.del_record, name="manager_del_record"),
     url(r'^manager/delete_book/api/$', librarian_views.delete_book_api, name='delete_book_api'),
     url(r'^manager/post_news_record/$', librarian_views.post_news_record, name="manager_post_news_record"),
-    url(r'^manager/post_news/$', librarian_views.post_news, name="manager_post_news"),
+
     url(r'^manager/income_record/$', librarian_views.income_record, name="manager_income_record"),
     url(r'^manager/add_reader/$', librarian_views.add_reader, name="manager_add_reader"),
     url(r'^manager/delete_reader/$', librarian_views.delete_reader, name="manager_delete_reader"),
@@ -90,4 +90,23 @@ urlpatterns = [
     url(r'^manager/edit_rules/$', administrator_views.edit_rules, name="edit_rules"),
     # 通过书id获得书的其他信息
     url(r'^get_book_info_by_id/api/$', librarian_views.get_book_info_by_id_api, name='get_book_info_by_id_api'),
+    # 图书管理员缴纳罚金
+    url(r'^manager/pay_debt/api/$', librarian_views.manager_pay_debt_api, name='manager_pay_debt_api'),
+    # 图书管理员查找指定isbn的删除记录
+    url(r'^manager/search_del_history/api/$', librarian_views.search_del_history_api, name='search_del_history_api'),
+    # 图书管理员发布新的通知
+    url(r'^manager/post_news/$', librarian_views.post_news, name="manager_post_news"),
+    url(r'^manager/add_new_notice/api/$', librarian_views.add_new_notice, name="add_new_notice"),
+    # 管理员编辑通知
+    url(r'^manager/edit_notice/(?P<notice_id>\d+)/$', librarian_views.edit_notice, name="edit_notice"),
+    url(r'^manager/edit_notice/api/$', librarian_views.edit_notice_api, name="edit_notice_api"),
+    # 图书管理员删除通知
+    url(r'^manager/delete_notice/api/$', librarian_views.delete_notice_api, name='delete_notice_api'),
+    # 图书管理员通过标题查找通知
+    url('^manager/search_notices/api/$', librarian_views.search_notices_api, name='search_notices_api'),
+    # 查看通知正文
+    url(r'^view_notice_content/(?P<notice_id>\d+)/$', librarian_views.view_notice_content, name="view_notice_content"),
+    # 查找指定月、周、日的收入
+    url(r'^manager/search_income_record/api/$', librarian_views.search_income_record_api, name="search_income_record_api"),
+
 ]

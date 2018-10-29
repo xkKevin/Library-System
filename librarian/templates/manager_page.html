@@ -159,7 +159,7 @@
 				<li><a href="{% url 'add_book' %}">{% trans '添加书籍' %}</a></li>
                 <li><a href="{% url 'update_book_message' %}">{% trans '编辑书籍' %}</a></li>
                 <li><a href="{% url 'manager_delete_book' %}">{% trans '删除书籍' %}</a></li>
-                <li><a href="{% url 'manager_del_record' %}">{% trans '删除记录' %}</a></li>
+                <li><a href="{% url 'manager_del_record' %}">{% trans '删书记录' %}</a></li>
                 <li><a href="{% url 'manager_income_record' %}">{% trans '收入记录' %}</a></li>
                 <li><a href="{% url 'manager_post_news_record' %}">{% trans '推送公告' %}</a></li>
             </ul>
@@ -232,7 +232,7 @@
             <th align="center">{%  trans '归还提醒' %}</th>
         </tr>
         </thead>
-	<tbody id="return_book_tbody">
+	<tbody id="unreturned_book_tbody">
 
 
 
@@ -253,7 +253,7 @@
             <th align="center">{% trans '欠费金额' %}</th>
         </tr>
         </thead>
-	<tbody id="return_book_tbody">
+	<tbody id="returned_book_tbody">
 
 
 
@@ -272,10 +272,15 @@
                     <th align="center">{% trans '付费类型' %}</th>
                     <th align="center">{% trans '用户名' %}</th>
                     <th align="center">{% trans '缴纳时间' %}</th>
+                    <th align="center">{% trans '收款人' %}</th>
                     <th align="center">{% trans '缴纳金额' %}</th>
 
                 </tr>
                 </thead>
+                <tbody id="money_orders">
+
+
+                </tbody>
             </table>
 
         </div>
@@ -302,6 +307,17 @@ Copyright &copy;2018 Library
             }
         })
     });
+
+    function pay_debt(username) {
+        $.get("{% url 'manager_pay_debt_api' %}", {'username': username}, function(result){
+            if(result["result"] === true){
+                alert("{% trans "缴纳罚金成功" %}");
+                search_user_message();
+            }else {
+                alert("Failed!\n" + result['msg']);
+            }
+        });
+    }
 
     function delete_reader(name) {
         $.get("{% url 'manager_delete_reader' %}", {'username':name}, function(result){
@@ -343,7 +359,7 @@ Copyright &copy;2018 Library
         //向逾期用户发送邮件提醒
         $.post("{% url 'manage_send_mail_api' %}", {'borrow_id':order_id}, function(result){
             if(result["result"] === true){
-                {#search_user_message();  //这是啥意思？#}
+                {#search_user_message(); #}
                 alert("Successful!\n message:"+result["msg"])
             }else {
                 alert("Failed!\n message:"+result["msg"])
@@ -365,15 +381,19 @@ Copyright &copy;2018 Library
         var td_2 = document.createElement("td");
         td_2.innerText = user["email"];
         user_parent.appendChild(td_2);
+
         var td_3 = document.createElement("td");
         var debt_button = document.createElement("button");
-        debt_button.innerText = "{% trans '罚金' %}";
+        debt_button.innerText = "{% trans '缴纳' %}";
+        debt_button.setAttribute("onclick", "pay_debt("+"\""+user["user_name"]+"\""+")");
         td_3.appendChild(debt_button);
+
         var td_4 = document.createElement("td");
         var delete_user_button = document.createElement("button");
         delete_user_button.innerText = "{% trans '删除' %}";
         delete_user_button.setAttribute("onclick", "delete_reader("+"\""+user["user_name"]+"\""+")");
         td_4.appendChild(delete_user_button);
+
         var td_5 = document.createElement("td");
         var edit_user_button = document.createElement("button");
         edit_user_button.innerText = "{% trans '编辑' %}";
@@ -387,36 +407,36 @@ Copyright &copy;2018 Library
     function  add_reserve_order(reserve_orders) {
         // 动态添加 预约 订单
         var reserve_tbody = document.getElementById("reserve_table_body");
-                        reserve_tbody.innerText = "";
-                        for( var i=0;i<reserve_orders.length;i++){
-                            var tr = document.createElement("tr");
-                            tr.setAttribute("class", "active");
-                            var td = document.createElement("td");
-                            var td_1 = document.createElement("td");
-                            var td_2 = document.createElement("td");
-                            var td_3 = document.createElement("td");
-                            var td_4 = document.createElement("td");
-                            td.innerText = reserve_orders[i]["reserve_order_id"];
-                            td_1.innerText = reserve_orders[i]["reserve_book_name"];
-                            td_2.innerText = reserve_orders[i]["reserve_user_name"];
-                            td_3.innerText = reserve_orders[i]["reserve_time"];
-                            td_4.setAttribute("width","100px");
-                            var button = document.createElement("button");
-                            button.setAttribute("name", "借阅");
-                            button.setAttribute("onclick", "borrow_book("+reserve_orders[i]["reserve_order_id"].toString()+")");
-                            button.innerText = "{%  trans '借阅' %}";
-                            td_4.appendChild(button);
-                            tr.appendChild(td);
-                            tr.appendChild(td_1);
-                            tr.appendChild(td_2);
-                            tr.appendChild(td_3);
-                            tr.appendChild(td_4);
-                            reserve_tbody.appendChild(tr)
-                        }
+        reserve_tbody.innerText = "";
+        for( var i=0;i<reserve_orders.length;i++){
+            var tr = document.createElement("tr");
+            tr.setAttribute("class", "active");
+            var td = document.createElement("td");
+            var td_1 = document.createElement("td");
+            var td_2 = document.createElement("td");
+            var td_3 = document.createElement("td");
+            var td_4 = document.createElement("td");
+            td.innerText = reserve_orders[i]["reserve_order_id"];
+            td_1.innerText = reserve_orders[i]["reserve_book_name"];
+            td_2.innerText = reserve_orders[i]["reserve_user_name"];
+            td_3.innerText = reserve_orders[i]["reserve_time"];
+            td_4.setAttribute("width","100px");
+            var button = document.createElement("button");
+            button.setAttribute("name", "借阅");
+            button.setAttribute("onclick", "borrow_book("+reserve_orders[i]["reserve_order_id"].toString()+")");
+            button.innerText = "{%  trans '借阅' %}";
+            td_4.appendChild(button);
+            tr.appendChild(td);
+            tr.appendChild(td_1);
+            tr.appendChild(td_2);
+            tr.appendChild(td_3);
+            tr.appendChild(td_4);
+            reserve_tbody.appendChild(tr)
+        }
     }
     function add_borrow_order(borrow_orders) {
         //添加 借阅图书
-        var parent = document.getElementById("return_book_tbody");
+        var parent = document.getElementById("unreturned_book_tbody");
         parent.innerText = "";
         for( var i=0;i<borrow_orders.length;i++){
             var tr = document.createElement("tr");
@@ -453,6 +473,69 @@ Copyright &copy;2018 Library
             parent.appendChild(tr);
         }
     }
+
+    function add_returned_order(returned_orders, allFine) {
+        //添加总罚金
+        var fine = document.getElementById("all_fine");
+        fine.innerText = allFine;
+        //添加 已归还图书
+        var parent = document.getElementById("returned_book_tbody");
+        parent.innerText = "";
+        for( var i=0;i<returned_orders.length;i++){
+            var tr = document.createElement("tr");
+            tr.setAttribute("class", "active");
+            var td = document.createElement("td");
+            var td_1 = document.createElement("td");
+            var td_2 = document.createElement("td");
+            var td_3 = document.createElement("td");
+            var td_4 = document.createElement("td");
+
+            td.innerText = returned_orders[i]["borrow_order_id"];
+            td_1.innerText = returned_orders[i]["borrow_book_name"];
+            td_2.innerText = returned_orders[i]["borrow_user_name"];
+            td_3.innerText = returned_orders[i]["return_time"];
+            td_4.innerText = returned_orders[i]["debt"];
+
+            tr.appendChild(td);
+            tr.appendChild(td_1);
+            tr.appendChild(td_2);
+            tr.appendChild(td_3);
+            tr.appendChild(td_4);
+
+            parent.appendChild(tr);
+        }
+    }
+
+    function add_money_order(money_orders){
+        var parent = document.getElementById("money_orders");
+        parent.innerText = "";
+        for( var i=0;i<money_orders.length;i++){
+            var tr = document.createElement("tr");
+            tr.setAttribute("class", "active");
+            var td = document.createElement("td");
+            var td_1 = document.createElement("td");
+            var td_2 = document.createElement("td");
+            var td_3 = document.createElement("td");
+            var td_4 = document.createElement("td");
+            var td_5 = document.createElement("td");
+
+            td.innerText = money_orders[i]["id"];
+            td_1.innerText = money_orders[i]["order_type"];
+            td_2.innerText = money_orders[i]["user_name"];
+            td_3.innerText = money_orders[i]["order_time"];
+            td_4.innerText = money_orders[i]["librarian"];
+            td_5.innerText = money_orders[i]["num"];
+
+            tr.appendChild(td);
+            tr.appendChild(td_1);
+            tr.appendChild(td_2);
+            tr.appendChild(td_3);
+            tr.appendChild(td_4);
+            tr.appendChild(td_5);
+
+            parent.appendChild(tr);
+        }
+    }
     function search_user_message() {
         // 搜索用户信息
         var user_name = $("#search_input").val();
@@ -463,7 +546,12 @@ Copyright &copy;2018 Library
                         var reserve_orders = result["reserve_orders"];
                         add_reserve_order(reserve_orders);
                         var borrow_orders = result["borrow_orders"];
-                        add_borrow_order(borrow_orders)
+                        add_borrow_order(borrow_orders);
+                        var returned_orders = result["returned_orders"];
+                        var all_fine = result["all_fine"];
+                        add_returned_order(returned_orders, all_fine);
+                        var money_orders = result["money_orders"];
+                        add_money_order(money_orders);
                 }else {
                     alert("Failed!\n message:"+result["msg"])
                 }

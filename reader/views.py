@@ -3,12 +3,13 @@ import random
 from django.shortcuts import render
 from django.http import JsonResponse
 
+from administrator.models import Administrator
 from tool.changePsw import SendEmail
 from reader.models import User
 import time
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from librarian.models import ReserveOrder, BorrowOrder
+from librarian.models import ReserveOrder, BorrowOrder, MoneyOrder, Role
 
 
 def forget_passwd_page(request):
@@ -90,11 +91,24 @@ def register_post(request):
             password = request.POST["password"]
             username = request.POST["username"]
             email = request.POST["email"]
+            libraian_name = request.session["admin_name"]
+            libraian = Administrator.objects.get(administrator_name=libraian_name)
             user = User(user_name=username, password=password, email=email)
             user.save()
+
+            # 押金数目
+            deposit = Role.objects.first().deposit
+
             temp = User.objects.get(user_name=username)
+
             if temp:
-                response = JsonResponse({'result': True})
+                # 添加押金记录
+
+                temp1 = MoneyOrder.objects.create(user=temp, order_type='D', num=deposit, librarian=libraian)
+                if temp1:
+                    response = JsonResponse({'result': True})
+                else:
+                    response = JsonResponse({'result': False})
             else:
                 response = JsonResponse({'result': False})
 

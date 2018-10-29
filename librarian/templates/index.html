@@ -115,21 +115,23 @@
 	    <tr>
 	        <th style="text-align: center;">{% trans '标题' %}</th>
             <th style="text-align: center;">{% trans '内容简介' %}</th>
-	        <th style="text-align: center;">{% trans '发布日期' %}</th>
+	        <th style="text-align: center;">{% trans '发布时间' %}</th>
+            <th style="text-align: center;">{% trans '发布者' %}</th>
 	    </tr>
 	    </thead>
 	    <tbody>
         {% for notice in notices %}
             <tr>
-            <td style="text-align: center;"><a href="#"/>{{ notice.title }}</td>
+                <td style="text-align: center;"><a href="{% url 'view_notice_content' notice.id %}">{{ notice.title }}</a></td>
             <td>
-                {% if notice.content|length > 30 %}
-                    {{ notice.content|slice:"30" }}
+                {% if notice.content|length > 20 %}
+                    {{ notice.content|slice:"20" }}
                 {% else %}
                     {{ notice.content }}
                 {% endif %}
             </td>
-            <td style="text-align: center;">{{ notice.issue_time }}</td>
+            <td style="text-align: center;">{{ notice.updated_time}}</td>
+            <td style="text-align: center;">{{ notice.author.administrator_name}}</td>
             </tr>
         {% endfor %}
 	    </tbody>
