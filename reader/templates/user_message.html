@@ -219,8 +219,20 @@ $(document).ready(function(){
             <td>{{ borrow_order.return_time }}</td>
         {% endif %}
         <td >{{ borrow_order.debt }}</td>
-        <td >{{ borrow_order.is_return }}</td>
-        <td >{{ borrow_order.expire }}</td>
+        <td >
+            {% if borrow_order.is_return %}
+            {% trans '是' %}
+            {% else %}
+            {% trans '否' %}
+            {% endif %}
+        </td>
+        <td >
+            {% if borrow_order.expire %}
+            {% trans '是' %}
+            {% else %}
+            {% trans '否' %}
+            {% endif %}
+        </td>
     {% endfor %}
 	</tbody>
 </table>
@@ -253,8 +265,20 @@ $(document).ready(function(){
             <td>{{ reserve_order.book.isbn.isbn }}</td>
 			<td >{{ reserve_order.book.isbn.book_name }}</td>
 			<td>{{ reserve_order.borrow_time }}</td>
-            <td>{{ reserve_order.successful }}</td>
-            <td>{{ reserve_order.expire }}</td>
+            <td>
+                {% if borrow_order.successful %}
+                {% trans '是' %}
+                {% else %}
+                {% trans '否' %}
+                {% endif %}
+            </td>
+            <td>
+                {% if reserve_order.expire  %}
+                {% trans '是' %}
+                {% else %}
+                {% trans '否' %}
+                {% endif %}
+            </td>
 		</tr>
     {% endfor %}
 	</tbody>
