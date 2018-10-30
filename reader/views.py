@@ -157,7 +157,8 @@ def user_message(request):
         user = User.objects.get(user_name=username)
         if user:
             borrow_order_list = BorrowOrder.objects.filter(user_id=user.user_id)
-            reserve_order_list = ReserveOrder.objects.filter(user_id=user.user_id, )
+            reserve_order_list = ReserveOrder.objects.filter(user_id=user.user_id)
+            money_order_list = MoneyOrder.objects.filter(user=user)
 
             # 计算全部罚金
             all_fine = 0
@@ -169,7 +170,8 @@ def user_message(request):
                                                          'user_name': user.user_name,
                                                          'reserve_order_list': reserve_order_list,
                                                          'borrow_order_list': borrow_order_list,
-                                                         'all_fine': all_fine
+                                                         'all_fine': all_fine,
+                                                         'money_order_list': money_order_list
                                                          }
                           )
         else:

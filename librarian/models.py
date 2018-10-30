@@ -72,7 +72,8 @@ class Notice(models.Model):
 
     title = models.CharField(max_length=100)
     content = models.TextField(max_length=2000)
-    author = models.ForeignKey(Administrator, related_name="notices")
+    author = models.ForeignKey(Administrator, related_name="notices",
+                               null=True, on_delete=models.SET_NULL)
     issue_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
 

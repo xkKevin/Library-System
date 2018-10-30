@@ -233,7 +233,9 @@ $(document).ready(function(){
 
            		<div class="input-group col-md-3" style="width: 600px;margin-left: auto;margin-right: auto" align="center">
                     <span class="input-group-btn">
-                        <button class="btn btn-info btn-search"  onclick="all()">{% trans '全部' %}</button>
+                        <a href="{% url 'admin_manage_login' %}">
+                            <button class="btn btn-info btn-search">{% trans '全部' %}</button>
+                        </a>
                     </span>
                     <input id="libname" type="text" class="form-control" placeholder="{% trans '请输入管理员账户名：' %}" onkeyup="searchLibkey(event)"/>
                     <span class="input-group-btn">
@@ -253,10 +255,22 @@ $(document).ready(function(){
     			<th align="center">{%  trans '找回密码' %}</th>
     		</tr>
     	</thead>
-    	<tbody >
-    		<tr id="manageLib"  class="active">
-
+    	<tbody id="manageLib">
+        {% for librarian in all_librarian %}
+            <tr class="active">
+                <td>{{ librarian.administrator_name }}</td>
+                <td id= "{{ librarian.administrator_name }}_pwd" >********</td>
+                <td>
+                    <a href="{% url 'edit_librarian' librarian.administrator_name %}"><button type="button">{% trans '编辑' %}</button> </a>
+                </td>
+                <td>
+                    <button type="button" onclick="delete_librarian('{{ librarian.administrator_name }}')" >{% trans '删除' %}</button>
+                </td>
+                <td>
+                    <button type="button" onclick="see_passwd('{{ librarian.administrator_name }}', '{{ librarian.password }}')">{% trans '查看密码' %}</button>
+                </td>
     		</tr>
+        {% endfor %}
     	</tbody>
     </table>
 
@@ -331,15 +345,17 @@ Copyright &copy;2018 Library
                 }
             })
         }
+            {#alert(account);#}
     }
-    function see_passwd(passwd) {
-        var pwd = document.getElementById("pwd");
+    function see_passwd(lib_name, passwd) {
+        var pwd = document.getElementById(lib_name+"_pwd");
         pwd.innerText = passwd;
+        {#alert(pwd.text);#}
     }
     function  add_admin_message(result) {
         // 动态添加管理员信息
         var lib = document.getElementById("manageLib");
-        var lib_child = lib.getElementsByTagName("td");
+        var lib_child = lib.getElementsByTagName("tr");
         var len = lib_child.length;
         if(len>0){  //删除之前的结果
             for (i=0;i<len;){
@@ -348,17 +364,18 @@ Copyright &copy;2018 Library
                 //lib_child的长度会动态修改
             }
         }
+        tr = document.createElement("tr");
         var account_name = document.createElement("td");
         account_name.innerText = result["account"];
         var passwd = document.createElement("td");
-        passwd.setAttribute("id","pwd");
+        passwd.setAttribute("id",result["account"]+"_pwd");
         passwd.innerText = "********";
         var edit_librarian = document.createElement("td");
         var edit_href = document.createElement("a");
         var button_3 = document.createElement("button");
         button_3.setAttribute("width", "100px");
         button_3.innerText = "{% trans '编辑' %}";
-        edit_href.setAttribute("href", "/manager/edit_librarian/");
+        edit_href.setAttribute("href", "/manager/edit_librarian/"+result["account"]+"/");
         edit_href.appendChild(button_3);
         edit_librarian.appendChild(edit_href);
         var delete_librarian = document.createElement("td");
@@ -371,13 +388,17 @@ Copyright &copy;2018 Library
         var button_2 = document.createElement("button");
         button_2.setAttribute("width", "100px");
         button_2.innerText = "{% trans '查看密码' %}";
-        button_2.setAttribute("onclick", "see_passwd(" + "\""+result["psw"]+"\""+ ")" );
+        button_2.setAttribute("onclick", "see_passwd(" + "\""+result["account"]+"\"" + ", " +
+            "\""+result["psw"]+"\""+ ")" );
         see_passwd_button.appendChild(button_2);
-        lib.appendChild(account_name);
-        lib.appendChild(passwd);
-        lib.appendChild(edit_librarian);
-        lib.appendChild(delete_librarian);
-        lib.appendChild(see_passwd_button);
+
+        tr.appendChild(account_name);
+        tr.appendChild(passwd);
+        tr.appendChild(edit_librarian);
+        tr.appendChild(delete_librarian);
+        tr.appendChild(see_passwd_button);
+
+        lib.appendChild(tr);
 
     }
     function test(str){
@@ -390,7 +411,22 @@ Copyright &copy;2018 Library
         var overdue_fine = $("#overdue_fine").val();
         var return_days = $("#return_days").val();
         var deposit_amount = $("#deposit_amount").val();
-        if(overdue_fine!=""&&return_days!=""&&deposit_amount!=""){
+        var flag = 0;
+
+        if (overdue_fine == "") {
+            overdue_fine = document.getElementById("overdue_fine").placeholder;
+            flag++;
+        }
+        if(return_days==""){
+            return_days = document.getElementById("return_days").placeholder;
+            flag++;
+        }
+        if(deposit_amount==""){
+            deposit_amount = document.getElementById("deposit_amount").placeholder;
+            flag++;
+        }
+
+        if(flag!=3){
             $.get("/manager/edit_rules/", {"overdue_fine": overdue_fine, "return_days":return_days,
             "deposit_amount":deposit_amount}, function (result,statue) {
                 if(statue === 'success') {
@@ -404,7 +440,7 @@ Copyright &copy;2018 Library
             })
         }
         else
-            alert("全不能为空！")
+            alert("No Change！")
     }
 </script>
 </html>

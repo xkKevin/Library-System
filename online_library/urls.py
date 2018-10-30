@@ -81,7 +81,7 @@ urlpatterns = [
     url(r'^createLib/$', administrator_views.create_lib, name="create_lib"),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     # 系统管理员编辑图书管理员信息
-    url(r'^manager/edit_librarian/$', administrator_views.edit_librarian, name="edit_librarian"),
+    url(r'^manager/edit_librarian/(?P<librarian_name>[a-zA-Z0-9_]+)/$', administrator_views.edit_librarian, name="edit_librarian"),
     url(r'^manager/manager_edit_librarian/$', administrator_views.manager_edit_librarian,
         name="manager_edit_librarian"),
     # 系统管理员删除图书管理员

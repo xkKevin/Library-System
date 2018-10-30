@@ -53,7 +53,10 @@ def index(request):
     # 获取最近5条通知
     notices = Notice.objects.filter().order_by('-updated_time')[:5]
     if username != "None":
-        message = {'login': True, "username": username, 'notices': notices}
+        if username == 'anti_man':  # 如果是系统管理员，不能在主页登录
+            message = {'login': False, "username": None, 'notices': notices}
+        else:
+            message = {'login': True, "username": username, 'notices': notices}
     else:
         message = {'login': False, "username": username, 'notices': notices}
     return render(request, 'index.html', message, )

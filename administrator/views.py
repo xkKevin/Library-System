@@ -28,8 +28,10 @@ def Adminlogin(request):
     username = request.session.get('username', "None")
     if not username == 'anti_man':
         return render(request, 'index.html')
+
     rule = Role.objects.first()
-    return render(request, 'admin2.html', {'rule': rule})
+    all_librarian = Administrator.objects.all()
+    return render(request, 'admin2.html', {'rule': rule, 'all_librarian': all_librarian})
 
 
 def login_adminRoot(request):
@@ -158,15 +160,15 @@ def get_adminPsw(request):
             response = JsonResponse({'result': True, "account": temp.administrator_name, "psw": temp.password})
             return response
         except Exception as e:
-                return JsonResponse({'result': False,  "account": "","psw": ""})
+                return JsonResponse({'result': False,  "account": "", "psw": ""})
     else:
         return HttpResponseRedirect(reverse("index"))
 
 
 # 系统管理员界面编辑图书馆管理员信息
-def edit_librarian(request):
-    lib_name = request.session["current_operated_lib_name"]
-    librarian = Administrator.objects.get(administrator_name=lib_name)
+def edit_librarian(request, librarian_name):
+    # lib_name = request.session["current_operated_lib_name"]
+    librarian = Administrator.objects.get(administrator_name=librarian_name)
 
     return render(request, 'edit_librarian.html', {'librarian': librarian})
 
