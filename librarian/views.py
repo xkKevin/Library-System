@@ -14,7 +14,7 @@ import time
 import requests
 
 from tool.changePsw import SendEmail
-
+from tool.change_time import time_stamp_to_str
 def index(request):
     '''
     首页
@@ -67,7 +67,8 @@ def manager_page(request):
     '''
     username = request.session.get('username', "None")
     if username == 'root':
-        return render(request, 'manager_page.html')
+        librarian_name = request.session['admin_name']
+        return render(request, 'manager_page.html', {'librarian_name': librarian_name})
     else:
         return HttpResponseRedirect(reverse("login"))
 
@@ -730,8 +731,7 @@ def borrow_book_api(request):
             reserve_order = ReserveOrder.objects.get(order_id=reserve_id,)
         except:
             return JsonResponse({"result": False, "msg": "Reserve_id is invalid"})
-        a = BorrowOrder.objects.filter(user_id=reserve_order.user.user_id, expire=False).count()
-        if BorrowOrder.objects.filter(user_id=reserve_order.user.user_id, expire=False).count() >= limit:
+        if BorrowOrder.objects.filter(user_id=reserve_order.user.user_id, is_return=False).count() >= limit:
             return JsonResponse({"result": False, "msg": "This User can not borrow!"})
         if reserve_order.isbn.available_num <= 0:
             return JsonResponse({"result": False, "msg": "All Book have been lent out!"})
@@ -783,10 +783,10 @@ def manage_user_api(request):
                 user_id = user.user_id
         except:
             return JsonResponse({"result": False, "msg": "User Name Invalid!"})
-        reserve_order_list = ReserveOrder.objects.filter(user_id=user_id, expire=False, )
-        borrow_order_list = BorrowOrder.objects.filter(user_id=user_id, is_return=False)
-        returned_order_list = BorrowOrder.objects.filter(user_id=user_id, is_return=True)
-        money_order_list = MoneyOrder.objects.filter(user=user)
+        reserve_order_list = ReserveOrder.objects.filter(user_id=user_id, expire=False,).order_by('-borrow_time')
+        borrow_order_list = BorrowOrder.objects.filter(user_id=user_id, is_return=False).order_by('-borrow_time')
+        returned_order_list = BorrowOrder.objects.filter(user_id=user_id, is_return=True).order_by('-return_time')
+        money_order_list = MoneyOrder.objects.filter(user=user).order_by('-order_time')
 
         user_dict = {
             "user_name": user.user_name,
@@ -800,7 +800,7 @@ def manage_user_api(request):
                 'reserve_order_id': reserve_order.order_id,
                 "reserve_book_name": reserve_order.book.isbn.book_name,
                 "reserve_user_name": user.user_name,
-                "reserve_time": reserve_order.borrow_time
+                "reserve_time": time_stamp_to_str(reserve_order.borrow_time.timetuple())
             }
             reserve_orders.append(order)
 
@@ -810,7 +810,7 @@ def manage_user_api(request):
                 'borrow_order_id': borrow_order.order_id,
                 "borrow_book_name": borrow_order.book.isbn.book_name,
                 "borrow_user_name": user.user_name,
-                "borrow_time": borrow_order.borrow_time,
+                "borrow_time": time_stamp_to_str(borrow_order.borrow_time.timetuple()),
                 "debt": borrow_order.debt
             }
             borrow_orders.append(order)
@@ -823,7 +823,7 @@ def manage_user_api(request):
                 'borrow_order_id': returned_order.order_id,
                 "borrow_book_name": returned_order.book.isbn.book_name,
                 "borrow_user_name": user.user_name,
-                "return_time": returned_order.return_time,
+                "return_time": time_stamp_to_str(returned_order.return_time.timetuple()),
                 "debt": returned_order.debt
             }
             returned_orders.append(order)
@@ -835,7 +835,7 @@ def manage_user_api(request):
                 'id': money_order.id,
                 "order_type": money_order.get_order_type_display(),
                 "user_name": money_order.user.user_name,
-                "order_time": money_order.order_time,
+                "order_time": time_stamp_to_str(money_order.order_time.timetuple()),
                 "librarian": money_order.librarian.administrator_name,
                 "num": money_order.num
             }
@@ -1010,7 +1010,7 @@ def search_del_history_api(request):
                 "book_id": del_history.book_id,
                 "book_name": del_history.book_name,
                 "book_isbn": del_history.book_isbn,
-                "deleted_time": del_history.deleted_time,
+                "deleted_time": time_stamp_to_str(del_history.deleted_time.timetuple()),
                 "del_reason": del_history.get_del_reason_display(),
                 "librarian_name": del_history.librarian.administrator_name
             }
@@ -1109,7 +1109,7 @@ def search_notices_api(request):
     try:
         title = request.POST["title"]
 
-        notice_list = Notice.objects.filter(title=title).order_by('-updated_time')
+        notice_list = Notice.objects.filter(title__contains=title).order_by('-updated_time')
 
         notices = list()
         for notice in notice_list:
@@ -1117,7 +1117,7 @@ def search_notices_api(request):
                 "id": notice.id,
                 "title": notice.title,
                 "content": notice.content,
-                "updated_time": notice.updated_time,
+                "updated_time": time_stamp_to_str(notice.updated_time.timetuple()),
                 "librarian_name": notice.author.administrator_name
             }
             notices.append(search_notice)
@@ -1171,7 +1171,7 @@ def search_income_record_api(request):
             record = {
                 "id": incomerecord.id,
                 "user_name": incomerecord.user.user_name,
-                "order_time": incomerecord.order_time,
+                "order_time": time_stamp_to_str(incomerecord.order_time.timetuple()),
                 "order_type": incomerecord.get_order_type_display(),
                 "librarian_name": incomerecord.librarian.administrator_name,
                 "num": incomerecord.num

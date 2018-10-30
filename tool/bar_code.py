@@ -40,4 +40,4 @@ class BarCode:
 
 
 if __name__ == '__main__':
-    print(BarCode.create_bar_code(2))
+    print(BarCode.create_bar_code(15))

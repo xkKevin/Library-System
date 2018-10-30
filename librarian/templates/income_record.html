@@ -175,7 +175,7 @@
                 <tr class="active">
                     <td>{{ money_order.id }}</td>
                     <td>{{ money_order.user.user_name }}</td>
-                    <td>{{ money_order.order_time }}</td>
+                    <td>{{ money_order.order_time | date:"Y-m-d H:i:s" }}</td>
                     <td>{{ money_order.get_order_type_display }}</td>
                     <td>{{ money_order.librarian.administrator_name }}</td>
                     <td>{{ money_order.num }}</td>

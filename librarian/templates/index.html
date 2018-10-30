@@ -124,7 +124,7 @@
         {% for notice in notices %}
             <tr>
                 <td style="text-align: center;"><a href="{% url 'view_notice_content' notice.id %}">{{ notice.title }}</a></td>
-            <td>
+            <td style="text-align: center;">
                 {% if notice.content|length > 20 %}
                     {{ notice.content|slice:"20" }}
                 {% else %}

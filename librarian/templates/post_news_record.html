@@ -185,7 +185,7 @@
                             {{ notice.content }}
                         {% endif %}
                     </td>
-                    <td>{{ notice.updated_time }}</td>
+                    <td>{{ notice.updated_time | date:"Y-m-d H:i:s"}}</td>
                     <td>{{ notice.author.administrator_name }}</td>
                     <td>
                         <a href="{% url 'edit_notice' notice.id %}">
