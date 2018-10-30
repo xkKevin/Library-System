@@ -160,15 +160,17 @@ $(document).ready(function(){
     <div class="row">
         <div class="col-xs-3" id="myScrollspy">
             <ul class="nav nav-tabs nav-stacked" id="myNav">
-                <li class="active"><a href="#section-1">{% trans '基本资料' %}</a></li>
+                <li><a href="#section-1">{% trans '基本资料' %}</a></li>
                 <li><a href="#section-2">{% trans '借阅记录' %}</a></li>
                 <li><a href="#section-3">{% trans '预约记录' %}</a></li>
+                <li><a href="#section-4">{% trans '付费记录' %}</a></li>
                 <li><a href="{% url 'change_passwd' %}">{% trans '修改密码' %}</a></li>
 
             </ul>
         </div>
         <div class="col-xs-9 ">
-            <h2 id="section-1" style="display:block; height:50px; width:350px">{% trans '基本资料' %}</h2>
+        <div id="section-1" style="position: relative; top: -50px;"></div>
+            <h2 style="display:block; height:50px; width:350px">{% trans '基本资料' %}</h2>
         
 	
 	
@@ -185,7 +187,8 @@ $(document).ready(function(){
         <a id="btlogin" onclick="changeInfo()">{% trans '修改' %}</a>
     </div>
             <hr>
-            <h2 id="section-2" style="display:block; height:50px; width:400px">{% trans  '借阅记录' %}</h2>
+        <div id="section-2" style="position: relative; top: -50px;"></div>
+            <h2 style="display:block; height:50px; width:400px">{% trans  '借阅记录' %}</h2>
 
 
 	<h4 style="display:block; height:50px; width:400px">{% trans  '罚金总额：' %}&nbsp;&nbsp;&nbsp;<span id="all_fine">{{ all_fine }}</span>&nbsp;￥</h4>
@@ -224,7 +227,8 @@ $(document).ready(function(){
 </table>
 
             <hr>
-            <h2 id="section-3" style="display:block; height:50px; width:400px">{% trans '预约记录' %}</h2>
+        <div id="section-3" style="position: relative; top: -50px;"></div>
+            <h2 style="display:block; height:50px; width:400px">{% trans '预约记录' %}</h2>
       
 
 <table align="center" id="tab" width="300px"  class="table table-striped">
@@ -237,6 +241,40 @@ $(document).ready(function(){
 			<th align="center">{% trans '预约时间' %}</th>
 			<th align="center">{% trans '是否有效' %}</th>
 			<th align="center">{% trans '是否过期' %}</th>
+		</tr>
+	</thead>
+	<tbody >
+    {% for reserve_order in reserve_order_list %}
+        {% if reserve_order.expire %}
+        <tr class="success">
+        {% else %}
+        <tr class="active">
+        {% endif %}
+            <td>{{ reserve_order.order_id }}</td>
+            <td>{{ reserve_order.book.isbn.isbn }}</td>
+			<td >{{ reserve_order.book.isbn.book_name }}</td>
+			<td>{{ reserve_order.borrow_time }}</td>
+            <td>{{ reserve_order.successful }}</td>
+            <td>{{ reserve_order.expire }}</td>
+		</tr>
+    {% endfor %}
+	</tbody>
+</table>
+
+                    <hr>
+        <div id="section-4" style="position: relative; top: -50px;"></div>
+            <h2 style="display:block; height:50px; width:400px">{% trans '付费记录' %}</h2>
+
+
+<table align="center" id="tab" width="300px"  class="table table-striped">
+
+	<thead>
+		<tr >
+            <th align="center">{% trans '订单号' %}</th>
+            <th align="center">{% trans '付费类型' %}</th>
+            <th align="center">{% trans '缴纳时间' %}</th>
+            <th align="center">{% trans '收款人' %}</th>
+            <th align="center">{% trans '缴纳金额' %}</th>
 		</tr>
 	</thead>
 	<tbody >
