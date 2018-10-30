@@ -21,6 +21,16 @@
         background-size: cover;
     }
 
+    .table-striped > tbody > tr:nth-child(2n+1) > td,
+    .table-striped > tbody > tr:nth-child(2n+1) > th {
+        background-color: #afd9ee;
+     }
+
+    .table-striped > tbody > tr:nth-child(2n) > td,
+    .table-striped > tbody > tr:nth-child(2n) > th {
+        background-color: #8EB2D2;
+     }
+
 </style>
 </head>
 <body>
@@ -33,14 +43,14 @@
 	        <ul class="nav navbar-nav navbar-right" style="left:0px; top:0px">
                 {% if login == True %}
                     {% if username == 'root' %}
-                    <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-user"></span>{% trans '进入管理中心' %}</a></li>
+                    <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-user"></span>&nbsp;{% trans '进入管理中心' %}</a></li>
                     {% else %}
-                    <li><a href="/user_message/"><span></span>{% trans '当前用户' %}:{{ username }}</a></li>
+                    <li><a href="/user_message/"><span class="fa fa-user fa-lg"></span>&nbsp;{% trans '当前用户' %}:{{ username }}</a></li>
                 {% endif %}
 
-                    <li><a href="/clear_message/">| <span class="glyphicon glyphicon-off"></span> {% trans '注销' %}</a></li>
+                    <li><a href="/clear_message/">| <span class="glyphicon glyphicon-off"></span>&nbsp;{% trans '注销' %}</a></li>
                  {% else %}
-                     <li><a href="/login/"><span class="glyphicon glyphicon-user"></span>{% trans '登录' %}</a></li>
+                     <li><a href="/login/"><span class="glyphicon glyphicon-user"></span>&nbsp;{% trans '登录' %}</a></li>
             {#         <span><a href="/register/">{% trans '注册' %}</a></span>#}
                  {% endif %}
 	        </ul>
@@ -50,7 +60,7 @@
                 {% csrf_token %}
                 <input type="hidden" id="lang_s" name="language" value="en">
                 <input name="next" type="hidden" value="{{ redirect_to }}"/>
-                <label class="btn btn-primary active"  onclick="test('zh-hans')">
+                <label class="btn btn-primary"  onclick="test('zh-hans')">
                     中文
                 </label>
                 <label class="btn btn-primary" onclick="test('en')">
@@ -69,21 +79,22 @@
 
             </div>
             <br/><br/>
-            <div class="nav ue-clear">
-            	<ul class="searchList">
-                    <li class="searchItem current" data-type="all_type">{% trans '全部' %}</li>
-                    <li class="searchItem" data-type="computer">{% trans '计算机' %}</li>
-                    <li class="searchItem" data-type="literature">{% trans  '文学' %}</li>
-                    <li class="searchItem" data-type="philosophy">{% trans '哲学' %}</li>
-                    <li class="searchItem" data-type="history">{% trans '历史' %}</li>
-                </ul>
+            <div style="position: relative; left:30px;">
+                <div class="nav ue-clear">
+                    <ul class="searchList">
+                        <li class="searchItem current" data-type="all_type">{% trans '全部' %}</li>
+                        <li class="searchItem" data-type="computer">{% trans '计算机' %}</li>
+                        <li class="searchItem" data-type="literature">{% trans  '文学' %}</li>
+                        <li class="searchItem" data-type="philosophy">{% trans '哲学' %}</li>
+                        <li class="searchItem" data-type="history">{% trans '历史' %}</li>
+                    </ul>
+                </div>
+                <div class="inputArea">
+                    <input type="text" class="searchInput" style="vertical-align:middle;width:600px;height:35px;" id="search_text" />
+                        <button class="btn btn-success"  onclick="search()">{% trans '搜索' %}</button>
+                    <div id="warn1"></div>
+                </div>
             </div>
-            <div class="inputArea">
-                <input type="text" class="searchInput" style="vertical-align:middle;width:600px;height:35px;" id="search_text" />
-                    <button class="btn btn-success"  onclick="search()">{% trans '搜索' %}</button>
-                <div id="warn1"></div>
-            </div>
-
         </div>
     </div>
 </div>
@@ -108,12 +119,13 @@
 </div>
 -->
 
-<div style="margin:0 auto;width:700px;height:300px;padding-top: 0px;margin-top:100px;">
+<div style="margin:0 auto;width:700px;height:300px;padding-top: 0px;">
 {% if notices.count > 0 %}
-	<h3 style="text-align: center;">{% trans '通知栏' %}</h3>
 	<table class="table table-striped">
+{#    #5bc0de#}
+        <caption style="text-align: center; font-size: 26px; font-weight: bold; color: orangered">{% trans '通知栏' %}</caption>
 	    <thead>
-	    <tr>
+	    <tr style="background-color: #e4b9b9">
 	        <th style="text-align: center;">{% trans '标题' %}</th>
             <th style="text-align: center;">{% trans '内容简介' %}</th>
 	        <th style="text-align: center;">{% trans '发布时间' %}</th>
