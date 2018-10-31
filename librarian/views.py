@@ -37,13 +37,12 @@ def index(request):
                     each.debt = role.fine * (expire_days + 1)  # 罚金
                     if not each.expire:  # 如果没设置到期
                         each.expire = True
-                    each.save()
 
-                    # 向逾期等于0（图书刚到期）的用户自动发送邮件
-                    if expire_days == 0:
-                        expire_date = each.borrow_time - timezone.timedelta(days=role.days_limit)
-                        content = '您所借的图书《' + each.book.isbn.book_name + '》已于' + str(expire_date) +\
-                                  '到期，现罚金为' + str(each.debt) + '元，请及时归还图书并缴纳罚金，谢谢！'
+                    # 向没有发过提醒邮件的用户发送邮件
+                    if not each.is_alert:  # 如果没有发过提醒邮件
+                        expire_date = time_stamp_to_str((each.borrow_time + timezone.timedelta(days=role.days_limit)).timetuple())
+                        content = '您所借图书《' + each.book.isbn.book_name + '》已于 ' + str(expire_date) +\
+                                  ' 到期，现罚金为 ' + str(each.debt) + ' 元，请及时归还图书并缴纳罚金，谢谢！'
                         s = SendEmail()
                         if s:  # 如果登录成功
                             is_successful = s.send("Bibliosoft 图书到期提醒", content, each.user.email)
@@ -55,6 +54,9 @@ def index(request):
                             else:
                                 print('Send alert email to user ' + each.user.user_name + ' about book 《' +
                                       each.book.isbn.book_name + '》: Success!')
+                                each.is_alert = True
+
+                    each.save()  # 数据库保存
 
         if flag:
             AutoUpdateDB.objects.create(is_updated=True)
@@ -659,9 +661,9 @@ def send_mail_api(request):
         if borrow_order.debt <= 0:  # 图书未到期
             return JsonResponse({"result": False, "msg": "This borrower_order is't expire"})
         else:
-            expire_date = borrow_order.borrow_time - timezone.timedelta(days=role.days_limit)
-            content = '您所借的图书《' + borrow_order.book.isbn.book_name + '》已于' + str(expire_date) + \
-                      '到期，现罚金为' + str(borrow_order.debt) + '元，请及时归还图书并缴纳罚金，谢谢！'
+            expire_date = time_stamp_to_str((borrow_order.borrow_time + timezone.timedelta(days=role.days_limit)).timetuple())
+            content = '您所借图书《' + borrow_order.book.isbn.book_name + '》已于 ' + expire_date + \
+                      ' 到期，现罚金为 ' + str(borrow_order.debt) + ' 元，请及时归还图书并缴纳罚金，谢谢！'
             s = SendEmail()
             if s:  # 如果登录成功
                 is_successful = s.send("图书到期提醒", content, borrow_order.user.email)

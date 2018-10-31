@@ -38,10 +38,10 @@ class BorrowOrder(models.Model):
     debt = models.IntegerField(default=0)
     return_time = models.DateTimeField(null=True)
     is_return = models.BooleanField(null=False)
-    # 判断是否为历史订单 方便后期查找
+    # 判断借书是否到期
     expire = models.BooleanField(default=False)
-    # 最后计算欠费的时间
-    last_count_time = models.DateTimeField(null=True)
+    # 是否发送提示还书邮件
+    is_alert = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.borrow_time)
