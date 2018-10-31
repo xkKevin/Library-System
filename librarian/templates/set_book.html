@@ -39,6 +39,13 @@
 	box-shadow: inset 0px 0px 1px 1px rgba(0,0,0,0.1);
 	color: #222;
 }
+        #type {
+            {#width: 180px;#}
+            text-align: center;
+            width: 178px;
+            height: 26px;
+            margin-top: 3px;
+        }
     </style>
 </head>
 <body>
@@ -67,6 +74,7 @@
         </div>
     </div> 
 </nav>
+    <!--
 <form action="{% url 'set_language' %}" method="post">
     {% csrf_token %}
     <input name="next" type="hidden" value="{{ redirect_to }}"/>
@@ -81,8 +89,9 @@
 <div align="right" class="banner-content" style="display: block;">
 		<a href="/manage/"style=" font-size:16px;">{% trans '进入管理中心' %}</a>
 	</div>
+	-->
 <div class="container">
-    <div class="form row">
+    <div class="form row" style="position: relative; bottom: 5px">
         <div class="form-horizontal col-md-offset-3" id="register_form">
             <div class="col-md-9">
 
@@ -112,7 +121,18 @@
                 <div class="form-group">
                     <i class="fa fa-sort"> {% trans '类型' %} </i>
                     <br>
-                    <input type="text" name="type" id="type">
+{#                    <input type="text" name="type" id="type">#}
+                    <select name="type" id="type">
+                        <option value="computer" selected="selected">{% trans '计算机' %}</option>
+                        <option value="education">{% trans '教育' %}</option>
+                        <option value="literature">{% trans '文学' %}</option>
+                        <option value="philosophy">{% trans '哲学' %}</option>
+                        <option value="language">{% trans '语言' %}</option>
+                        <option value="history">{% trans '历史' %}</option>
+                        <option value="politics">{% trans '政治' %}</option>
+                        <option value="economics">{% trans '经济' %}</option>
+                        <option value="other">{% trans '其他' %}</option>
+                    </select>
                 </div>
 
                 <div class="form-group">

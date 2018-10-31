@@ -235,10 +235,10 @@ Copyright &copy;2018 Library
 
         $.post("{% url 'delete_notice_api' %}", {'notice_id':notice_id}, function(result) {
             if (result["result"] === true) {
-                alert("公告删除成功!");
+                alert("{% trans '公告删除成功!' %}");
                 window.location.reload();
             } else {
-                alert("公告删除失败!");
+                alert("{% trans '公告删除失败!' %}");
             }
         });
 

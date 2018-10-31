@@ -138,7 +138,7 @@ book_id_fouces();
                             document.getElementById("isbn").value = result["isbn"];
                             document.getElementById("author").value = result["author"];
                         } else {
-                            alert('请输入正确ID！')
+                            alert("{% trans '请输入正确ID！' %}")
                         }
                     }
                 });

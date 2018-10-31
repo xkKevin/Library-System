@@ -68,14 +68,17 @@
                 <td id="col2">
                         <form name="cclform" >
                             <input style="width: 410px;visibility: hidden"  >
-                                <select name="find_code" id="find_code">
-                                    <option value="all_type">{% trans '所有字段' %}</option>
-    {#                                <option value="author">作者</option>#}
-    {#                                <option value="isbn">ISBN</option>#}
-                                    <option value="history">{% trans '历史' %}</option>
+                                <select name="find_code" id="find_code" style="height: 26px;">
+                                    <option value="all_type">{% trans '全部' %}</option>
+                                    <option value="computer">{% trans '计算机' %}</option>
+                                    <option value="education">{% trans '教育' %}</option>
                                     <option value="literature">{% trans '文学' %}</option>
                                     <option value="philosophy">{% trans '哲学' %}</option>
-                                    <option value="computer">{% trans '计算机' %}</option>
+                                    <option value="language">{% trans '语言' %}</option>
+                                    <option value="history">{% trans '历史' %}</option>
+                                    <option value="politics">{% trans '政治' %}</option>
+                                    <option value="economics">{% trans '经济' %}</option>
+                                    <option value="other">{% trans '其他' %}</option>
                                 </select>
                             <input autocomplete="off" style="width:30%" name="request" value="{{ search_text }}" id="find_text"> &nbsp;
                             <span id="refine"></span>
@@ -158,13 +161,13 @@ Copyright &copy;2018 Library
         var isbn = document.getElementsByClassName(class_selector)[0].innerHTML;
         $.post('/reserve/api/',{"isbn":isbn}, function (result, statue) {
             if(result["result"]===false){
-                alert("图书添加失败!\n错误信息: "+ result['msg']);
+                alert("{% trans '图书预约失败!\n错误信息: ' %}"+ result['msg']);
             }else {
                 var this_button = document.getElementById(id);
                 this_button.disabled  = true;
                 this_button.innerText = "{% trans '预约成功' %}";
                 if(result["update"] === true){
-                    alert("该书已预约, 已更新预约时间!")
+                    alert("{% trans '该书已预约, 已更新预约时间!' %}")
                 }
             }
         })
@@ -183,7 +186,7 @@ Copyright &copy;2018 Library
             get_data["book_name"] = find_text;
             $.get('/search_book/api/',get_data, function (result, status) {
             if(result["result"]===false){
-                alert("搜索失败!\n失败信息: "+ result["msg"])
+                alert("{% trans '搜索失败!\n失败信息:' %} "+ result["msg"])
             }
             else {
                 var result_div = document.getElementById("result");

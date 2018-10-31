@@ -11,6 +11,8 @@
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'font/css/font-awesome.min.css' %}" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <style type="text/css">
 
@@ -20,7 +22,15 @@
         background-repeat: no-repeat;
         background-size: cover;
     }
-
+    html, body {
+            height: 100%;
+        }
+	    footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            {#background-color: #ffc0cb;#}
+        }
     .table-striped > tbody > tr:nth-child(2n+1) > td,
     .table-striped > tbody > tr:nth-child(2n+1) > th {
         background-color: #afd9ee;
@@ -49,7 +59,23 @@
 	box-shadow: inset 0px 0px 1px 1px rgba(0,0,0,0.1);
 	color: #222;
 }
-
+#type {
+    width: 210px;
+    background: rgba(255,255,255,0.8);
+}
+#type li {
+    text-align: center;
+    width: 100px;
+    float: left;
+    display: block;
+}
+#type li:hover a {
+	background: -webkit-gradient(linear, center top, center bottom, from(#ccc), to(#ededed));
+	background-image: linear-gradient(#ccc, #ededed);
+	border-radius: 12px;
+	box-shadow: inset 0px 0px 1px 1px rgba(0,0,0,0.1);
+	color: blue;
+}
 </style>
 </head>
 <body>
@@ -99,6 +125,7 @@
             </div>
             <br/><br/>
             <div style="position: relative; left:30px;">
+                <!--
                 <div class="nav ue-clear">
                     <ul class="searchList">
                         <li class="searchItem current" data-type="all_type">{% trans '全部' %}</li>
@@ -108,11 +135,50 @@
                         <li class="searchItem" data-type="history">{% trans '历史' %}</li>
                     </ul>
                 </div>
-                <div class="inputArea">
-                    <input type="text" class="searchInput" style="vertical-align:middle;width:600px;height:35px;" id="search_text" />
-                        <button class="btn btn-success"  onclick="search()">{% trans '搜索' %}</button>
-                    <div id="warn1"></div>
+                -->
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-success dropdown-toggle searchIntem-current"
+                                data-toggle="dropdown" data-type="all_type" style="width: 100px;"><span id="all_type">{% trans '全部' %}</span>
+                        </button>
+                        <ul class="dropdown-menu" id="type">
+                            <li class="searchItem" id="all">
+                                <a href="#">{% trans '全部' %}</a>
+                            </li>
+                            <li class="searchItem" id="computer">
+                                <a href="#">{% trans '计算机' %}</a>
+                            </li>
+                            <li class="searchItem" id="education">
+                                <a href="#">{% trans '教育' %}</a>
+                            </li>
+                            <li class="searchItem" id="literature">
+                                <a href="#">{% trans '文学' %}</a>
+                            </li>
+                            <li class="searchItem" id="philosophy">
+                                <a href="#">{% trans '哲学' %}</a>
+                            </li>
+                            <li class="searchItem" id="language">
+                                <a href="#">{% trans '语言' %}</a>
+                            </li>
+                            <li class="searchItem" id="history">
+                                <a href="#">{% trans '历史' %}</a>
+                            </li>
+                            <li class="searchItem" id="politics">
+                                <a href="#">{% trans '政治' %}</a>
+                            </li>
+                            <li class="searchItem" id="economics">
+                                <a href="#">{% trans '经济' %}</a>
+                            </li>
+                            <li class="searchItem" id="other">
+                                <a href="#">{% trans '其他' %}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <input type="text" class="searchInput" style="vertical-align:middle;width:500px;height:35px;" id="search_text" />
+                    <button class="btn btn-success"  onclick="search()">{% trans '搜索' %}</button>
+    {#              <div id="warn1"></div>#}
                 </div>
+
             </div>
         </div>
     </div>
@@ -138,7 +204,7 @@
 </div>
 -->
 
-<div style="margin:0 auto;width:700px;height:300px;padding-top: 0px;">
+<div style="margin:0 auto;width:700px;height:300px;padding-top: 20px;">
 {% if notices.count > 0 %}
 	<table class="table table-striped">
 {#    #5bc0de#}
@@ -202,6 +268,18 @@ Copyright &copy;2018 Library
     {#        document.getElementById("warn1").innerHTML="";#}
     {#    }#}
     {#  }  #}
+
+    var li=document.getElementById("type").getElementsByTagName("li");
+    var book_type = "all";
+    for(var i=0;i<li.length;i++)
+    {
+        li[i].onclick=function () {
+            document.getElementById("all_type").innerHTML=this.getElementsByTagName("a")[0].innerHTML;
+            book_type = this.id; //获取图书类别的值
+            alert(book_type);
+        };
+    }
+
     function search() {
         var type_attr = $('.current').attr('data-type');
         var type_dic = {"computer":"计算机","literature":"哲学" ,

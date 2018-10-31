@@ -39,6 +39,17 @@
 	box-shadow: inset 0px 0px 1px 1px rgba(0,0,0,0.1);
 	color: #222;
 }
+        #type {
+            {#width: 180px;#}
+            text-align: center;
+            width: 178px;
+            height: 26px;
+            margin-top: 3px;
+        }
+        {##type option {#}
+        {#    width: 80px;#}
+        {#    float: left;#}
+        {#}#}
     </style>
 </head>
 <body>
@@ -72,7 +83,7 @@
 		<a href="/manage/"style=" font-size:16px;">{% trans '进入管理中心' %}</a>
 	</div>
 <div class="container">
-    <div class="form row">
+    <div class="form row" style="position: relative; bottom: 50px">
         <div class="form-horizontal col-md-offset-3" id="register_form">
             <div class="col-md-9">
                 <div class="form-group">
@@ -103,7 +114,18 @@
                 <div class="form-group">
                     <i class="fa fa-clone"> {% trans '类型' %} </i>
                     <br>
-                    <input type="text" name="type" id="type">
+{#                    <input type="text" name="type" id="type">#}
+                    <select name="type" id="type">
+                        <option value="computer" selected="selected">{% trans '计算机' %}</option>
+                        <option value="education">{% trans '教育' %}</option>
+                        <option value="literature">{% trans '文学' %}</option>
+                        <option value="philosophy">{% trans '哲学' %}</option>
+                        <option value="language">{% trans '语言' %}</option>
+                        <option value="history">{% trans '历史' %}</option>
+                        <option value="politics">{% trans '政治' %}</option>
+                        <option value="economics">{% trans '经济' %}</option>
+                        <option value="other">{% trans '其他' %}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <i class="fa fa-money"> {% trans '价格' %} </i>
@@ -146,7 +168,7 @@ isbn_fouces();
                     if (result['result']=== true){
                         document.getElementById("book_name").value = result["book_name"];
                         document.getElementById("image_url").value = result["image_url"];
-                        document.getElementById("type").value = result["type"];
+                        //document.getElementById("type").value = result["type"];
                         document.getElementById("author").value = result["author"];
                         document.getElementById("price").value = result["price"];
                     } else {

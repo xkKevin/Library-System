@@ -425,7 +425,7 @@ Copyright &copy;2018 Library
         $.post("{% url 'manage_borrow_book_api' %}", {'reserve_id':order_id}, function(result){
             if(result["result"] === true){
                 if(result["expire"]===true){
-                    alert("该订单已过期！")
+                    alert("{% trans '该订单已过期！' %}")
                 }
                 search_user_message();
             }else {
