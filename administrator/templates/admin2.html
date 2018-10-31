@@ -15,6 +15,24 @@
     <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <style type="text/css">
+    #menu li a {
+	color: #afd9ee;
+	display: block;
+	font-size: 14px;
+	line-height: 20px;
+	padding: 6px 12px;
+	margin: 8px 8px;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+#menu li a:hover {
+	background: -webkit-gradient(linear, center top, center bottom, from(#ededed), to(#fff));
+	background-image: linear-gradient(#ededed, #fff);
+	border-radius: 12px;
+	box-shadow: inset 0px 0px 1px 1px rgba(0,0,0,0.1);
+	color: #222;
+}
 /* Custom Styles */
     ul.nav-tabs{
         width: 140px;
@@ -118,7 +136,7 @@ $(document).ready(function(){
                 <a class="navbar-brand">Bibliosoft</a>
             </div>
             <div>
-                <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px">
+                <ul class="nav navbar-nav navbar-right" id="menu" style="position:absolut; left:0px; top:0px">
                     <li><a><span class="fa fa-user fa-lg"></span>&nbsp;&nbsp;admin{{ admin_name }} </a></li>
                     <li><a href="{% url 'admin_login' %}"><span class="glyphicon glyphicon-home"></span> {% trans '返回登录页面' %}</a></li>
                 </ul>

@@ -31,6 +31,25 @@
         background-color: #8EB2D2;
      }
 
+#menu li a {
+	color: #afd9ee;
+	display: block;
+	font-size: 14px;
+	line-height: 20px;
+	padding: 6px 12px;
+	margin: 8px 8px;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+#menu li a:hover {
+	background: -webkit-gradient(linear, center top, center bottom, from(#ededed), to(#fff));
+	background-image: linear-gradient(#ededed, #fff);
+	border-radius: 12px;
+	box-shadow: inset 0px 0px 1px 1px rgba(0,0,0,0.1);
+	color: #222;
+}
+
 </style>
 </head>
 <body>
@@ -40,7 +59,7 @@
 	        <a class="navbar-brand">Bibliosoft</a>
 	    </div>
 	    <div>
-	        <ul class="nav navbar-nav navbar-right" style="left:0px; top:0px">
+	        <ul class="nav navbar-nav navbar-right" id="menu" style="left:0px; top:0px">
                 {% if login == True %}
                     {% if username == 'root' %}
                     <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-user"></span>&nbsp;{% trans '进入管理中心' %}</a></li>
@@ -48,7 +67,7 @@
                     <li><a href="/user_message/"><span class="fa fa-user fa-lg"></span>&nbsp;{% trans '当前用户' %}:{{ username }}</a></li>
                 {% endif %}
 
-                    <li><a href="/clear_message/">| <span class="glyphicon glyphicon-off"></span>&nbsp;{% trans '注销' %}</a></li>
+                    <li><a href="/clear_message/"><span class="glyphicon glyphicon-off"></span>&nbsp;{% trans '注销' %}</a></li>
                  {% else %}
                      <li><a href="/login/"><span class="glyphicon glyphicon-user"></span>&nbsp;{% trans '登录' %}</a></li>
             {#         <span><a href="/register/">{% trans '注册' %}</a></span>#}

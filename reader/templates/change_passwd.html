@@ -18,6 +18,24 @@
 {#    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>#}
 {#    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>#}
     <style>
+        #menu li a {
+	color: #afd9ee;
+	display: block;
+	font-size: 14px;
+	line-height: 20px;
+	padding: 6px 12px;
+	margin: 8px 8px;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+#menu li a:hover {
+	background: -webkit-gradient(linear, center top, center bottom, from(#ededed), to(#fff));
+	background-image: linear-gradient(#ededed, #fff);
+	border-radius: 12px;
+	box-shadow: inset 0px 0px 1px 1px rgba(0,0,0,0.1);
+	color: #222;
+}
         .form{background: rgba(255,255,255,0.2);width:400px;margin:120px auto;}
         html, body {
             height: 100%;
@@ -49,7 +67,7 @@
                 <a class="navbar-brand">Bibliosoft</a>
             </div>    
             <div> 
-                <ul class="nav navbar-nav navbar-right" style="position:absolut; left:0px; top:0px"> 
+                <ul class="nav navbar-nav navbar-right" id="menu" style="position:absolut; left:0px; top:0px">
                     <li><a href="{% url 'user_message' %}"><span class="glyphicon glyphicon-th-list"></span> {% trans '进入管理中心' %}</a></li>
                 </ul> 
             </div> 
