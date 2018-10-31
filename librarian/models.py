@@ -4,12 +4,15 @@ from administrator.models import Administrator
 
 
 class Book(models.Model):
+    TYPE = (('A', '教育'), ('B', '计算机'), ('C', '文学'), ('D', '哲学'), ('E', '语言'),
+            ('F', '历史'), ('G', '政治'), ('H', '经济'), ('I', '其他'))
+
     author = models.CharField(max_length=50)
     isbn = models.IntegerField(primary_key=True)
     total_num = models.IntegerField(null=False)
     available_num = models.IntegerField(null=False)
     book_name = models.CharField(max_length=100, null=False)
-    type = models.CharField(max_length=20, null=False)
+    type = models.CharField(max_length=1, choices=TYPE)
     place = models.CharField(max_length=50, null=False)
     image_url = models.CharField(max_length=100, default='None')
     price = models.CharField(max_length=100, default='100')

@@ -123,15 +123,16 @@
                     <br>
 {#                    <input type="text" name="type" id="type">#}
                     <select name="type" id="type">
-                        <option value="computer" selected="selected">{% trans '计算机' %}</option>
-                        <option value="education">{% trans '教育' %}</option>
-                        <option value="literature">{% trans '文学' %}</option>
-                        <option value="philosophy">{% trans '哲学' %}</option>
-                        <option value="language">{% trans '语言' %}</option>
-                        <option value="history">{% trans '历史' %}</option>
-                        <option value="politics">{% trans '政治' %}</option>
-                        <option value="economics">{% trans '经济' %}</option>
-                        <option value="other">{% trans '其他' %}</option>
+                        <option value="NULL" class="NULL">---</option>
+                        <option value="A" id="A">{% trans '教育' %}</option>
+                        <option value="B" class="B">{% trans '计算机' %}</option>
+                        <option value="C" class="C">{% trans '文学' %}</option>
+                        <option value="D" class="D">{% trans '哲学' %}</option>
+                        <option value="E" class="E">{% trans '语言' %}</option>
+                        <option value="F" class="F">{% trans '历史' %}</option>
+                        <option value="G" class="G">{% trans '政治' %}</option>
+                        <option value="H" class="H">{% trans '经济' %}</option>
+                        <option value="I" class="I">{% trans '其他' %}</option>
                     </select>
                 </div>
 
@@ -173,7 +174,13 @@ isbn_fouces();
                 $.get("{% url 'get_book_api' %}", {"isbn": isbn},function (result, statue) {
                     if (result['result']=== true){
                         document.getElementById("book_name").value = result["book_name"];
-                        document.getElementById("type").value = result["type"];
+                        var all_types = document.getElementById("type").children;
+                        for(i=0;i<all_types.length;i++){  //选定类型
+                            if(all_types[i].value == result["type"]){
+                                all_types[i].selected = true;
+                                break;
+                            }
+                        }
                         document.getElementById("author").value = result["author"];
                         document.getElementById("place").value = result["place"];
                         document.getElementById("total_num").value = result["total_num"];

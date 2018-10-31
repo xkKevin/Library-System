@@ -142,34 +142,34 @@
                                 data-toggle="dropdown" data-type="all_type" style="width: 100px;"><span id="all_type">{% trans '全部' %}</span>
                         </button>
                         <ul class="dropdown-menu" id="type">
-                            <li class="searchItem" id="all">
+                            <li class="searchItem" id="all" >
                                 <a href="#">{% trans '全部' %}</a>
                             </li>
-                            <li class="searchItem" id="computer">
-                                <a href="#">{% trans '计算机' %}</a>
-                            </li>
-                            <li class="searchItem" id="education">
+                            <li class="searchItem" id="A">
                                 <a href="#">{% trans '教育' %}</a>
                             </li>
-                            <li class="searchItem" id="literature">
+                            <li class="searchItem" id="B">
+                                <a href="#">{% trans '计算机' %}</a>
+                            </li>
+                            <li class="searchItem" id="C">
                                 <a href="#">{% trans '文学' %}</a>
                             </li>
-                            <li class="searchItem" id="philosophy">
+                            <li class="searchItem" id="D">
                                 <a href="#">{% trans '哲学' %}</a>
                             </li>
-                            <li class="searchItem" id="language">
+                            <li class="searchItem" id="E">
                                 <a href="#">{% trans '语言' %}</a>
                             </li>
-                            <li class="searchItem" id="history">
+                            <li class="searchItem" id="F">
                                 <a href="#">{% trans '历史' %}</a>
                             </li>
-                            <li class="searchItem" id="politics">
+                            <li class="searchItem" id="G">
                                 <a href="#">{% trans '政治' %}</a>
                             </li>
-                            <li class="searchItem" id="economics">
+                            <li class="searchItem" id="H">
                                 <a href="#">{% trans '经济' %}</a>
                             </li>
-                            <li class="searchItem" id="other">
+                            <li class="searchItem" id="I">
                                 <a href="#">{% trans '其他' %}</a>
                             </li>
                         </ul>
@@ -276,24 +276,19 @@ Copyright &copy;2018 Library
         li[i].onclick=function () {
             document.getElementById("all_type").innerHTML=this.getElementsByTagName("a")[0].innerHTML;
             book_type = this.id; //获取图书类别的值
-            alert(book_type);
+            //alert(book_type);
         };
     }
 
     function search() {
-        var type_attr = $('.current').attr('data-type');
-        var type_dic = {"computer":"计算机","literature":"哲学" ,
-                         "philosophy": "哲学", "history":"历史",
-                        "all_type":"全部",
-                        };
 
         var book_name = $('.searchInput').val();
-        if(book_name===""){
+        if( book_type==="all" && book_name===""){
             alert("{% trans '请输入书名！' %}");
             return;
         }
         {#var get_data = {"book_type":type_dic[type_attr],"book_name":book_name};#}
-        window.location.href ="/search_book/?book_type="+type_dic[type_attr] +"&book_name="+book_name;
+        window.location.href ="/search_book/?book_type="+book_type +"&book_name="+book_name;
 
     }
 

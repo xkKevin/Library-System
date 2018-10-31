@@ -24,6 +24,7 @@ def index(request):
     try:
         AutoUpdateDB.objects.get(updated_date=datetime.date.today())
     except:
+        flag = True  # 邮件发送失败将变为false
         # 每天第一次访问主页将自动更新每本书的罚金
         all_borrow_orders = BorrowOrder.objects.all()
         role = Role.objects.first()
@@ -33,21 +34,30 @@ def index(request):
                 if timezone.now() - each.borrow_time > timezone.timedelta(days=role.days_limit):
                     expire_days = (timezone.now() - each.borrow_time -
                                    timezone.timedelta(days=role.days_limit)).days
-                    each.debt = role.fine * expire_days  # 罚金
+                    each.debt = role.fine * (expire_days + 1)  # 罚金
                     if not each.expire:  # 如果没设置到期
                         each.expire = True
                     each.save()
 
                     # 向逾期等于0（图书刚到期）的用户自动发送邮件
                     if expire_days == 0:
-                        content = '您所借的图书《' + each.book.isbn.book_name + '》已到期，现罚金为' \
-                                  + str(each.debt) + '元，请及时归还图书并缴纳罚金，谢谢！'
+                        expire_date = each.borrow_time - timezone.timedelta(days=role.days_limit)
+                        content = '您所借的图书《' + each.book.isbn.book_name + '》已于' + str(expire_date) +\
+                                  '到期，现罚金为' + str(each.debt) + '元，请及时归还图书并缴纳罚金，谢谢！'
                         s = SendEmail()
                         if s:  # 如果登录成功
-                            s.send("图书到期提醒", content, each.user.email)
+                            is_successful = s.send("Bibliosoft 图书到期提醒", content, each.user.email)
                             s.close_smtp()
+                            if not is_successful:
+                                flag = False
+                                print('Send alert email to user ' + each.user.user_name + ' about book 《' +
+                                      each.book.isbn.book_name + '》: Failure!')
+                            else:
+                                print('Send alert email to user ' + each.user.user_name + ' about book 《' +
+                                      each.book.isbn.book_name + '》: Success!')
 
-        AutoUpdateDB.objects.create(is_updated=True)
+        if flag:
+            AutoUpdateDB.objects.create(is_updated=True)
 
     username = request.session.get('username', "None")
     # 获取最近5条通知
@@ -392,10 +402,14 @@ def search_book_api(request):
     if book_name is None or book_type is None:
         return JsonResponse({"result": False, "msg": "查询参数不正确"})
     try:
-        if book_type == "全部":
+        if book_type == "ALL":
             result = Book.objects.filter(book_name__contains=book_name)
         else:
-            result = Book.objects.filter(book_name__contains=book_name, type__contains=book_type)
+            print(book_name)
+            if book_name == "":
+                result = Book.objects.filter(type=book_type)
+            else:
+                result = Book.objects.filter(book_name__contains=book_name, type=book_type)
         if len(result) > 0:
             result_json = render(request, 'result_json.html', {"book_list": result, "administrator": is_administrator})
             return JsonResponse({"result": True, "html": bytes.decode(result_json.content)})
@@ -422,12 +436,16 @@ def search_book(request):
     if book_name is None or book_type is None:
         return JsonResponse({"result": False, "msg": "查询参数不正确"})
     try:
-        if book_type == "全部":
+        if book_type == "all":
             result = Book.objects.filter(book_name__contains=book_name)
         else:
-            result = Book.objects.filter(book_name__contains=book_name, type__contains=book_type)
+            if book_name == "":
+                result = Book.objects.filter(type=book_type)
+            else:
+                result = Book.objects.filter(book_name__contains=book_name, type=book_type)
+
         return render(request, 'search_results.html', {"book_list": result, "administrator": is_administrator,
-                                                       'search_text': book_name})
+                                                       'search_text': book_name, 'search_type': book_type})
 
     except :
         return JsonResponse({"result": False, "msg": "查询出错"})
@@ -633,6 +651,7 @@ def send_mail_api(request):
 
     try:
         borrow_order = BorrowOrder.objects.get(order_id=borrow_id)
+        role = Role.objects.first()
     except:
         return JsonResponse({"result": False, "msg": "Borrow_order_id is invalid"})
 
@@ -640,13 +659,19 @@ def send_mail_api(request):
         if borrow_order.debt <= 0:  # 图书未到期
             return JsonResponse({"result": False, "msg": "This borrower_order is't expire"})
         else:
-            content = '您所借的图书《' + borrow_order.book.isbn.book_name + '》已到期，现罚金为' \
-                      + str(borrow_order.debt) + '元，请及时归还图书并缴纳罚金，谢谢！'
+            expire_date = borrow_order.borrow_time - timezone.timedelta(days=role.days_limit)
+            content = '您所借的图书《' + borrow_order.book.isbn.book_name + '》已于' + str(expire_date) + \
+                      '到期，现罚金为' + str(borrow_order.debt) + '元，请及时归还图书并缴纳罚金，谢谢！'
             s = SendEmail()
             if s:  # 如果登录成功
-                s.send("图书到期提醒", content, borrow_order.user.email)
+                is_successful = s.send("图书到期提醒", content, borrow_order.user.email)
                 s.close_smtp()
-                return JsonResponse({"result": True, "msg": "Send email successful!"})
+                if is_successful:
+                    return JsonResponse({"result": True, "msg": "Send email successful!"})
+                else:
+                    return JsonResponse({"result": False, "msg": "Send email failure!"})
+            else:
+                return JsonResponse({"result": False, "msg": "Sign in the email failure!"})
     except:
         return JsonResponse({"result": False, "msg": "Send email failure!"})
 

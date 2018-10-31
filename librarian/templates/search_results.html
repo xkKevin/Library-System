@@ -69,16 +69,16 @@
                         <form name="cclform" >
                             <input style="width: 410px;visibility: hidden"  >
                                 <select name="find_code" id="find_code" style="height: 26px;">
-                                    <option value="all_type">{% trans '全部' %}</option>
-                                    <option value="computer">{% trans '计算机' %}</option>
-                                    <option value="education">{% trans '教育' %}</option>
-                                    <option value="literature">{% trans '文学' %}</option>
-                                    <option value="philosophy">{% trans '哲学' %}</option>
-                                    <option value="language">{% trans '语言' %}</option>
-                                    <option value="history">{% trans '历史' %}</option>
-                                    <option value="politics">{% trans '政治' %}</option>
-                                    <option value="economics">{% trans '经济' %}</option>
-                                    <option value="other">{% trans '其他' %}</option>
+                                    <option value="ALL">{% trans '全部' %}</option>
+                                    <option value="A">{% trans '教育' %}</option>
+                                    <option value="B">{% trans '计算机' %}</option>
+                                    <option value="C">{% trans '文学' %}</option>
+                                    <option value="D">{% trans '哲学' %}</option>
+                                    <option value="E">{% trans '语言' %}</option>
+                                    <option value="F">{% trans '历史' %}</option>
+                                    <option value="G">{% trans '政治' %}</option>
+                                    <option value="H">{% trans '经济' %}</option>
+                                    <option value="I">{% trans '其他' %}</option>
                                 </select>
                             <input autocomplete="off" style="width:30%" name="request" value="{{ search_text }}" id="find_text"> &nbsp;
                             <span id="refine"></span>
@@ -117,7 +117,7 @@
                               </tr>
                               <tr>
                                   <td class="label1">{% trans '类型' %}：</td>
-                                  <td class="content" valign="top">{{ book.type }}</td>
+                                  <td class="content" valign="top">{{ book.get_type_display }}</td>
                               </tr>
                               <tr>
                                   <td class="label1">{% trans '价格' %}：</td>
@@ -155,6 +155,14 @@ Copyright &copy;2018 Library
 <a href="#">xiaoxiongxiong@xiongxiong.com</a>
 </footer>
 <script type="application/javascript">
+    var all_types = document.getElementById("find_code").children;
+    for(i=0;i<all_types.length;i++){  //选定类型
+        if(all_types[i].value == '{{ search_type }}'){
+            all_types[i].selected = true;
+            break;
+        }
+    }
+
     $("#body").on('click', '.button' ,function(){
         var id = $(this).attr("id");
         var class_selector = "id_"+ id;
@@ -173,16 +181,12 @@ Copyright &copy;2018 Library
         })
     });
     function result_search() {
-        var type_dic = {"computer":"计算机","literature":"哲学" ,
-                         "philosophy": "哲学", "history":"历史",
-                        "all_type":"全部",
-                        };
             var find_code =  document.getElementById("find_code");
             var index = find_code.selectedIndex;
             var type = find_code.options[index].value;
             var find_text = $("#find_text").val();
             var get_data ={};
-            get_data["book_type"] = type_dic[type];
+            get_data["book_type"] = type;
             get_data["book_name"] = find_text;
             $.get('/search_book/api/',get_data, function (result, status) {
             if(result["result"]===false){
