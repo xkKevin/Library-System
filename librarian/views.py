@@ -407,7 +407,6 @@ def search_book_api(request):
         if book_type == "ALL":
             result = Book.objects.filter(book_name__contains=book_name)
         else:
-            print(book_name)
             if book_name == "":
                 result = Book.objects.filter(type=book_type)
             else:
@@ -435,6 +434,7 @@ def search_book(request):
         is_administrator = True
     book_type = request.GET.get('book_type', None)
     book_name = request.GET.get('book_name', None)
+
     if book_name is None or book_type is None:
         return JsonResponse({"result": False, "msg": "查询参数不正确"})
     try:

@@ -198,6 +198,14 @@ isbn_fouces();
             alert("{% trans '请选择图书总类!' %}");
             return;
         }
+        if(total_num == ''){
+            alert("{% trans '请输入图书数目!' %}");
+            return;
+        }
+        if(place == ''){
+            alert("{% trans '请输入图书位置!' %}");
+            return;
+        }
 
         book_message["isbn"] = isbn;
         book_message['author'] = author;
