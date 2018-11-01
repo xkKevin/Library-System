@@ -51,10 +51,23 @@
 
     <style type="text/css">
     body{
-        background-image:url("/static/images/register.jpg");
+        background-image:url("/static/images/bg2.jpg");
         background-attachment: fixed;
         background-repeat: no-repeat;
         background-size: cover;
+    }
+        #code {
+            display: inline;
+        }
+    #createCode {
+        background-image:url("../static/images/validate.jpg");
+        font-family:Arial;
+        text-decoration:line-through;
+        font-style:italic;
+        position: absolute;
+        right: 0px;
+        width: 83px;
+        text-align: center;
     }
     </style>
 
@@ -78,15 +91,16 @@
         }
         </script>
 </head>
-<body>
+<body onload="createCode()">
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;"> 
         <div class="container"> 
             <div class="navbar-header"> 
                 <a class="navbar-brand">Bibliosoft</a>
             </div>    
             <div> 
-                <ul class="nav navbar-nav navbar-right" id="menu" style="position:absolut; left:0px; top:0px">
+                <ul class="nav navbar-nav navbar-right" id="menu" style="left:0px; top:0px">
                     <li><a href="/manage/"><span class="glyphicon glyphicon-th-list"></span> {% trans '返回登录界面' %}</a></li>
+                    <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home"></span> {% trans '返回首页' %}</a></li>
                 </ul> 
             </div>
 
@@ -115,7 +129,13 @@
                     <input class="form-control required" type="text" placeholder="Username" id="username" name="username" autofocus="autofocus" maxlength="20"/>
                     <span id="warn2"></span>
                 </div>
-
+                <div class="form-group">
+                    <i class="fa fa-key"></i>
+                    <br/>
+                    <input class="form-control required" type="text" placeholder="Verification code" id="code" autofocus="autofocus" maxlength="4" style="width: 130px;"/>
+                    <span onClick="createCode()" id="createCode" style="cursor:pointer; font-size: 27px;"></span>
+                </div>
+                <span id="warn1" style="color: red; visibility: hidden;">啦啦啦</span>
                 <div class="form-group col-md-offset-9">
                     <button type="submit" class="btn pull-right" name="submit" onclick="send()">{% trans '获取密码' %}</button>
                 </div>
@@ -139,16 +159,43 @@ Copyright &copy;2018 Library
 </script>
 <script>
 
+    function createCode() {
+        var code = "";
+        var codeLength = 4;//验证码的长度
+        var createCode = document.getElementById("createCode");
+        var selectChar = new Array(0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');//所有候选组成验证码的字符，当然也可以用中文的
+        for(var i=0;i<codeLength;i++) {
+            var charIndex = Math.floor(Math.random()*36);
+            code +=selectChar[charIndex];
+        }
+        createCode.innerText = code;
+        //createCode.blur();
+    }
     function send() {
         var username = $("#username").val();
-
+        var code = $("#code").val();
+        var create_Code = document.getElementById("createCode").innerText;
+        if(code == '' || username == ''){
+            document.getElementById("warn1").style.visibility = "visible";
+            document.getElementById("warn1").innerText = "{% trans '请输入账号及验证码' %}";
+            createCode(); //函数名不能和变量名相同！
+            return;
+        }
+        if (code.toUpperCase() != create_Code){
+            document.getElementById("warn1").style.visibility = "visible";
+            document.getElementById("warn1").innerText = "{% trans '验证码错误\n' %}";
+            createCode();
+            return;
+        }
         $.get("/changePsw/api/",{"username":username},function (result,statue) {
                 if(statue === 'success') {
                     if (result["result"] === true) {
                         alert("{% trans '发送成功' %}");
                         $(window).attr('location', '{% url 'index' %}');
                     } else {
-                        alert("{% trans '发送失败!' %}")
+                        alert("{% trans '发送失败!' %}");
+                        document.getElementById("warn1").style.visibility = "hidden";
+                        createCode();
                     }
                 }
         })

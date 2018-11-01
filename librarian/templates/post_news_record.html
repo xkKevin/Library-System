@@ -11,7 +11,7 @@
 	<script src="/static/js/jquery.min.js"> </script>
 <style type="text/css">
    body{
-        background-image:url("/static/images/bgp5.jpg");
+        background-image:url("/static/images/bg5.jpg");
         background-attachment: fixed;
         background-repeat: no-repeat;
         background-size: cover;
@@ -202,7 +202,7 @@
                     <td style="width: 15%;">
                         <a href="{% url 'view_notice_content' notice.id %}">
                             {% if notice.title|length > 10 %}
-                                <marquee onMouseOut="this.start()" onMouseOver="this.stop()" scrollAmount="5">
+                                <marquee onMouseOut="outFunc(this)" onMouseOver="overFunc(this)" scrollAmount="0"  behavior="alternate">
                                 {{ notice.title }}
                                 </marquee>
                             {% else %}
@@ -212,7 +212,7 @@
                     </td>
                     <td style="width: 33%;">
                         {% if notice.content|length > 22 %}
-                            <marquee onMouseOut="this.start()" onMouseOver="this.stop()" scrollAmount="5">
+                            <marquee onMouseOut="outFunc(this)" onMouseOver="overFunc2(this)" scrollAmount="0"  behavior="alternate">
                                 {{ notice.content }}
                             </marquee>
                         {% else %}
@@ -243,10 +243,22 @@ Copyright &copy;2018 Library
 <a href="#">xiaoxiongxiong@xiongxiong.com</a>
 </footer>
 <script>
-     $.ajaxSetup({
+$.ajaxSetup({
     data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
 });
-
+    function outFunc(obj) {
+        obj.scrollAmount = "0";
+        obj.stop();
+        //this.align = "left";
+    }
+    function overFunc(obj) {
+        obj.scrollAmount = "3";
+        obj.start();
+    }
+    function overFunc2(obj) {
+        obj.scrollAmount = "4";
+        obj.start();
+    }
     function delete_notice(notice_id){
 
         $.post("{% url 'delete_notice_api' %}", {'notice_id':notice_id}, function(result) {
