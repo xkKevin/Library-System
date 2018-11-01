@@ -436,9 +436,9 @@ def search_book(request):
     book_name = request.GET.get('book_name', None)
 
     if book_name is None or book_type is None:
-        return JsonResponse({"result": False, "msg": "查询参数不正确"})
+        return JsonResponse({"result": False, "msg": "Query parameter incorrect!"})  # 查询参数不正确
     try:
-        if book_type == "all":
+        if book_type == "ALL":
             result = Book.objects.filter(book_name__contains=book_name)
         else:
             if book_name == "":
@@ -450,7 +450,7 @@ def search_book(request):
                                                        'search_text': book_name, 'search_type': book_type})
 
     except :
-        return JsonResponse({"result": False, "msg": "查询出错"})
+        return JsonResponse({"result": False, "msg": "Query error!"})  # 查询出错
 
 
 def delete_book(request):
@@ -495,7 +495,7 @@ def delete_book_api(request):
             del_reason = None
 
         if book_id is None:
-            return JsonResponse({"result": False, "msg": "Book ID 不能为空！"})
+            return JsonResponse({"result": False, "msg": "Book ID can not be empty!"})  # Book ID 不能为空！
         else:
             try:
                 del_book = AllBook.objects.get(book_id=book_id)
@@ -520,7 +520,7 @@ def delete_book_api(request):
                 delhistory.save()
                 return JsonResponse({"result": True})
             except:
-                return JsonResponse({"result": False, "msg": "请输入正确id"})
+                return JsonResponse({"result": False, "msg": "Please input correct ID!"})  # 请输入正确id
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -576,7 +576,7 @@ def reserve_api(request):
     '''
     username = request.session.get('username', "None")
     if username == "None":
-        return JsonResponse({'result': False, "msg": "未登录"})
+        return JsonResponse({'result': False, "msg": "Not logged in!"})  # 未登录
     if request.method == 'POST':
         isbn = request.POST['isbn']
 
@@ -590,9 +590,9 @@ def reserve_api(request):
                 return JsonResponse({"result": True, "update": True})
             isbn = Book.objects.get(isbn=isbn)
         except Exception as e:
-            return JsonResponse({'result': False, "msg": "数据库错误"})
+            return JsonResponse({'result': False, "msg": "Database Error!"})  # 数据库错误
         if not (book and user and isbn):
-            return JsonResponse({'result': False, "msg": "未查到相关数据"})
+            return JsonResponse({'result': False, "msg": "No relevant data was found!"})  # 未查到相关数据
         borrow_time = timezone.now()
         try:
             result = ReserveOrder.objects.create(book=book, user=user, borrow_time=borrow_time, successful=False,
@@ -600,9 +600,9 @@ def reserve_api(request):
             if result:
                 return JsonResponse({"result": True, "update": False})
             else:
-                return JsonResponse({"result": False, "msg": "数据库保存失败"})
+                return JsonResponse({"result": False, "msg": "Database save failed"})  # 数据库保存失败
         except Exception as e:
-            return JsonResponse({"result": False,  "msg": "数据库错误"})
+            return JsonResponse({"result": False,  "msg": "Database Error!"})
 
 
 def return_book_api(request):
@@ -897,7 +897,7 @@ def add_book_api(request):
             try:
                 temp = Book.objects.get(isbn=isbn)
                 if temp:
-                    return JsonResponse({"result": False, 'msg': "该书已存在"})
+                    return JsonResponse({"result": False, 'msg': "The book already exists"})
             except Book.DoesNotExist:
                 pass
             author = request.POST['author']
@@ -928,7 +928,7 @@ def add_book_api(request):
                 all_book_list.append(AllBook(isbn=book, is_available=True))
             AllBook.objects.bulk_create(all_book_list)
         except Exception as e:
-            return JsonResponse({'result': False, "msg": "数据库保存错误"})
+            return JsonResponse({'result': False, "msg": "Database save failed"})
     return JsonResponse({'result': True})
 
 
@@ -1014,7 +1014,7 @@ def get_book_info_by_id_api(request):
 
         except:
             result_json['result'] = False
-            result_json["msg"] = "数据库操作失败！"
+            result_json["msg"] = "Database operated failed!"  # 数据库操作失败！
 
         return JsonResponse(result_json)
 

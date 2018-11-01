@@ -197,16 +197,8 @@ isbn_fouces();
         var price = document.getElementById("price").value;
         var book_message = {};
 
-        if(type == 'NULL'){
-            alert("{% trans '请选择图书总类!' %}");
-            return;
-        }
-        if(total_num == ''){
-            alert("{% trans '请输入图书数目!' %}");
-            return;
-        }
-        if(place == ''){
-            alert("{% trans '请输入图书位置!' %}");
+        if(type == 'NULL' || total_num == '' || place == ''){
+            alert("{% trans '请输入图书的完整信息！' %}");
             return;
         }
 
@@ -224,6 +216,7 @@ isbn_fouces();
                     alert("{% trans '图书添加失败!\n错误信息: ' %}"+ result['msg']);
                 }
                 else {
+                    alert("{% trans '添加成功' %}");
                     window.location.href = ''
                 }
             }

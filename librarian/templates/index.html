@@ -142,35 +142,35 @@
                                 data-toggle="dropdown" data-type="all_type" style="width: 100px;"><span id="all_type">{% trans '全部' %}</span>
                         </button>
                         <ul class="dropdown-menu" id="type">
-                            <li class="searchItem" id="all" >
-                                <a href="#">{% trans '全部' %}</a>
+                            <li class="searchItem" id="ALL" >
+                                <a>{% trans '全部' %}</a>
                             </li>
                             <li class="searchItem" id="A">
-                                <a href="#">{% trans '教育' %}</a>
+                                <a>{% trans '教育' %}</a>
                             </li>
                             <li class="searchItem" id="B">
-                                <a href="#">{% trans '计算机' %}</a>
+                                <a>{% trans '计算机' %}</a>
                             </li>
                             <li class="searchItem" id="C">
-                                <a href="#">{% trans '文学' %}</a>
+                                <a>{% trans '文学' %}</a>
                             </li>
                             <li class="searchItem" id="D">
-                                <a href="#">{% trans '哲学' %}</a>
+                                <a>{% trans '哲学' %}</a>
                             </li>
                             <li class="searchItem" id="E">
-                                <a href="#">{% trans '语言' %}</a>
+                                <a>{% trans '语言' %}</a>
                             </li>
                             <li class="searchItem" id="F">
-                                <a href="#">{% trans '历史' %}</a>
+                                <a>{% trans '历史' %}</a>
                             </li>
                             <li class="searchItem" id="G">
-                                <a href="#">{% trans '政治' %}</a>
+                                <a>{% trans '政治' %}</a>
                             </li>
                             <li class="searchItem" id="H">
-                                <a href="#">{% trans '经济' %}</a>
+                                <a>{% trans '经济' %}</a>
                             </li>
                             <li class="searchItem" id="I">
-                                <a href="#">{% trans '其他' %}</a>
+                                <a>{% trans '其他' %}</a>
                             </li>
                         </ul>
                     </div>
@@ -284,7 +284,7 @@ Copyright &copy;2018 Library
     {#  }  #}
 
     var li=document.getElementById("type").getElementsByTagName("li");
-    var book_type = "all";
+    var book_type = "ALL";
     for(var i=0;i<li.length;i++)
     {
         li[i].onclick=function () {
@@ -297,10 +297,6 @@ Copyright &copy;2018 Library
     function search() {
 
         var book_name = $('.searchInput').val();
-        if( book_type==="all" && book_name===""){
-            alert("{% trans '请输入书名！' %}");
-            return;
-        }
         {#var get_data = {"book_type":type_dic[type_attr],"book_name":book_name};#}
         window.location.href ="/search_book/?book_type="+book_type +"&book_name="+book_name;
 
