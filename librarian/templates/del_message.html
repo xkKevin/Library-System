@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    {% load static %}
     {% load i18n %}
 <meta charset="UTF-8">
 <title>delete record</title>
@@ -10,6 +11,12 @@
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="/static/js/jquery.min.js"> </script>
 <style type="text/css">
+    body{
+            background-image:url("{% static 'images/bgp3.jpg' %}");
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
     #menu li a {
 	color: #afd9ee;
 	display: block;

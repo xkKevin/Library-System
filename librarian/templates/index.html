@@ -204,29 +204,43 @@
 </div>
 -->
 
-<div style="margin:0 auto;width:700px;height:300px;padding-top: 20px;">
+<div style="margin:0 auto;width:50% ;padding-top: 20px;">
 {% if notices.count > 0 %}
 	<table class="table table-striped">
 {#    #5bc0de#}
         <caption style="text-align: center; font-size: 26px; font-weight: bold; color: orangered">{% trans '通知栏' %}</caption>
 	    <thead>
-	    <tr style="background-color: #e4b9b9">
-	        <th style="text-align: center;">{% trans '标题' %}</th>
-            <th style="text-align: center;">{% trans '内容简介' %}</th>
-	        <th style="text-align: center;">{% trans '发布时间' %}</th>
-            <th style="text-align: center;">{% trans '发布者' %}</th>
+	    <tr style="background-color: #e4b9b9;">
+	        <th style="text-align: center;  width: 15%">{% trans '标题' %}</th>
+            <th style="text-align: center; width: 45%">{% trans '内容简介' %}</th>
+	        <th style="text-align: center; width: 26%">{% trans '发布时间' %}</th>
+            <th style="text-align: center; width: 14%">{% trans '发布者' %}</th>
 	    </tr>
 	    </thead>
 	    <tbody>
         {% for notice in notices %}
             <tr>
-                <td style="text-align: center;"><a href="{% url 'view_notice_content' notice.id %}">{{ notice.title }}</a></td>
+                <td style="text-align: center;"><a href="{% url 'view_notice_content' notice.id %}">
+                    {% if notice.title|length > 7 %}
+                    <marquee onMouseOut="this.start()" onMouseOver="this.stop()" scrollAmount="4">
+                    {{ notice.title }}
+                    </marquee>
+                {% else %}
+                    {{ notice.title }}
+                {% endif %}
+
+                </a></td>
             <td style="text-align: center;">
-                {% if notice.content|length > 20 %}
-                    {{ notice.content|slice:"20" }}
+
+                {% if notice.content|length > 22 %}
+                    <marquee onMouseOut="this.start()" onMouseOver="this.stop()" scrollAmount="4">
+                    {{ notice.content }}
+{#                    {{ notice.content|slice:"20" }}#}
+                    </marquee>
                 {% else %}
                     {{ notice.content }}
                 {% endif %}
+
             </td>
             <td style="text-align: center;">{{ notice.updated_time}}</td>
             <td style="text-align: center;">{{ notice.author.administrator_name}}</td>

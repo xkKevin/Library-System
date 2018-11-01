@@ -11,6 +11,12 @@
     <meta charset="UTF-8">
     <title>Add book</title>
     <style>
+    body{
+        background-image:url("{% static 'images/bgp3.jpg' %}");
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
         .form{background: rgba(255,255,255,0.2);width:400px;margin:120px auto;}
         html, body {
             height: 100%;
@@ -79,11 +85,8 @@
     </div>
 </nav>
 
-<div align="right" class="banner-content" style="display: block;">
-		<a href="/manage/"style=" font-size:16px;">{% trans '进入管理中心' %}</a>
-	</div>
 <div class="container">
-    <div class="form row" style="position: relative; bottom: 50px">
+    <div class="form row" style="position: relative; bottom: 20px">
         <div class="form-horizontal col-md-offset-3" id="register_form">
             <div class="col-md-9">
                 <div class="form-group">
