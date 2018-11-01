@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 04:57+0800\n"
+"POT-Creation-Date: 2018-11-02 05:56+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,11 +41,11 @@ msgid "用户名不能为空"
 msgstr "用户名不能为空"
 
 #: .\administrator\templates\Adminlogin.html:84
-#: .\administrator\templates\admin_change_passwd.html:174
-#: .\administrator\templates\edit_librarian.html:161
+#: .\administrator\templates\admin_change_passwd.html:182
+#: .\administrator\templates\edit_librarian.html:168
 #: .\librarian\templates\add_reader.html:67
 #: .\librarian\templates\add_reader.html:199
-#: .\reader\templates\change_passwd.html:162
+#: .\reader\templates\change_passwd.html:169
 #: .\reader\templates\forget_passwd.html:86 .\reader\templates\login.html:110
 #: .\reader\templates\register.html:63
 msgid "密码不能为空"
@@ -214,13 +214,19 @@ msgid "删除失败!"
 msgstr "删除失败!"
 
 #: .\administrator\templates\admin2.html:476
+#: .\administrator\templates\admin_change_passwd.html:150
+#: .\administrator\templates\edit_librarian.html:136
+#: .\reader\templates\change_passwd.html:138
 msgid "修改成功!"
 msgstr "修改成功!"
 
 #: .\administrator\templates\admin2.html:479
+#: .\administrator\templates\admin_change_passwd.html:140
+#: .\administrator\templates\edit_librarian.html:126
 #: .\librarian\templates\edit_news.html:218
 #: .\librarian\templates\set_reader.html:161
 #: .\librarian\templates\set_reader.html:193
+#: .\reader\templates\change_passwd.html:129
 #: .\reader\templates\user_message.html:382
 msgid "修改失败!"
 msgstr "修改失败!"
@@ -254,16 +260,22 @@ msgstr "管理中心"
 msgid "修改密码"
 msgstr "修改密码"
 
-#: .\administrator\templates\admin_change_passwd.html:163
-#: .\administrator\templates\edit_librarian.html:150
-#: .\reader\templates\change_passwd.html:151
+#: .\administrator\templates\admin_change_passwd.html:154
+#: .\administrator\templates\edit_librarian.html:140
+#: .\reader\templates\change_passwd.html:142
+msgid "修改失败！原密码错误！"
+msgstr "修改失败！原密码错误！"
+
+#: .\administrator\templates\admin_change_passwd.html:169
+#: .\administrator\templates\edit_librarian.html:155
+#: .\reader\templates\change_passwd.html:156
 #: .\reader\templates\register.html:42
 msgid "两次密码相同"
 msgstr "两次密码相同"
 
-#: .\administrator\templates\admin_change_passwd.html:166
-#: .\administrator\templates\edit_librarian.html:153
-#: .\reader\templates\change_passwd.html:154
+#: .\administrator\templates\admin_change_passwd.html:173
+#: .\administrator\templates\edit_librarian.html:159
+#: .\reader\templates\change_passwd.html:160
 #: .\reader\templates\register.html:47
 msgid "两次密码不相同"
 msgstr "两次密码不相同"
@@ -390,11 +402,12 @@ msgid "ISBN查询失败"
 msgstr "ISBN查询失败"
 
 #: .\librarian\templates\add_book.html:201
+#: .\librarian\templates\set_book.html:211
 msgid "请输入图书的完整信息！"
 msgstr "请输入图书的完整信息！"
 
 #: .\librarian\templates\add_book.html:216
-#: .\librarian\templates\set_book.html:218
+#: .\librarian\templates\set_book.html:222
 msgid "图书添加失败!\\n错误信息: "
 msgstr "图书添加失败!\\n错误信息: "
 
@@ -796,6 +809,10 @@ msgstr "借阅"
 msgid "发邮件"
 msgstr "发邮件"
 
+#: .\librarian\templates\post_news.html:207
+msgid "标题或内容为空！"
+msgstr "标题或内容为空！"
+
 #: .\librarian\templates\post_news.html:214
 msgid "发布成功"
 msgstr "发布成功"
@@ -873,7 +890,7 @@ msgstr "搜索失败!\\n失败信息:"
 msgid "编辑图书"
 msgstr "编辑图书"
 
-#: .\librarian\templates\set_book.html:221
+#: .\librarian\templates\set_book.html:225
 msgid "图书信息修改成功"
 msgstr "图书信息修改成功"
 
@@ -885,14 +902,13 @@ msgstr "用户名不能为空！"
 msgid "返回登录界面"
 msgstr "返回登录界面"
 
-#: .\reader\templates\forget_passwd.html:138
-#: .\reader\templates\forget_passwd.html:180
-msgid "请输入账号及验证码"
-msgstr "请输入账号及验证码"
-
 #: .\reader\templates\forget_passwd.html:140
 msgid "获取密码"
 msgstr "获取密码"
+
+#: .\reader\templates\forget_passwd.html:180
+msgid "请输入账号及验证码"
+msgstr "请输入账号及验证码"
 
 #: .\reader\templates\forget_passwd.html:186
 msgid "验证码错误\\n"

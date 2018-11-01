@@ -207,6 +207,10 @@ isbn_fouces();
         var total_num = document.getElementById("total_num").value;
         var type = document.getElementById("type").value;
         var place = document.getElementById("place").value;
+        if(isbn== 'NULL' || type == 'NULL' || total_num == '' || place == ''){
+            alert("{% trans '请输入图书的完整信息！' %}");
+            return;
+        }
         var book_message = {};
         book_message["isbn"] = isbn;
         book_message['total_num'] = total_num;

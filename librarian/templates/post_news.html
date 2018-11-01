@@ -204,7 +204,7 @@ Copyright &copy;2018 Library
         var content = $("#content").val();
         var author_name = $("#author_name").val();
         if(title===''||content===''||author_name===''){
-            alert("Content or title is empty!");
+            alert("{% trans '标题或内容为空！' %}");
             return;
         }
         $.post("{% url 'add_new_notice' %}",{"title":title,"content":content, "author_name":author_name},

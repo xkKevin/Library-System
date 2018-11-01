@@ -87,7 +87,7 @@
             <div class="col-md-9">
                 <div class="form-group">
                     <i class="fa fa-lock fa-lg"></i>
-                    <input class="form-control required" type="text" id="lib_name" name="lib_name" value={{ librarian.administrator_name }} readonly="readonly" /><span id="warn0"></span>
+                    <input class="form-control required" type="text" id="lib_name" name="lib_name" value={{ librarian.administrator_name }} readonly="readonly" />
                 </div>
                 <div class="form-group">
                     <i class="fa fa-lock fa-lg"></i>
@@ -122,6 +122,10 @@ Copyright &copy;2018 Library
 <script>
 
     function changePsw(){
+        if (validate()==false || checkPassword(0)==false || checkPassword(1)==false){
+            alert("{% trans '修改失败!' %}");
+            return;
+        }
         var lib_name = document.getElementById("lib_name").value;
         var oldPaw = document.getElementById("past_password").value;
         var newPaw = document.getElementById("password").value;
@@ -129,10 +133,11 @@ Copyright &copy;2018 Library
           $.get('{% url 'manager_edit_librarian' %}', {'lib_name':lib_name, 'oldPsw':oldPaw, "newPaw":newPaw,"confirPsw":confirPsw},function (result,statue) {
             if(statue ==='success'){
                 if(result["result"]===true){
+                    alert("{% trans '修改成功!' %}");
                     $(window).attr('location', '/loginAdmin/manage/');
                 }
                 else {
-                    alert("change error")
+                    alert("{% trans '修改失败！原密码错误！' %}");
                 }
             }
         },"json")
@@ -148,9 +153,11 @@ Copyright &copy;2018 Library
             <!-- 对比两次输入的密码 -->
             if(pwd1 == pwd2) {
                 document.getElementById("warn1").innerHTML="<font color='green'>{% trans '两次密码相同' %}</font>";
+                return true;
             }
             else {
                 document.getElementById("warn1").innerHTML="<font color='red'>{% trans '两次密码不相同' %}</font>";
+                return false;
             }
         }
 
@@ -159,8 +166,10 @@ Copyright &copy;2018 Library
             var password = document.getElementById(pwd[index][0]).value;
             if (password.length == 0) {
                 document.getElementById(pwd[index][1]).innerHTML="<font color='red'>{% trans '密码不能为空' %}</font>";
+                return false;
             }else{
                 document.getElementById(pwd[index][1]).innerHTML="";
+                return true;
             }
         }
 function test(str){

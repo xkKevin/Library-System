@@ -136,16 +136,22 @@ Copyright &copy;2018 Library
 <script>
 
     function changePsw(){
+        if (validate()==false || checkPassword(0)==false || checkPassword(1)==false){
+            alert("{% trans '修改失败!' %}");
+            return;
+        }
         var oldPaw = document.getElementById("past_password").value;
         var newPaw = document.getElementById("password").value;
         var confirPsw = document.getElementById("confirmPassword").value;
+
           $.get('{% url 'manager_update_adminPsw' %}', {'oldPsw':oldPaw, "newPaw":newPaw,"confirPsw":confirPsw},function (result,statue) {
             if(statue ==='success'){
                 if(result["result"]===true){
+                    alert("{% trans '修改成功!' %}");
                     $(window).attr('location', '{% url 'admin_manage_login' %}');
                 }
                 else {
-                    alert("change error")
+                    alert("{% trans '修改失败！原密码错误！' %}");
                 }
             }
         },"json")
@@ -161,9 +167,11 @@ Copyright &copy;2018 Library
             <!-- 对比两次输入的密码 -->
             if(pwd1 == pwd2) {
                 document.getElementById("warn1").innerHTML="<font color='green'>{% trans '两次密码相同' %}</font>";
+                return true;
             }
             else {
                 document.getElementById("warn1").innerHTML="<font color='red'>{% trans '两次密码不相同' %}</font>";
+                return false;
             }
         }
 
@@ -172,8 +180,10 @@ Copyright &copy;2018 Library
             var password = document.getElementById(pwd[index][0]).value;
             if (password.length == 0) {
                 document.getElementById(pwd[index][1]).innerHTML="<font color='red'>{% trans '密码不能为空' %}</font>";
+                return false;
             }else{
                 document.getElementById(pwd[index][1]).innerHTML="";
+                return true;
             }
         }
 function test(str){
