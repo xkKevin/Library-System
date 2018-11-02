@@ -175,6 +175,9 @@
                 <label class="btn btn-primary" onclick="find_way('month')">
                     {% trans '月' %}
                 </label>
+                <label class="btn btn-primary" onclick="javascript: window.location ='{% url 'manager_income_record' %}'">
+                    {% trans '全部' %}
+                </label>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <h4 id="" style="display:inline; height:50px; width:350px;text-align:right;">  <span id="find_way"></span>  {% trans '收入总金额为：' %}&nbsp;<span id="all_fine" style="text-align: right">{{ all_money }}</span>&nbsp;￥</h4>
             </form>
