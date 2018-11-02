@@ -16,6 +16,27 @@
         background-repeat: no-repeat;
         background-size: cover;
     }
+   {#.tab1{#}
+       {#opacity: 0.1;设置表格的透明度 0.1=10%透明度#}
+   {#}#}
+   td{
+       {#控制单元格数据不溢出，不换行#}
+white-space:nowrap;
+overflow:hidden;
+word-break:keep-all;
+}
+
+       .tab1 > tbody > tr:nth-child(2n-1) > td,
+    .tab1 > tbody > tr:nth-child(2n-1) > th {
+        {#background-color: #afd9ee;#}
+         background-color: rgba(180,233,80,0.2);
+     }
+
+    .tab1 > tbody > tr:nth-child(2n) > td,
+    .tab1 > tbody > tr:nth-child(2n) > th {
+        {#background-color: #8EB2D2;#}
+        background-color: rgba(120,100,130,0.2);
+     }
     #menu li a {
 	color: #afd9ee;
 	display: block;
@@ -119,7 +140,8 @@
 			transition:all linear 0.30s;		}
 		#login_click a:hover { background:#385f9e; }
 
-		 #tab{font-size:16px;
+		 #tab
+         {font-size:16px;
 			 font-family:楷体;
 			 text-algn:right;
 			 border-color:black;
@@ -181,7 +203,7 @@
     <br/>
         <div align="center">
 
-	    <table align="center" id="tab" class="table table-striped" style="text-align: center;">
+	    <table align="center" id="tab" class="table tab1" style="text-align: center;">
 
 	        <thead>
                 <tr>
@@ -199,25 +221,18 @@
             {% for notice in all_notices %}
                 <tr class="active">
                     <td>{{ notice.id }}</td>
-                    <td style="width: 15%;">
+                    <td style="width: 14%;">
                         <a href="{% url 'view_notice_content' notice.id %}">
-                            {% if notice.title|length > 10 %}
-                                <marquee onMouseOut="outFunc(this)" onMouseOver="overFunc(this)" scrollAmount="0"  behavior="alternate">
-                                {{ notice.title }}
-                                </marquee>
-                            {% else %}
-                                {{ notice.title }}
-                            {% endif %}
+                            <marquee onMouseOut="outFunc(this)" onMouseOver=overFunc(this,"{{ notice.title }}") scrollAmount="0"  behavior="alternate">
+                            {{ notice.title }}
+                            </marquee>
                         </a>
                     </td>
                     <td style="width: 33%;">
-                        {% if notice.content|length > 22 %}
-                            <marquee onMouseOut="outFunc(this)" onMouseOver="overFunc2(this)" scrollAmount="0"  behavior="alternate">
-                                {{ notice.content }}
-                            </marquee>
-                        {% else %}
+                        <marquee onMouseOut="outFunc(this)" onMouseOver=overFunc(this,"{{ notice.content }}") scrollAmount="0"  behavior="alternate">
                             {{ notice.content }}
-                        {% endif %}
+                        </marquee>
+                        <span id="content_td" style="display: none;"></span>
                     </td>
                     <td>{{ notice.updated_time | date:"Y-m-d H:i:s"}}</td>
                     <td>{{ notice.author.administrator_name }}</td>
@@ -235,6 +250,7 @@
         </table>
         </div>
 </div>
+
 <footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
 京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
 <br>
@@ -243,6 +259,15 @@ Copyright &copy;2018 Library
 <a href="#">xiaoxiongxiong@xiongxiong.com</a>
 </footer>
 <script>
+     String.prototype.visualLength = function(size,family) {
+         //获取字符串的显示宽度
+        var ruler = $("#content_td").css({
+            "font-size":size || "inherit",
+            "font-family":family || "inherit"
+        });
+        ruler.text(this);
+        return ruler.width();
+    }
 $.ajaxSetup({
     data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
 });
@@ -251,11 +276,14 @@ $.ajaxSetup({
         obj.stop();
         //this.align = "left";
     }
-    function overFunc(obj) {
-        obj.scrollAmount = "3";
-        obj.start();
-    }
-    function overFunc2(obj) {
+    function overFunc(obj,str) {
+        //alert(len);
+        var width = obj.parentNode.offsetWidth;
+        var len = str.visualLength("16px","楷体");
+        if(len<width){
+            return;
+        }
+        //alert(width+"\n"+len);
         obj.scrollAmount = "4";
         obj.start();
     }
@@ -305,8 +333,8 @@ $.ajaxSetup({
             td_2.innerText = notices[i]["content"].substring(0,20);
             td_3.innerText = notices[i]["updated_time"];
             td_4.innerText = notices[i]["librarian_name"];
-            td_5.setAttribute("width","100px");
-            td_6.setAttribute("width","100px");
+            td_1.setAttribute("width","14%");
+            td_2.setAttribute("width","33%");
 
             var a_1 = document.createElement("a");
             a_1.setAttribute("href", "/manager/edit_notice/"+ notices[i]["id"] +"/");

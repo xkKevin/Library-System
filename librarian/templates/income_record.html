@@ -25,7 +25,17 @@
             width: 100%;
             {#background-color: #ffc0cb;#}
         }
+       .tab1 > tbody > tr:nth-child(2n-1) > td,
+    .tab1 > tbody > tr:nth-child(2n-1) > th {
+        {#background-color: #afd9ee;#}
+         background-color: rgba(180,233,80,0.2);
+     }
 
+    .tab1 > tbody > tr:nth-child(2n) > td,
+    .tab1 > tbody > tr:nth-child(2n) > th {
+        {#background-color: #8EB2D2;#}
+        background-color: rgba(120,100,130,0.2);
+     }
 /* Custom Styles */
     ul.nav-tabs{
         width: 140px;
@@ -182,7 +192,7 @@
                 <h4 id="" style="display:inline; height:50px; width:350px;text-align:right;">  <span id="find_way"></span>  {% trans '收入总金额为：' %}&nbsp;<span id="all_fine" style="text-align: right">{{ all_money }}</span>&nbsp;￥</h4>
             </form>
             </div>
-	    <table align="center" id="tab" width="300px"  class="table table-striped" style="text-align: center;">
+	    <table align="center" id="tab" width="300px"  class="table tab1" style="text-align: center;">
 
 	        <thead>
                 <tr>

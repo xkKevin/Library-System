@@ -27,7 +27,17 @@
 	vertical-align: middle;
 	text-decoration: none;
 }
+       .tab1 > tbody > tr:nth-child(2n-1) > td,
+    .tab1 > tbody > tr:nth-child(2n-1) > th {
+        {#background-color: #afd9ee;#}
+         background-color: rgba(180,233,80,0.2);
+     }
 
+    .tab1 > tbody > tr:nth-child(2n) > td,
+    .tab1 > tbody > tr:nth-child(2n) > th {
+        {#background-color: #8EB2D2;#}
+        background-color: rgba(120,100,130,0.2);
+     }
 #menu li a:hover {
 	background: -webkit-gradient(linear, center top, center bottom, from(#ededed), to(#fff));
 	background-image: linear-gradient(#ededed, #fff);
@@ -178,7 +188,7 @@
         <br/>
         <div align="center">
         
-	    <table align="center" id="tab" class="table table-striped" style="text-align: center;">
+	    <table align="center" id="tab" class="table tab1" style="text-align: center;">
 
 	        <thead>
                 <tr>

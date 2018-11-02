@@ -45,8 +45,12 @@
         </div>
         <div>
             <ul class="nav navbar-nav navbar-right" id="menu" style="position:absolut; left:0px; top:0px">
-                <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home"></span> {% trans '返回首页' %}</a></li>
-                <li><a href="/user_message/"><span class="h5"></span>{% trans '个人中心' %}</a></li>
+                {% if username == 'root' %}
+                <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-user"></span>&nbsp;{% trans '进入管理中心' %}</a></li>
+                {% else %}
+                <li><a href="/user_message/"><span class="fa fa-user-circle-o"></span>&nbsp;{% trans '返回个人中心' %}</a></li>
+                {% endif %}
+                <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home"></span>&nbsp;{% trans '返回首页' %}</a></li>
             </ul>
         </div>
         <div class="btn-group navbar-btn" data-toggle="buttons">

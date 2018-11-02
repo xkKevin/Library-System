@@ -64,6 +64,9 @@ def index(request):
     username = request.session.get('username', "None")
     # 获取最近5条通知
     notices = Notice.objects.filter().order_by('-updated_time')[:5]
+    for i in range(len(notices)):  # 去掉回车换行
+        notices[i].content = notices[i].content.replace("\n", "")
+        notices[i].content = notices[i].content.replace("\r", "")
     if username != "None":
         if username == 'anti_man':  # 如果是系统管理员，不能在主页登录
             message = {'login': False, "username": None, 'notices': notices}
@@ -396,7 +399,7 @@ def search_book_api(request):
     is_administrator = False
     username = request.session.get('username', "None")
     if username == "None":
-        return JsonResponse({"result": False, "msg": "未登录"})
+        return JsonResponse({"result": False, "msg": "Not logged in!"})
     elif username == "root":
         is_administrator = True
     book_type = request.GET.get('book_type', None)
@@ -448,7 +451,7 @@ def search_book(request):
                 result = Book.objects.filter(book_name__contains=book_name, type=book_type)
 
         return render(request, 'search_results.html', {"book_list": result, "administrator": is_administrator,
-                                                       'search_text': book_name, 'search_type': book_type})
+                                     "username": username, 'search_text': book_name, 'search_type': book_type})
 
     except :
         return JsonResponse({"result": False, "msg": "Query error!"})  # 查询出错
@@ -535,6 +538,9 @@ def post_news_record(request):
     username = request.session.get('username', "None")
     if username == 'root':
         all_notices = Notice.objects.all().order_by("-updated_time")
+        for i in range(len(all_notices)):  # 去掉回车换行
+            all_notices[i].content = all_notices[i].content.replace("\n", "")
+            all_notices[i].content = all_notices[i].content.replace("\r", "")
         return render(request, 'post_news_record.html', {'all_notices': all_notices})
     else:
         return HttpResponseRedirect(reverse("index"))
@@ -1161,7 +1167,10 @@ def search_notices_api(request):
 # 查看通知正文
 def view_notice_content(request, notice_id):
     notice = Notice.objects.get(id=notice_id)
-    return render(request, 'view_news.html', {"notice": notice})
+    username = request.session.get('username', "None")
+    if username == "None":
+        return JsonResponse({"result": False, "msg": "Not logged in!"})
+    return render(request, 'view_news.html', {"notice": notice, "username": username})
 
 
 # 查找指定月 周 日的收入

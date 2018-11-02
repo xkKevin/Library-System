@@ -42,6 +42,18 @@
         {#background-color: #8EB2D2;#}
         background-color: rgba(120,200,30,0.1);
      }
+    td{
+       {#控制单元格数据不溢出，不换行#}
+        white-space:nowrap;
+        overflow:hidden;
+        word-break:keep-all;
+    }
+    #tab {
+         font-size:16px;
+         font-family:楷体;
+         text-algn:right;
+         border-color:black;
+    }
 
 #menu li a {
 	color: #afd9ee;
@@ -92,7 +104,7 @@
                     {% if username == 'root' %}
                     <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-user"></span>&nbsp;{% trans '进入管理中心' %}</a></li>
                     {% else %}
-                    <li><a href="/user_message/"><span class="fa fa-user fa-lg"></span>&nbsp;{% trans '当前用户' %}:{{ username }}</a></li>
+                    <li><a href="/user_message/"><span class="fa fa-user fa-lg"></span>&nbsp;{{ username }}</a></li>
                 {% endif %}
 
                     <li><a href="/clear_message/"><span class="glyphicon glyphicon-off"></span>&nbsp;{% trans '注销' %}</a></li>
@@ -206,9 +218,9 @@
 </div>
 -->
 
-<div style="margin:0 auto;width:50% ;padding-top: 20px;">
+<div style="margin:0 auto;width:51% ;padding-top: 20px;">
 {% if notices.count > 0 %}
-	<table class="table tab1">
+	<table class="table tab1" id="tab">
 {#    #5bc0de#}
         <caption style="text-align: center; font-size: 26px; font-weight: bold; color: orangered;">{% trans '通知栏' %}</caption>
 	    <thead>
@@ -223,29 +235,18 @@
         {% for notice in notices %}
             <tr>
                 <td style="text-align: center;"><a href="{% url 'view_notice_content' notice.id %}">
-                    {% if notice.title|length > 7 %}
-                    <marquee onMouseOut="outFunc(this)" onMouseOver="overFunc(this)" scrollAmount="0"  behavior="alternate">
+                    <marquee onMouseOut="outFunc(this)" onMouseOver=overFunc(this,"{{ notice.title }}") scrollAmount="0"  behavior="alternate">
                     {{ notice.title }}
                     </marquee>
-                {% else %}
-                    {{ notice.title }}
-                {% endif %}
-
                 </a></td>
-            <td style="text-align: center;">
-
-                {% if notice.content|length > 22 %}
-                    <marquee onMouseOut="outFunc(this)" onMouseOver="overFunc2(this)" scrollAmount="0"  behavior="alternate">
-                    {{ notice.content }}
-{#                    {{ notice.content|slice:"20" }}#}
+                <td style="text-align: center;">
+                    <marquee onMouseOut="outFunc(this)" onMouseOver=overFunc(this,"{{ notice.content }}") scrollAmount="0"  behavior="alternate">
+                        {{ notice.content }}
                     </marquee>
-                {% else %}
-                    {{ notice.content }}
-                {% endif %}
-
-            </td>
-            <td style="text-align: center;">{{ notice.updated_time}}</td>
-            <td style="text-align: center;">{{ notice.author.administrator_name}}</td>
+                    <span id="content_td" style="display: none;"></span>
+                </td>
+                <td style="text-align: center;">{{ notice.updated_time}}</td>
+                <td style="text-align: center;">{{ notice.author.administrator_name}}</td>
             </tr>
         {% endfor %}
 	    </tbody>
@@ -263,17 +264,30 @@ Copyright &copy;2018 Library
 <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/global.js' %}"></script>
 <script type="text/javascript">
+    String.prototype.visualLength = function(size,family) {
+         //获取字符串的显示宽度
+        var ruler = $("#content_td").css({
+            "font-size":size || "inherit",
+            "font-family":family || "inherit"
+        });
+        ruler.text(this);
+        return ruler.width();
+    }
     function outFunc(obj) {
         obj.scrollAmount = "0";
         obj.stop();
         //this.align = "left";
     }
-    function overFunc(obj) {
-        obj.scrollAmount = "2";
+    function overFunc(obj,str) {
+        var width = obj.parentNode.offsetWidth;
+        var len = str.visualLength("16px","楷体");
+        if(len<width){
+            return;
+        }
+        //alert(width+"\n"+len);
+        obj.scrollAmount = "4";
         obj.start();
-    }
-    function overFunc2(obj) {
-        obj.scrollAmount = "3";
+        obj.scrollAmount = "2";
         obj.start();
     }
     var suggest_url = "/suggest/";
