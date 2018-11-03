@@ -175,9 +175,11 @@
             <div class="col-md-9">
                 <div class="form-group">
                     <i class="fa fa-lock fa-lg"></i>
-                    <span class="form-title" id="notice_id" style="font-size: larger">{% trans '公告ID' %}：{{ notice.id }}</span>
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <span class="form-title" id="publisher" style="font-size: larger">{% trans '原发布者' %}：{{ librarian.administrator_name }}</span>
+                    <input class="form-control required" type="text" id="notice_id"  value="{{ notice.id }}" readonly="readonly"/>
+                </div>
+                <div class="form-group">
+                    <i class="fa fa-lock fa-lg"></i>
+                    <input class="form-control required" type="text" id="author_name" value="{{ librarian.administrator_name }}" readonly="readonly"/>
                 </div>
                 <div class="form-group">
                     <i class="fa fa-lock fa-lg"></i>
