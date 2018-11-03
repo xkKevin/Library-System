@@ -231,7 +231,7 @@ def update_readerByMe(request):
     '''
     username = request.session.get('username', "None")
     if username == "None" :
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("login"))
     if request.method == "GET":
 
         email = ""
@@ -273,7 +273,7 @@ def update_readerByMeInfo(request):
     '''
     username = request.session.get('username', "None")
     if username == "None" :
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("login"))
     if request.method == "GET":
 
         email = ""
@@ -399,7 +399,8 @@ def search_book_api(request):
     is_administrator = False
     username = request.session.get('username', "None")
     if username == "None":
-        return JsonResponse({"result": False, "msg": "Not logged in!"})
+        return HttpResponseRedirect(reverse("login"))
+        # return JsonResponse({"result": False, "msg": "Not logged in!"})
     elif username == "root":
         is_administrator = True
     book_type = request.GET.get('book_type', None)
@@ -583,7 +584,8 @@ def reserve_api(request):
     '''
     username = request.session.get('username', "None")
     if username == "None":
-        return JsonResponse({'result': False, "msg": "Not logged in!"})  # 未登录
+        return HttpResponseRedirect(reverse("login"))
+        # return JsonResponse({'result': False, "msg": "Not logged in!"})  # 未登录
     if request.method == 'POST':
         isbn = request.POST['isbn']
 
@@ -1169,7 +1171,7 @@ def view_notice_content(request, notice_id):
     notice = Notice.objects.get(id=notice_id)
     username = request.session.get('username', "None")
     if username == "None":
-        return JsonResponse({"result": False, "msg": "Not logged in!"})
+        return HttpResponseRedirect(reverse("login"))
     return render(request, 'view_news.html', {"notice": notice, "username": username})
 
 
