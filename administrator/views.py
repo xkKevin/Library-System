@@ -135,12 +135,16 @@ def create_lib(request):
         if request.method == "GET":
             libname = request.GET["name"]
             psw = request.GET["psw"]
-            lib = Administrator()
-            lib.administrator_name = libname
-            lib.password = psw
-            lib.authority = 1
-            lib.save()
-            return JsonResponse({'result': True})
+            try:
+                ago = Administrator.objects.get(administrator_name=libname)
+                return JsonResponse({'result': False})
+            except:
+                lib = Administrator()
+                lib.administrator_name = libname
+                lib.password = psw
+                lib.authority = 1
+                lib.save()
+                return JsonResponse({'result': True})
     else:
         return JsonResponse({'result': False, "msg": "数据库保存错误"})
 
