@@ -6,11 +6,7 @@
 2·数据库操作
     python manage.py makemigrations
     python manage.py migrate
-3·后台操作
-    后台网址 /admin/
-    用户 root
-<<<<<<< HEAD
-    密码 WangNing7411.
+
 
 
 

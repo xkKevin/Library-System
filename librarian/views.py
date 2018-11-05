@@ -15,6 +15,8 @@ import requests
 
 from tool.changePsw import SendEmail
 from tool.change_time import time_stamp_to_str
+
+
 def index(request):
     '''
     首页
@@ -63,7 +65,7 @@ def index(request):
 
     username = request.session.get('username', "None")
     # 获取最近5条通知
-    notices = Notice.objects.filter().order_by('-updated_time')[:5]
+    notices = Notice.objects.filter().order_by('-updated_time')
     for i in range(len(notices)):  # 去掉回车换行
         notices[i].content = notices[i].content.replace("\n", "")
         notices[i].content = notices[i].content.replace("\r", "")
@@ -437,6 +439,8 @@ def search_book(request):
         return HttpResponseRedirect(reverse("login"))
     elif username == "root":
         is_administrator = True
+    elif username == "anti_man":
+        return HttpResponseRedirect(reverse("login"))
     book_type = request.GET.get('book_type', None)
     book_name = request.GET.get('book_name', None)
 
@@ -504,26 +508,30 @@ def delete_book_api(request):
         else:
             try:
                 del_book = AllBook.objects.get(book_id=book_id)
-                book = Book.objects.get(isbn=del_book.isbn.isbn)
-                # 添加删除记录
-                delhistory = BookDelHistory()
-                delhistory.book_id = book_id
-                delhistory.book_name = book.book_name
-                delhistory.book_isbn = book.isbn
-                delhistory.book_author = book.author
-                delhistory.librarian = libraian
-                delhistory.del_reason = del_reason
+                if del_book.is_available:  # 如果书未借出
+                    book = Book.objects.get(isbn=del_book.isbn.isbn)
+                    # 添加删除记录
+                    delhistory = BookDelHistory()
+                    delhistory.book_id = book_id
+                    delhistory.book_name = book.book_name
+                    delhistory.book_isbn = book.isbn
+                    delhistory.book_author = book.author
+                    delhistory.librarian = libraian
+                    delhistory.del_reason = del_reason
 
-                if book.total_num == 1:  # 如果只剩这一本
-                    book.delete()
+                    if book.total_num == 1:  # 如果只剩这一本
+                        book.delete()
+                    else:
+                        book.total_num -= 1  # 此图书总数减1
+                        book.available_num -= 1
+                        book.save()
+                    # 删除这本图书
+                    del_book.delete()
+                    delhistory.save()
+                    return JsonResponse({"result": True})
                 else:
-                    book.total_num -= 1  # 此图书总数减1
-                    book.available_num -= 1
-                    book.save()
-                # 删除这本图书
-                del_book.delete()
-                delhistory.save()
-                return JsonResponse({"result": True})
+                    return JsonResponse({"result": False, "msg": "Book is borrowed!"})  # 请输入正确id
+
             except:
                 return JsonResponse({"result": False, "msg": "Please input correct ID!"})  # 请输入正确id
     else:
@@ -730,7 +738,7 @@ def administrator_login_post(request):
             password = request.POST["password"]
             username = request.POST["username"]
             remember = request.POST['remember']
-            temp = Administrator.objects.get(administrator_name=username, password=password)
+            temp = Administrator.objects.get(administrator_name=username, password=password, is_available=True)
             if temp:
                 response = JsonResponse({'result': True})
                 if not remember:

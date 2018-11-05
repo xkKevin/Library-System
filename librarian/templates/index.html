@@ -89,6 +89,33 @@
 	box-shadow: inset 0px 0px 1px 1px rgba(0,0,0,0.1);
 	color: blue;
 }
+    #notices tbody::-webkit-scrollbar {/*滚动条整体样式*/
+            width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+            height: 4px;
+        }
+        #notices tbody::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+            border-radius: 5px;
+            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.3);
+        }
+        #notices tbody::-webkit-scrollbar-track {/*滚动条里面轨道*/
+            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            border-radius: 0;
+            background: rgba(0,0,0,0.1);
+        }
+    #notices thead, tbody tr {
+        display:table;
+        width:100%;
+        table-layout:fixed;
+    }
+    #notices tbody {
+        display: block;
+        height: 228px;
+        overflow-y: auto;
+    }
+    {##notices thead {#}
+    {#    width: calc( 100% - 1em )#}
+    {#}#}
 </style>
 </head>
 <body>
@@ -196,28 +223,8 @@
         </div>
     </div>
 </div>
-<!--
-<div align="center">
 
-    <table align="center" id="tab" class="table table-striped">
-        <caption>{% trans '通知栏' %}</caption>
-        <thead>
-            <tr>
-                <th align="center">{% trans '标题' %}</th>
-                <th align="center">{% trans '内容简介' %}</th>
-                <th align="center">{% trans '发布时间' %}</th>
-            </tr>
-        </thead>
-
-        <tbody >
-            <tr class="active" id="user_message_tr">
-            </tr>
-        </tbody>
-    </table>
-</div>
--->
-
-<div style="margin:0 auto;width:51% ;padding-top: 20px;">
+<div style="margin:0 auto;width:51% ;padding-top: 20px;" id="notices" >
 {% if notices.count > 0 %}
 	<table class="table tab1" id="tab">
 {#    #5bc0de#}
@@ -231,24 +238,24 @@
 	    </tr>
 	    </thead>
 	    <tbody>
-        {% for notice in notices %}
-            <tr>
-                <td style="text-align: center;"><a href="{% url 'view_notice_content' notice.id %}">
-                    <marquee onMouseOut="outFunc(this)" onMouseOver=overFunc(this,"{{ notice.title }}") scrollAmount="0"  behavior="alternate">
-                    {{ notice.title }}
-                    </marquee>
-                </a></td>
-                <td style="text-align: center;">
-                    <marquee onMouseOut="outFunc(this)" onMouseOver=overFunc(this,"{{ notice.content }}") scrollAmount="0"  behavior="alternate">
-                        {{ notice.content }}
-                    </marquee>
-                    <span id="content_td" style="display: none;"></span>
-                </td>
-                <td style="text-align: center;">{{ notice.updated_time}}</td>
-                <td style="text-align: center;">{{ notice.author.administrator_name}}</td>
-            </tr>
-        {% endfor %}
-	    </tbody>
+            {% for notice in notices %}
+                <tr>
+                    <td style="text-align: center;  width: 15%"><a href="{% url 'view_notice_content' notice.id %}">
+                        <marquee onMouseOut="outFunc(this)" onMouseOver=overFunc(this,"{{ notice.title }}") scrollAmount="0"  behavior="alternate">
+                        {{ notice.title }}
+                        </marquee>
+                    </a></td>
+                    <td style="text-align: center; width: 45%">
+                        <marquee onMouseOut="outFunc(this)" onMouseOver=overFunc(this,"{{ notice.content }}") scrollAmount="0"  behavior="alternate">
+                            {{ notice.content }}
+                        </marquee>
+                        <span id="content_td" style="display: none;"></span>
+                    </td>
+                    <td style="text-align: center; width: 26%">{{ notice.updated_time}}</td>
+                    <td style="text-align: center; width: 14%">{{ notice.author.administrator_name}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
 	</table>
 {% endif %}
 </div>

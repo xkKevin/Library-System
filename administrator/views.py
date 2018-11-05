@@ -30,7 +30,7 @@ def Adminlogin(request):
         return render(request, 'index.html')
 
     rule = Role.objects.first()
-    all_librarian = Administrator.objects.all()
+    all_librarian = Administrator.objects.filter(is_available=True)
     return render(request, 'admin2.html', {'rule': rule, 'all_librarian': all_librarian})
 
 
@@ -159,7 +159,7 @@ def get_adminPsw(request):
     if request.method == "GET":
         try:
             admin = request.GET["username"]
-            temp = Administrator.objects.get(administrator_name=admin)
+            temp = Administrator.objects.get(administrator_name=admin, is_available=True)
             request.session["current_operated_lib_name"] = admin
             response = JsonResponse({'result': True, "account": temp.administrator_name, "psw": temp.password})
             return response
@@ -172,7 +172,7 @@ def get_adminPsw(request):
 # 系统管理员界面编辑图书馆管理员信息
 def edit_librarian(request, librarian_name):
     # lib_name = request.session["current_operated_lib_name"]
-    librarian = Administrator.objects.get(administrator_name=librarian_name)
+    librarian = Administrator.objects.get(administrator_name=librarian_name, is_available=True)
 
     return render(request, 'edit_librarian.html', {'librarian': librarian})
 
@@ -182,6 +182,7 @@ def manager_edit_librarian(request):
         try:
             newPaw = ""
             oldPsw = ""
+            lib_name = ""
             try:
                 lib_name = request.GET["lib_name"]
                 oldPsw = request.GET["oldPsw"]
@@ -190,7 +191,7 @@ def manager_edit_librarian(request):
             except:
                 pass
 
-            librarian = Administrator.objects.get(administrator_name=lib_name)
+            librarian = Administrator.objects.get(administrator_name=lib_name, is_available=True)
 
             if librarian:
                 if not newPaw is "":
@@ -215,7 +216,8 @@ def delete_librarian(request):
         try:
             lib_name = request.GET['lib_name']
             librarian = Administrator.objects.get(administrator_name=lib_name)
-            librarian.delete()
+            librarian.is_available = False
+            librarian.save()
             return JsonResponse({'result': True})
 
         except:
