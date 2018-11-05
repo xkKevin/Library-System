@@ -137,16 +137,24 @@ def create_lib(request):
             psw = request.GET["psw"]
             try:
                 ago = Administrator.objects.get(administrator_name=libname)
-                return JsonResponse({'result': False})
+                if ago.is_available == True:
+                    return JsonResponse({'result': False, "msg": "The account already exists!"})
+                else:
+                    ago.password = psw
+                    ago.authority = 1
+                    ago.is_available = True
+                    ago.save()
+                    return JsonResponse({'result': True, 'result2': False, "msg": "The account has been activated!"})
             except:
                 lib = Administrator()
                 lib.administrator_name = libname
                 lib.password = psw
                 lib.authority = 1
+                lib.is_available = True
                 lib.save()
-                return JsonResponse({'result': True})
+                return JsonResponse({'result': True, 'result2': True})
     else:
-        return JsonResponse({'result': False, "msg": "数据库保存错误"})
+        return JsonResponse({'result': False, "msg": "Database save error!"})
 
 
 def get_adminPsw(request):

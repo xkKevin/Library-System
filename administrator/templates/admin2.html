@@ -334,10 +334,14 @@ Copyright &copy;2018 Library
             $.get("/createLib/",{"name":name,"psw":psw},function (result,statue) {
                 if(statue === 'success') {
                     if (result["result"] === true) {
-                        alert("{% trans '注册成功!' %}")
+                        if(result["result2"] == true){
+                            alert("{% trans '注册成功!' %}")
+                        }else{
+                            alert("{% trans '注册成功!' %}"+'\n'+result['msg'])
+                        }
                          window.location.reload();
                     } else {
-                        alert("{% trans '注册失败!' %}")
+                        alert("{% trans '注册失败!' %}"+'\n'+result['msg'])
                     }
                 }
             })
