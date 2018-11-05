@@ -36,7 +36,7 @@ urlpatterns = [
     # url(r'^register/$', reader_views.register, name="register"),
     # 媒体目录 访问 书的条形码
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-    url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+    # url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
     # 下载书的条形码
     url(r'^download/(\d+)/$', librarian_views.download_book_bar_code_api, name="download_bar_code"),
     url(r'^clear_message/$', librarian_views.clear_message, name="logout"),
