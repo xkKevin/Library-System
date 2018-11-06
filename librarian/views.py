@@ -576,10 +576,17 @@ def income_record(request):
     if username == 'root':
         all_money_orders = MoneyOrder.objects.all().order_by('-order_time')
         all_money = 0
+        all_fine = 0
+        all_deposit = 0
         for order in all_money_orders:
             all_money += order.num
+            if order.order_type == 'D':
+                all_deposit += order.num
+            else:
+                all_fine += order.num
         return render(request, 'income_record.html',
-                      {'all_money_orders': all_money_orders, 'all_money': all_money})
+                      {'all_money_orders': all_money_orders, 'all_money': all_money,
+                       'all_fine': all_fine, 'all_deposit': all_deposit})
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -1224,8 +1231,16 @@ def search_income_record_api(request):
 
         income_records = list()
         income_num = 0
+        income_fine = 0
+        income_deposit = 0
+
         for incomerecord in income_record_list:
             income_num += incomerecord.num
+            if incomerecord.order_type == 'D':
+                income_deposit += incomerecord.num
+            else:
+                income_fine += incomerecord.num
+
             record = {
                 "id": incomerecord.id,
                 "user_name": incomerecord.user.user_name,
@@ -1236,6 +1251,7 @@ def search_income_record_api(request):
             }
             income_records.append(record)
 
-        return JsonResponse({'result': True, 'income_records': income_records, 'income_num': income_num})
+        return JsonResponse({'result': True, 'income_records': income_records, 'income_num': income_num,
+                             'income_deposit': income_deposit, 'income_fine': income_fine})
     except Exception:
         return JsonResponse({"result": False, "msg": "Error!"})
