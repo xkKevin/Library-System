@@ -11,4 +11,3 @@ image/
 test.*
 test_mysql.py
 download_plus.py
-media/
