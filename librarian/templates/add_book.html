@@ -149,13 +149,9 @@
         </div>
     </div>
 </div>
-<footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
-京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
-<br>
-Copyright &copy;2018 Library
-<br>
-<a href="#">xiaoxiongxiong@xiongxiong.com</a>
-</footer>
+<img src="" id="book_image">
+<img src="" id="book_bar_code">
+
 <script>
     function isbn_fouces() {
         document.getElementById("isbn").focus()
@@ -217,7 +213,11 @@ isbn_fouces();
                 }
                 else {
                     alert("{% trans '添加成功' %}");
-                    window.location.href = ''
+                    var book_image = document.getElementById("book_image");
+                    book_image.setAttribute("src", result["book_image"]);
+                    var bar_code = document.getElementById("book_bar_code");
+                    bar_code.setAttribute("src", result["bar_code_url"]);
+                    {#window.location.href = ''#}
                 }
             }
         })

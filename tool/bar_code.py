@@ -15,7 +15,7 @@ from pystrich.code39 import Code39Encoder
 from online_library.settings import MEDIA_ROOT
 from django.http import FileResponse
 import os
-
+from librarian.models import Book
 
 class BarCode:
     @staticmethod
@@ -29,15 +29,18 @@ class BarCode:
             bar_num = int(bar_num)
         except ValueError:
             return False, '请输入数字!'
-        if bar_num > 10**9-1:
+        if bar_num > 10**19-1:
             return False, '数字不应大于八位!'
         path = os.path.join(MEDIA_ROOT, '%d.png' % bar_num)
         if os.path.exists(path):
             return True, 'Exists!', '/media/%d.png' % bar_num, path,
-        encoder = Code39Encoder('{:0=8}'.format(bar_num))
+        encoder = Code39Encoder('{:0=13}'.format(bar_num))
         encoder.save(path)
         return True, 'Successful!', '/media/%d.png' % bar_num, path
 
 
 if __name__ == '__main__':
-    print(BarCode.create_bar_code(15))
+    books = Book.objects.all()
+    for book in books:
+        print(BarCode.create_bar_code(book.isbn))
+    # print(BarCode.create_bar_code(9787115191120))

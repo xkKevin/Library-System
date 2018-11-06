@@ -908,6 +908,8 @@ def add_book_api(request):
     :param request:
     :return:
     '''
+    image_url = ""
+    bar_code_url = ""
     if request.method == "POST":
         try:
             isbn = request.POST['isbn']
@@ -929,6 +931,10 @@ def add_book_api(request):
                 with open("./librarian/static/book_image/%s.jpg" % isbn, "wb") as file:
                     file.write(image_result.content)
             image_url = '/static/book_image/%s.jpg' % isbn
+            if isbn.isalnum() and isbn:
+                result = BarCode.create_bar_code(isbn)
+                if result[0]:
+                    bar_code_url = result[2]
             book = Book()
             book.isbn = isbn
             book.author = author
@@ -946,7 +952,7 @@ def add_book_api(request):
             AllBook.objects.bulk_create(all_book_list)
         except Exception as e:
             return JsonResponse({'result': False, "msg": "Database save failed"})
-    return JsonResponse({'result': True})
+    return JsonResponse({'result': True, 'book_image': image_url, 'bar_code_url': bar_code_url})
 
 
 def get_book(request):
