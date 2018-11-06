@@ -213,10 +213,12 @@ isbn_fouces();
                 }
                 else {
                     alert("{% trans '添加成功' %}");
+                    {# -----------显示图片示例----------- #}
                     var book_image = document.getElementById("book_image");
                     book_image.setAttribute("src", result["book_image"]);
                     var bar_code = document.getElementById("book_bar_code");
                     bar_code.setAttribute("src", result["bar_code_url"]);
+                    {# -----------############---------- #}
                     {#window.location.href = ''#}
                 }
             }

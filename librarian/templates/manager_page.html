@@ -233,22 +233,6 @@ position: relative;
 </nav>
 
 <body data-spy="scroll" data-target="#myScrollspy">
-<!--
-<form action="{% url 'set_language' %}" method="post">
-    {% csrf_token %}
-    <input name="next" type="hidden" value="{{ redirect_to }}"/>
-    <select name="language">
-        {% for language in LANGUAGES %}
-            <option value="{{ language.0 }}"{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
-                {{ language.1 }} ({{ language.0 }})
-        {% endfor %}
-    </select>
-    <input type="submit" value="Go"/>
-</form>
-
-	<div align="right" class="banner-content" style="display: block;">
-		<a href="/"style=" font-size:16px;">{% trans '首页' %}</a>| <a href="/"style=" font-size:16px;" >{% trans '退出' %}</a>
--->
 
 <div style="text-align:center;margin-top: 40px">
     <img src="/static/images/book_logo.png" style="vertical-align:middle;" width="200"  />
@@ -261,6 +245,7 @@ position: relative;
             <ul class="nav nav-tabs nav-stacked" data-spy="affix" data-offset-top="125" id="myNav">
                 <li class="active"><a href="#section-1">{% trans '用户资料' %}</a></li>
                 <li><a href="#section-2">{% trans '处理预约' %}</a></li>
+                <li><a href=""></a></li>
 				<li><a href="#section-3">{% trans '未还图书' %}</a></li>
                 <li><a href="#section-4">{% trans '已还图书' %}</a></li>
                 <li><a href="#section-5">{% trans '付费记录' %}</a></li>
@@ -275,7 +260,27 @@ position: relative;
         <div class="col-xs-9 " style="float: right">
             <div id="section-1" style="position: relative; top: -50px;"></div>
             <h2 style="display:block; height:50px; width:350px">{% trans '用户资料' %}</h2>
-        
+
+         <table align="center" id="tab" width="300px"  class="table tab1">
+
+	        <thead>
+                <tr>
+                    <th align="center">{% trans '用户ID' %}</th>
+                    <th align="center">{% trans '用户名' %}</th>
+                    <th align="center">{% trans '邮箱' %}</th>
+                    <th align="center">{% trans '缴纳罚金' %}</th>
+                    <th align="center">{% trans '删除用户' %}</th>
+                    <th align="center">{% trans '编辑用户' %}</th>
+                </tr>
+	        </thead>
+
+            <tbody >
+                <tr class="active" id="user_message_tr">
+                </tr>
+            </tbody>
+        </table>
+
+
 	    <table align="center" id="tab" width="300px"  class="table tab1">
 
 	        <thead>

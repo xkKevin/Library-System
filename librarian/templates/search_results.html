@@ -130,9 +130,12 @@
                                   <td class="content" valign="top">
                                       {% trans book.get_type_display %}
                                   </td>
+
+                              {#  -----------条形码显示示例----------- #}
                               </tr>
-                              <img src="/media/{{ book.isbn }}.png">
+                                <img src="/media/{{ book.isbn }}.png"/>
                               <tr>
+                              {#  -----------#############----------- #}
                                   <td class="label1">{% trans '价格' %}：</td>
                                   <td class="content" valign="top">{{ book.price }}</td>
                               </tr>

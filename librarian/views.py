@@ -931,10 +931,12 @@ def add_book_api(request):
                 with open("./librarian/static/book_image/%s.jpg" % isbn, "wb") as file:
                     file.write(image_result.content)
             image_url = '/static/book_image/%s.jpg' % isbn
+            # -----------生成条形码示例-----------
             if isbn.isalnum() and isbn:
                 result = BarCode.create_bar_code(isbn)
                 if result[0]:
                     bar_code_url = result[2]
+            # -----------##############----------
             book = Book()
             book.isbn = isbn
             book.author = author
