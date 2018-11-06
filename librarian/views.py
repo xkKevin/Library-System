@@ -43,7 +43,7 @@ def index(request):
                     # 向没有发过提醒邮件的用户发送邮件
                     if not each.is_alert:  # 如果没有发过提醒邮件
                         expire_date = time_stamp_to_str((each.borrow_time + timezone.timedelta(days=role.days_limit)).timetuple())
-                        content = '您所借图书《' + each.book.isbn.book_name + '》已于 ' + str(expire_date) +\
+                        content = '您所借图书《' + each.book.the_book.book_name + '》已于 ' + str(expire_date) +\
                                   ' 到期，现罚金为 ' + str(each.debt) + ' 元，请及时归还图书并缴纳罚金，谢谢！'
                         s = SendEmail()
                         if s:  # 如果登录成功
@@ -52,10 +52,10 @@ def index(request):
                             if not is_successful:
                                 flag = False
                                 print('Send alert email to user ' + each.user.user_name + ' about book 《' +
-                                      each.book.isbn.book_name + '》: Failure!')
+                                      each.book.the_book.book_name + '》: Failure!')
                             else:
                                 print('Send alert email to user ' + each.user.user_name + ' about book 《' +
-                                      each.book.isbn.book_name + '》: Success!')
+                                      each.book.the_book.book_name + '》: Success!')
                                 each.is_alert = True
 
                     each.save()  # 数据库保存
@@ -509,12 +509,13 @@ def delete_book_api(request):
             try:
                 del_book = AllBook.objects.get(book_id=book_id)
                 if del_book.is_available:  # 如果书未借出
-                    book = Book.objects.get(isbn=del_book.isbn.isbn)
+                    book = Book.objects.get(id=del_book.the_book.id)
                     # 添加删除记录
                     delhistory = BookDelHistory()
                     delhistory.book_id = book_id
                     delhistory.book_name = book.book_name
-                    delhistory.book_isbn = book.isbn
+                    if not (book.isbn is None):
+                        delhistory.book_isbn = book.isbn
                     delhistory.book_author = book.author
                     delhistory.librarian = libraian
                     delhistory.del_reason = del_reason
@@ -605,22 +606,22 @@ def reserve_api(request):
         isbn = request.POST['isbn']
 
         try:
-            book = AllBook.objects.filter(isbn=isbn, is_available=True).first()
+            the_book = Book.objects.filter(isbn=isbn).first()
+            book = AllBook.objects.filter(the_book=the_book, is_available=True).first()
             user = User.objects.get(user_name=username)
-            borrow = ReserveOrder.objects.filter(isbn=isbn, user_id=user.user_id, expire=False).first()
+            borrow = ReserveOrder.objects.filter(the_book=the_book, user_id=user.user_id, expire=False).first()
             if borrow:
                 borrow.borrow_time = timezone.now()
                 borrow.save()
                 return JsonResponse({"result": True, "update": True})
-            isbn = Book.objects.get(isbn=isbn)
         except Exception as e:
             return JsonResponse({'result': False, "msg": "Database Error!"})  # 数据库错误
-        if not (book and user and isbn):
+        if not (book and user and the_book):
             return JsonResponse({'result': False, "msg": "No relevant data was found!"})  # 未查到相关数据
         borrow_time = timezone.now()
         try:
             result = ReserveOrder.objects.create(book=book, user=user, borrow_time=borrow_time, successful=False,
-                                                 isbn=isbn)
+                                                 the_book=the_book)
             if result:
                 return JsonResponse({"result": True, "update": False})
             else:
@@ -653,14 +654,16 @@ def return_book_api(request):
         borrow_order.return_time = timezone.now()
         borrow_order.is_return = True
         borrow_order.book.is_available = True
-        if borrow_order.book.isbn.available_num < borrow_order.book.isbn.total_num:
-            borrow_order.book.isbn.available_num = borrow_order.book.isbn.available_num + 1
+        if borrow_order.book.the_book.available_num < borrow_order.book.the_book.total_num:
+            borrow_order.book.the_book.available_num = borrow_order.book.the_book.available_num + 1
         else:
-            borrow_order.book.isbn.available_num = borrow_order.book.isbn.total_num
-        borrow_order.book.isbn.save()
+            borrow_order.book.the_book.available_num = borrow_order.book.the_book.total_num
+        borrow_order.book.the_book.save()
+        borrow_order.book.save()
         borrow_order.save()
         return JsonResponse({"result": True})
-    except Exception:
+    except Exception as e:
+        print(e)
         return JsonResponse({"result": False, "msg": "Error!"})
 
 
@@ -686,7 +689,7 @@ def send_mail_api(request):
             return JsonResponse({"result": False, "msg": "This borrower_order is't expire"})
         else:
             expire_date = time_stamp_to_str((borrow_order.borrow_time + timezone.timedelta(days=role.days_limit)).timetuple())
-            content = '您所借图书《' + borrow_order.book.isbn.book_name + '》已于 ' + expire_date + \
+            content = '您所借图书《' + borrow_order.book.the_book.book_name + '》已于 ' + expire_date + \
                       ' 到期，现罚金为 ' + str(borrow_order.debt) + ' 元，请及时归还图书并缴纳罚金，谢谢！'
             s = SendEmail()
             if s:  # 如果登录成功
@@ -698,7 +701,8 @@ def send_mail_api(request):
                     return JsonResponse({"result": False, "msg": "Send email failure!"})
             else:
                 return JsonResponse({"result": False, "msg": "Sign in the email failure!"})
-    except:
+    except Exception as e:
+        print(e)
         return JsonResponse({"result": False, "msg": "Send email failure!"})
 
 def book_message_api(request):
@@ -777,17 +781,19 @@ def borrow_book_api(request):
         reserve_id = request.POST["reserve_id"]
     except:
         return JsonResponse({"result": False, "msg": "Forbidden"})
+
     try:
         limit = Role.objects.all().first().books_limit
         reserve_order = None
 
         try:
-            reserve_order = ReserveOrder.objects.get(order_id=reserve_id,)
+            reserve_order = ReserveOrder.objects.get(order_id=reserve_id)
         except:
             return JsonResponse({"result": False, "msg": "Reserve_id is invalid"})
+
         if BorrowOrder.objects.filter(user_id=reserve_order.user.user_id, is_return=False).count() >= limit:
             return JsonResponse({"result": False, "msg": "This User can not borrow!"})
-        if reserve_order.isbn.available_num <= 0:
+        if reserve_order.the_book.available_num <= 0:
             return JsonResponse({"result": False, "msg": "All Book have been lent out!"})
         reserve_time = reserve_order.borrow_time
         delay = time.mktime(timezone.now().timetuple()) - time.mktime(reserve_time.timetuple())
@@ -796,20 +802,27 @@ def borrow_book_api(request):
             reserve_order.expire = True
             reserve_order.save()
             return JsonResponse({"result": True, "expire": True})
+
         borrow_time = timezone.now()
-        book_id = reserve_order.book_id
-        user_id = reserve_order.user_id
+        book_id = reserve_order.book.book_id
+        user_id = reserve_order.user.user_id
         BorrowOrder.objects.create(borrow_time=borrow_time,
                                    debt=0,
                                    is_return=False,
                                    book_id=book_id,
                                    user_id=user_id,
                                    expire=False)
-        reserve_order.isbn.available_num = reserve_order.isbn.available_num - 1
+
+        reserve_order.the_book.available_num = reserve_order.the_book.available_num - 1
         reserve_order.successful = True
+
         reserve_order.book.is_available = False
         reserve_order.expire = True
-        reserve_order.isbn.save()
+        reserve_order.user.borrow_num += 1
+
+        reserve_order.book.save()
+        reserve_order.user.save()
+        reserve_order.the_book.save()
         reserve_order.save()
         return JsonResponse({"result": True, "expire": False})
     except Exception as e:
@@ -852,7 +865,7 @@ def manage_user_api(request):
         for reserve_order in reserve_order_list:
             order = {
                 'reserve_order_id': reserve_order.order_id,
-                "reserve_book_name": reserve_order.book.isbn.book_name,
+                "reserve_book_name": reserve_order.the_book.book_name,
                 "reserve_user_name": user.user_name,
                 "reserve_time": time_stamp_to_str(reserve_order.borrow_time.timetuple())
             }
@@ -862,7 +875,7 @@ def manage_user_api(request):
         for borrow_order in borrow_order_list:
             order = {
                 'borrow_order_id': borrow_order.order_id,
-                "borrow_book_name": borrow_order.book.isbn.book_name,
+                "borrow_book_name": borrow_order.book.the_book.book_name,
                 "borrow_user_name": user.user_name,
                 "borrow_time": time_stamp_to_str(borrow_order.borrow_time.timetuple()),
                 "debt": borrow_order.debt
@@ -875,7 +888,7 @@ def manage_user_api(request):
             all_fine += returned_order.debt
             order = {
                 'borrow_order_id': returned_order.order_id,
-                "borrow_book_name": returned_order.book.isbn.book_name,
+                "borrow_book_name": returned_order.book.the_book.book_name,
                 "borrow_user_name": user.user_name,
                 "return_time": time_stamp_to_str(returned_order.return_time.timetuple()),
                 "debt": returned_order.debt
@@ -921,9 +934,10 @@ def add_book_api(request):
         try:
             isbn = request.POST['isbn']
             try:
-                temp = Book.objects.get(isbn=isbn)
-                if temp:
-                    return JsonResponse({"result": False, 'msg': "The book already exists"})
+                if isbn != '':
+                    temp = Book.objects.get(isbn=isbn)
+                    if temp:
+                        return JsonResponse({"result": False, 'msg': "The book already exists"})
             except Book.DoesNotExist:
                 pass
             author = request.POST['author']
@@ -933,31 +947,50 @@ def add_book_api(request):
             price = request.POST['price']
             type = request.POST["type"]
             place = request.POST['place']
-            image_result = requests.get(image_url)
-            if image_result.status_code == 200:
-                with open("./librarian/static/book_image/%s.jpg" % isbn, "wb") as file:
-                    file.write(image_result.content)
-            image_url = '/static/book_image/%s.jpg' % isbn
+
+            if image_url != '':
+                image_result = requests.get(image_url)
+                if image_result.status_code == 200:
+                    with open("./librarian/static/book_image/%s.jpg" % isbn, "wb") as file:
+                        file.write(image_result.content)
+                image_url = '/static/book_image/%s.jpg' % isbn
+            else:
+                image_url = 'None'
+
+
             # -----------生成条形码示例-----------
             if isbn.isalnum() and isbn:
                 result = BarCode.create_bar_code(isbn)
                 if result[0]:
                     bar_code_url = result[2]
             # -----------##############----------
+
             book = Book()
-            book.isbn = isbn
-            book.author = author
-            book.book_name = book_name
-            book.image_url = image_url
-            book.total_num = total_num
-            book.type = type
-            book.place = place
-            book.price = price
-            book.available_num = total_num
-            book.save()
+            if isbn != '':
+                book.isbn = isbn
+                book.author = author
+                book.book_name = book_name
+                book.image_url = image_url
+                book.total_num = total_num
+                book.type = type
+                book.place = place
+                book.price = price
+                book.available_num = total_num
+                book.save()
+            else:
+                book.author = author
+                book.book_name = book_name
+                book.image_url = image_url
+                book.total_num = total_num
+                book.type = type
+                book.place = place
+                book.price = price
+                book.available_num = total_num
+                book.save()
+
             all_book_list = list()
             for x in range(int(total_num)):
-                all_book_list.append(AllBook(isbn=book, is_available=True))
+                all_book_list.append(AllBook(the_book=book, is_available=True))
             AllBook.objects.bulk_create(all_book_list)
         except Exception as e:
             return JsonResponse({'result': False, "msg": "Database save failed"})
@@ -999,7 +1032,7 @@ def update_book(request):
     if username == 'root':
         if request.method == "GET":
                 isbn = request.GET["isbn"]
-                book = Book.objects.get(isbn=isbn)
+                book = Book.objects.filter(isbn=isbn).first()
                 total_num = request.GET["total_num"]
                 place = request.GET['place']
                 type = request.GET['type']
@@ -1014,7 +1047,7 @@ def update_book(request):
                             try:
                                 all_book_list = list()
                                 for x in range(int(add_num)):
-                                    all_book_list.append(AllBook(isbn=book, is_available=True))
+                                    all_book_list.append(AllBook(the_book=book, is_available=True))
                                 AllBook.objects.bulk_create(all_book_list)
                                 book.total_num = total_num
                                 book.available_num += add_num
@@ -1038,7 +1071,7 @@ def get_book_info_by_id_api(request):
     if book_id:
         try:
             the_book = AllBook.objects.get(book_id=book_id)
-            book = Book.objects.get(isbn=the_book.isbn.isbn)
+            book = Book.objects.get(id=the_book.the_book.id)
             result_json['isbn'] = book.isbn
             result_json['author'] = book.author
             result_json['book_name'] = book.book_name

@@ -9,7 +9,6 @@ class User(models.Model):
     email = models.CharField(max_length=100, null=False)
     borrow_num = models.IntegerField(default=0)
     user_name = models.CharField(max_length=20, null=False)
-    deposit = models.BooleanField(default=False)
     password = models.CharField(max_length=20, null=False)
 
     def __str__(self):

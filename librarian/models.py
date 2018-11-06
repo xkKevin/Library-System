@@ -8,7 +8,7 @@ class Book(models.Model):
             ('F', '历史'), ('G', '政治'), ('H', '经济'), ('I', '其他'))
 
     author = models.CharField(max_length=50)
-    isbn = models.IntegerField(primary_key=True)
+    isbn = models.IntegerField(null=True, unique=True)
     total_num = models.IntegerField(null=False)
     available_num = models.IntegerField(null=False)
     book_name = models.CharField(max_length=100, null=False)
@@ -24,7 +24,7 @@ class Book(models.Model):
 class AllBook(models.Model):
     book_id = models.IntegerField(auto_created=True, primary_key=True)
     is_available = models.BooleanField(null=False, default=True)
-    isbn = models.ForeignKey(Book, related_name="all_book_isbn")
+    the_book = models.ForeignKey(Book, related_name="all_book_isbn")
 
     def __str__(self):
         return str(self.book_id)
@@ -51,7 +51,7 @@ class ReserveOrder(models.Model):
     order_id = models.IntegerField(primary_key=True)
     user = models.ForeignKey(User, related_name="reserve_order_user")
     book = models.ForeignKey(AllBook, related_name="reserve_order_book")
-    isbn = models.ForeignKey(Book, related_name="reserve_order_isbn")
+    the_book = models.ForeignKey(Book, related_name="reserve_order_isbn")
     borrow_time = models.DateTimeField(null=False)
     successful = models.BooleanField(null=False)
     # 判断是否为历史订单 方便后期查找
@@ -109,7 +109,7 @@ class AutoUpdateDB(models.Model):
 class BookDelHistory(models.Model):
     REASON = (('D', 'DAMAGED'), ('L', 'LOST'))
     book_id = models.IntegerField()
-    book_isbn = models.IntegerField()
+    book_isbn = models.IntegerField(null=True)
     book_name = models.CharField(max_length=100)
     book_author = models.CharField(max_length=50)
     deleted_time = models.DateTimeField(auto_now_add=True)
