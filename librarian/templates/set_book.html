@@ -100,7 +100,11 @@
     <div class="form row" style="position: relative; bottom: 5px">
         <div class="form-horizontal col-md-offset-3" id="register_form">
             <div class="col-md-9">
-
+            <div class="form-group">
+                    <i class="fa fa-barcode"> {% trans 'bookid' %}</i>
+                    <br>
+                    <input type="text" name="bookid" id="bookid">
+                </div>
                 <div class="form-group">
                     <i class="fa fa-barcode"> {% trans 'isbn' %}</i>
                     <br>
@@ -169,10 +173,16 @@ Copyright &copy;2018 Library
     function isbn_fouces() {
         document.getElementById("isbn").focus()
     }
+
+    function bookid_fouces() {
+        document.getElementById("bookid").focus()
+    }
     $.ajaxSetup({
     data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
 });
 isbn_fouces();
+bookid_fouces()
+
     $(document).ready(function () {
         $('#isbn').bind('keypress',function(event){
             if (event.keyCode == "13") {
@@ -187,6 +197,38 @@ isbn_fouces();
                                 break;
                             }
                         }
+                        document.getElementById("bookid").value = result["id"];
+
+                        document.getElementById("author").value = result["author"];
+                        document.getElementById("place").value = result["place"];
+                        document.getElementById("total_num").value = result["total_num"];
+                        document.getElementById("old_num").value = result["total_num"];
+                    } else {
+                        alert('{% trans 'ISBN查询失败' %}')
+                    }
+                });
+            } else {
+                return;
+            }
+
+
+        })
+
+        $('#bookid').bind('keypress',function(event){
+            if (event.keyCode == "13") {
+                var bookid = document.getElementById("bookid").value;
+                $.get("{% url 'get_bookbyid_api' %}", {"bookid": bookid},function (result, statue) {
+                    if (result['result']=== true){
+                        document.getElementById("book_name").value = result["book_name"];
+                        var all_types = document.getElementById("type").children;
+                        for(i=0;i<all_types.length;i++){  //选定类型
+                            if(all_types[i].value == result["type"]){
+                                all_types[i].selected = true;
+                                break;
+                            }
+                        }
+                        document.getElementById("isbn").value = result["isbn"];
+
                         document.getElementById("author").value = result["author"];
                         document.getElementById("place").value = result["place"];
                         document.getElementById("total_num").value = result["total_num"];
@@ -203,6 +245,7 @@ isbn_fouces();
         })
     });
     function update_book() {
+        var bookid = document.getElementById("bookid").value
         var isbn = document.getElementById("isbn").value;
         var total_num = document.getElementById("total_num").value;
         var type = document.getElementById("type").value;
@@ -212,6 +255,7 @@ isbn_fouces();
             return;
         }
         var book_message = {};
+        book_message["bookid"] = bookid;
         book_message["isbn"] = isbn;
         book_message['total_num'] = total_num;
         book_message['type'] = type;
@@ -222,8 +266,13 @@ isbn_fouces();
                     alert("{% trans '图书添加失败!\n错误信息: ' %}"+ result['msg']);
                 }
                 else {
-                    alert("{% trans '图书信息修改成功' %}");
-                    window.location.reload()
+                    if (parseInt(result["num"])>0){
+                        book= result["book_list"]
+                        window.location.href = "/add_barcode_page/?book="+book
+                    }else {
+                        alert("{% trans '图书信息修改成功' %}");
+                        //window.location.reload()
+                    }
                     {#$(window).attr('location', '{% url 'manage_page' %}');#}
                 }
             }

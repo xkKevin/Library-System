@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^user_message/$', reader_views.user_message, name="user_message"),
     url(r'^add_book/$', librarian_views.add_book, name="add_book"),
     url(r'^search_book/$', librarian_views.search_book, name="search_book"),
+    url(r'^add_barcode_page/$', librarian_views.bar_code_page, name="add_barcode_page"),
     url(r'^manager/delete_book/$', librarian_views.delete_book, name="manager_delete_book"),
     url(r'^manager/delete_record/$', librarian_views.del_record, name="manager_del_record"),
     url(r'^manager/delete_book/api/$', librarian_views.delete_book_api, name='delete_book_api'),
@@ -75,6 +76,7 @@ urlpatterns = [
     url(r'^add_book/api/$', librarian_views.add_book_api, name="add_book_api"),
     url(r'^update_book/api/$', librarian_views.update_book, name="update_book_api"),
     url(r'^get_book/api/$', librarian_views.get_book, name="get_book_api"),
+    url(r'^get_bookbyid/api/$', librarian_views.get_book_byid, name="get_bookbyid_api"),
     url(r'^reserve/api/$', librarian_views.reserve_api, name="reserve_api"),
     url(r'^search_book/api/$', librarian_views.search_book_api, name="search_book_api"),
     url(r'^changePsw/api/$', reader_views.sendEmailToChangePsw, name="change_reader_psw"),
@@ -109,6 +111,8 @@ urlpatterns = [
     url(r'^view_notice_content/(?P<notice_id>\d+)/$', librarian_views.view_notice_content, name="view_notice_content"),
     # 查找指定月、周、日的收入
     url(r'^manager/search_income_record/api/$', librarian_views.search_income_record_api, name="search_income_record_api"),
+
+
 
 ]
 

@@ -992,10 +992,33 @@ def add_book_api(request):
             for x in range(int(total_num)):
                 all_book_list.append(AllBook(the_book=book, is_available=True))
             AllBook.objects.bulk_create(all_book_list)
+
+
+            all = list(AllBook.objects.all())
+            need = all[-int(total_num):]
+            img_result = []
+            img_str = ""
+            for x in range(int(total_num)):
+                # -----------生成条形码示例-----------
+
+                result = BarCode.create_bar_code(need[x].book_id)
+                if result[0]:
+                    img_result.append(result[2])
+                    img_str+="!"
+                    img_str+=result[2]
+                # -----------##############----------
         except Exception as e:
             return JsonResponse({'result': False, "msg": "Database save failed"})
-    return JsonResponse({'result': True, 'book_image': image_url, 'bar_code_url': bar_code_url})
 
+
+    return JsonResponse({'result': True, 'book_image': image_url, 'bar_code_url': bar_code_url,"book_list": img_str})
+
+def bar_code_page(request):
+    need = []
+    if request.method == "GET":
+        str = request.GET["book"]
+        need = str.split("!")
+    return render(request, 'book_barcode.html',{"book_list":need})
 
 def get_book(request):
     '''
@@ -1007,11 +1030,38 @@ def get_book(request):
     if username == 'root':
         if request.method == "GET":
             isbn = request.GET["isbn"]
+
             try:
                 book = Book.objects.get(isbn=isbn)
             except:
                 return JsonResponse({"result": False})
-            response = JsonResponse({'result': True, 'isbn': isbn, "price": book.price,
+            response = JsonResponse({'result': True, 'id': book.id,'isbn': isbn, "price": book.price,
+                                     'author': book.author, 'book_name': book.book_name,
+                                     'place': book.place, "total_num": book.total_num,
+                                     'type': book.type
+                                     })
+            return response
+
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
+def get_book_byid(request):
+    '''
+    获取书的信息
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username == 'root':
+        if request.method == "GET":
+            isbn = request.GET["bookid"]
+
+            try:
+                book = Book.objects.get(id=isbn)
+            except:
+                return JsonResponse({"result": False})
+            response = JsonResponse({'result': True, 'isbn': book.isbn, "price": book.price,
                                      'author': book.author, 'book_name': book.book_name,
                                      'place': book.place, "total_num": book.total_num,
                                      'type': book.type
@@ -1031,11 +1081,14 @@ def update_book(request):
     username = request.session.get('username', "None")
     if username == 'root':
         if request.method == "GET":
+                id = request.GET["bookid"]
                 isbn = request.GET["isbn"]
-                book = Book.objects.filter(isbn=isbn).first()
+                #book = Book.objects.filter(isbn=isbn).first()
+                book = Book.objects.get(id=id)
                 total_num = request.GET["total_num"]
                 place = request.GET['place']
                 type = request.GET['type']
+                img_str = ""
                 if book:
                     if not place is "":
                         book.place = place
@@ -1051,13 +1104,27 @@ def update_book(request):
                                 AllBook.objects.bulk_create(all_book_list)
                                 book.total_num = total_num
                                 book.available_num += add_num
+
+                                all = list(AllBook.objects.all())
+                                need = all[-int(add_num):]
+                                img_result = []
+                                for x in range(int(add_num)):
+                                    # -----------生成条形码示例-----------
+
+                                    result = BarCode.create_bar_code(need[x].book_id)
+                                    if result[0]:
+                                        img_result.append(result[2])
+                                        img_str += "!"
+                                        img_str += result[2]
+                                    # -----------##############----------
+
                             except:
                                 pass
                         else:
                             response = JsonResponse({'result': False, "msg": "The quantity should not be less than the previous quantity."})
                             return response
                     book.save()
-                    response = JsonResponse({'result': True})
+                    response = JsonResponse({'result': True,"book_list":img_str,"num":add_num})
                 else:
                     response = JsonResponse({'result': False, "msg": "Unknown Error!"})
                 return response

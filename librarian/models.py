@@ -6,7 +6,7 @@ from administrator.models import Administrator
 class Book(models.Model):
     TYPE = (('A', '教育'), ('B', '计算机'), ('C', '文学'), ('D', '哲学'), ('E', '语言'),
             ('F', '历史'), ('G', '政治'), ('H', '经济'), ('I', '其他'))
-
+    #id = models.IntegerField(auto_created=True, primary_key=True)
     author = models.CharField(max_length=50)
     isbn = models.IntegerField(null=True, unique=True)
     total_num = models.IntegerField(null=False)

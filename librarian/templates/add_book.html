@@ -153,6 +153,11 @@
 <img src="" id="book_bar_code">
 
 <script>
+
+    function f() {
+        window.location.href = '/add_barcode_page/'
+
+    }
     function isbn_fouces() {
         document.getElementById("isbn").focus()
     }
@@ -212,14 +217,15 @@ isbn_fouces();
                     alert("{% trans '图书添加失败!\n错误信息: ' %}"+ result['msg']);
                 }
                 else {
-                    alert("{% trans '添加成功' %}");
+                    {% comment %}alert("{% trans '添加成功' %}");{% endcomment %}
                     {# -----------显示图片示例----------- #}
-                    var book_image = document.getElementById("book_image");
+                   {% comment %} var book_image = document.getElementById("book_image");
                     book_image.setAttribute("src", result["book_image"]);
                     var bar_code = document.getElementById("book_bar_code");
-                    bar_code.setAttribute("src", result["bar_code_url"]);
+                    bar_code.setAttribute("src", result["bar_code_url"]);{% endcomment %}
                     {# -----------############---------- #}
-                    {#window.location.href = ''#}
+                    book= result["book_list"]
+                    window.location.href = "/add_barcode_page/?book="+book
                 }
             }
         })
