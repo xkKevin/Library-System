@@ -197,8 +197,14 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <h4 id="" style="display:inline; height:50px; width:350px;text-align:right;">
                     <span id="find_way"></span>
-                    {% trans '收入总金额为：' %}&nbsp;
-                    <span id="all_fine" style="text-align: right">{{ all_money }}</span>&nbsp;￥</h4>
+                    {% trans '总收入:' %}&nbsp;
+                    <span id="all_fine" style="text-align: right">{{ all_money }}</span>￥&nbsp;&nbsp;&nbsp;
+                    {% trans '罚金收入:' %}&nbsp;
+                    <span id="fine" style="text-align: right">{{ all_fine }}</span>￥&nbsp;&nbsp;&nbsp;
+                    {% trans '保证金收入:' %}&nbsp;
+                    <span id="deposit" style="text-align: right">{{ all_deposit }}</span>￥
+                </h4>
+
             </form>
             </div>
 	    <table align="center" id="tab" width="300px"  class="table tab1" style="text-align: center;">
@@ -298,7 +304,8 @@ Copyright &copy;2018 Library
                 var income_deposit = result["income_deposit"];  //押金
                 var income_fine = result["income_fine"];  //罚金
                 var income_records = result["income_records"];
-
+                document.getElementById("fine").innerText = income_fine;
+                document.getElementById("deposit").innerText = income_deposit;
                 add_income_record(income_num, income_records);  //添加押金和罚金参数，修改函数
                 var findway = document.getElementById("find_way");
                 if(str == 'day'){

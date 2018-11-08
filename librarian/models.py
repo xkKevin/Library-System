@@ -25,7 +25,8 @@ class AllBook(models.Model):
     book_id = models.IntegerField(auto_created=True, primary_key=True)
     is_available = models.BooleanField(null=False, default=True)
     the_book = models.ForeignKey(Book, related_name="all_book_isbn")
-
+    #0 可借 1 预约 2 已借 3 删除
+    status = models.IntegerField(default=0)
     def __str__(self):
         return str(self.book_id)
 

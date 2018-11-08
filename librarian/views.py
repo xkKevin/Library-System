@@ -527,7 +527,9 @@ def delete_book_api(request):
                         book.available_num -= 1
                         book.save()
                     # 删除这本图书
-                    del_book.delete()
+                    del_book.status = 3
+                    del_book.is_available = False
+                    del_book.save()
                     delhistory.save()
                     return JsonResponse({"result": True})
                 else:
@@ -806,6 +808,8 @@ def borrow_book_api(request):
         borrow_time = timezone.now()
         book_id = reserve_order.book.book_id
         user_id = reserve_order.user.user_id
+
+
         BorrowOrder.objects.create(borrow_time=borrow_time,
                                    debt=0,
                                    is_return=False,
@@ -817,6 +821,7 @@ def borrow_book_api(request):
         reserve_order.successful = True
 
         reserve_order.book.is_available = False
+        reserve_order.book.status = 2
         reserve_order.expire = True
         reserve_order.user.borrow_num += 1
 
