@@ -224,6 +224,8 @@ $(document).ready(function(){
 	<thead>
 		<tr >
 			<th style="text-align: center;">{% trans '订单号' %}</th>
+            <th style="text-align: center;">{% trans '书籍ID' %}</th>
+            <th style="text-align: center;">{% trans '书名' %}</th>
 			<th style="text-align: center;">{% trans '借阅日期' %}</th>
 			<th style="text-align: center;">{% trans '归还期限' %}</th>
 			<th style="text-align: center;">{% trans '欠费金额' %}</th>
@@ -239,6 +241,8 @@ $(document).ready(function(){
         <tr class="active">
         {% endif %}
         <td >{{ borrow_order.order_id }}</td>
+        <td >{{ borrow_order.book.book_id }}</td>
+        <td >{{ borrow_order.book.the_book.book_name }}</td>
         <td >{{ borrow_order.borrow_time }}</td>
         {% if borrow_order.return_time == None %}
             <td>{% trans '尚未归还' %}</td>
@@ -289,8 +293,8 @@ $(document).ready(function(){
         <tr class="active">
         {% endif %}
             <td>{{ reserve_order.order_id }}</td>
-            <td>{{ reserve_order.book.isbn.isbn }}</td>
-			<td >{{ reserve_order.book.isbn.book_name }}</td>
+            <td>{{ reserve_order.book.book_id }}</td>
+			<td >{{ reserve_order.the_book.book_name}}</td>
 			<td>{{ reserve_order.borrow_time }}</td>
             <td>
                 {% if borrow_order.successful %}

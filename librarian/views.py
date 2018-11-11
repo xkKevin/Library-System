@@ -980,7 +980,7 @@ def manage_user_api(request):
             order = {
                 'reserve_order_id': reserve_order.order_id,
                 "reserve_book_name": reserve_order.the_book.book_name,
-                "reserve_user_name": user.user_name,
+                "reserve_book_id": reserve_order.book.book_id,
                 "reserve_time": time_stamp_to_str(reserve_order.borrow_time.timetuple())
             }
             reserve_orders.append(order)
@@ -990,7 +990,7 @@ def manage_user_api(request):
             order = {
                 'borrow_order_id': borrow_order.order_id,
                 "borrow_book_name": borrow_order.book.the_book.book_name,
-                "borrow_user_name": user.user_name,
+                "borrow_book_id": borrow_order.book.book_id,
                 "borrow_time": time_stamp_to_str(borrow_order.borrow_time.timetuple()),
                 "debt": borrow_order.debt
             }
@@ -1003,7 +1003,7 @@ def manage_user_api(request):
             order = {
                 'borrow_order_id': returned_order.order_id,
                 "borrow_book_name": returned_order.book.the_book.book_name,
-                "borrow_user_name": user.user_name,
+                "borrow_book_id": returned_order.book_id,
                 "return_time": time_stamp_to_str(returned_order.return_time.timetuple()),
                 "debt": returned_order.debt
             }
