@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 
 from administrator.models import Administrator
+from tool.bar_code import BarCode
 from tool.changePsw import SendEmail
 from reader.models import User
 import time
@@ -90,12 +91,25 @@ def register_post(request):
         try:
             password = request.POST["password"]
             username = request.POST["username"]
+            flag = False
+            try:
+                temp = User.objects.get(user_name=username)
+                if temp:
+                    flag = True
+            except Exception as e:
+                pass
+            if flag:
+                return JsonResponse({'result': False})
             email = request.POST["email"]
             libraian_name = request.session["admin_name"]
             libraian = Administrator.objects.get(administrator_name=libraian_name)
             user = User(user_name=username, password=password, email=email)
             user.save()
 
+            if username.isalnum() and username:
+                result = BarCode.create_bar_code(username)
+                if result[0]:
+                    bar_code_url = result[2]
             # 押金数目
             deposit = Role.objects.first().deposit
 
@@ -106,7 +120,7 @@ def register_post(request):
 
                 temp1 = MoneyOrder.objects.create(user=temp, order_type='D', num=deposit, librarian=libraian)
                 if temp1:
-                    response = JsonResponse({'result': True})
+                    response = JsonResponse({'result': True,'url':bar_code_url})
                 else:
                     response = JsonResponse({'result': False})
             else:

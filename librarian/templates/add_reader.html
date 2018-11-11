@@ -53,16 +53,26 @@
     </style>
 
     <script>
-        function checkUserName() {
-            var username = document.getElementById("username").value;
-            if (username.length === 0) {
-                document.getElementById("warn2").innerHTML="<font color='red'>{% trans '用户名不能为空' %}</font>";
+        function checkUserName(username) {
+            var regPos = /^\d+$/; // 非负整数
+            //var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+            //alert(regPos.test(username))
+            if(regPos.test(username)){
+                document.getElementById("warn1").innerHTML="";
+                return true;
+            }else{
+                if (username.length === 0) {
+                    document.getElementById("warn1").innerHTML="";
+                    document.getElementById("warn2").innerHTML="<font color='red'>{% trans '用户名不能为空' %}</font>";
+                }else{
+                    document.getElementById("warn1").innerHTML="<font color='red'>{% trans '请输入数字' %}</font>";
+                    document.getElementById("warn2").innerHTML = "";
+                }
                 return false;
             }
-            return true;
         }
-        function checkPassword() {
-            var password = document.getElementById("password").value;
+        function checkPassword(password) {
+            //var password = document.getElementById("password").value;
             if (password.length === 0) {
                 document.getElementById("warn3").innerHTML="<font color='red'>{% trans '密码不能为空' %}</font>";
                 return false;
@@ -106,8 +116,8 @@
             <div class="col-md-9">
                 <div class="form-group">
                     <i class="fa fa-user fa-lg"></i>
-                    <input class="form-control required" type="text" placeholder="Username" id="username" name="username" autofocus="autofocus" maxlength="20"/>
-                    <span id="warn2"></span>
+                    <input class="form-control required" type="text" placeholder="Username" id="username" autofocus="autofocus" maxlength="20"/>
+                    <span id="warn1"></span><span id="warn2"></span>
                 </div>
                 <div class="form-group">
                     <i class="fa fa-lock fa-lg"></i>
@@ -116,7 +126,7 @@
                 </div>
                 <div class="form-group">
                     <i class="fa fa-envelope"></i>
-                    <input class="form-control required" type="email" placeholder="Email" id="email" name="email" maxlength="28"/>
+                    <input class="form-control required" type="email" placeholder="Email" id="email" name="email" onblur="isEmail(this.value)" maxlength="28"/>
                     <span id="warn4"></span>
                 </div>
                 <div class="form-group col-md-offset-9">
@@ -124,6 +134,7 @@
                 </div>
             </div>
         </div>
+        <div id="img" align="center"></div>
     </div>
 </div>
 <footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
@@ -160,14 +171,16 @@ Copyright &copy;2018 Library
         var username = $("#username").val();
         var password = $("#password").val();
         var email = $("#email").val();
-        if(checkUserName()&&checkPassword()&&isEmail(email)){
+        if(checkUserName(username)&&checkPassword(password)&&isEmail(email)){
             //password = hex_md5(password);
 
             $.post("/register/api/",{"password":password,"username":username, "email":email},function (result,statue) {
                 if(statue === 'success') {
                     if (result["result"] === true) {
                         alert("{% trans '添加成功' %}");
-                        $(window).attr('location', '{% url 'manager_add_reader' %}');
+                        url = result["url"]
+                        document.getElementById("img").innerHTML = "<img width=\"100%\" src=\""+url+"\">";
+                        //$(window).attr('location', '{% url 'manager_add_reader' %}');
                     } else {
                         alert("{% trans '注册失败!' %}")
                     }
@@ -185,32 +198,26 @@ Copyright &copy;2018 Library
         }
     });
     $('#username').bind('input propertychange', function() {
-        if($(this).val()){
-            $.post('/test_user_name/api/',{'username':$(this).val()},function (result, statue) {
-                if (statue === 'success') {
-                    if (result["result"] === true) {
-                        document.getElementById("warn2").innerHTML = "<font color='green'>{% trans '用户名可用' %}</font>";
+        var username = $(this).val();
+        if(checkUserName(username)){
+            if(username){
+                $.post('/test_user_name/api/',{'username':$(this).val()},function (result, statue) {
+                    if (statue === 'success') {
+                        if (result["result"] === true) {
+                            document.getElementById("warn2").innerHTML = "<font color='green'>{% trans '用户名可用' %}</font>";
+                        }
+                        else {
+                            document.getElementById("warn2").innerHTML = "<font color='red'>{% trans '用户名不可用' %}</font>";
+                        }
                     }
-                    else {
-                        document.getElementById("warn2").innerHTML = "<font color='red'>{% trans '用户名不可用' %}</font>";
-                    }
-                }
-
-            })
-        }
-        else {
-            document.getElementById("warn2").innerHTML = "<font color='red'>{% trans '用户名不能为空' %}</font>";
+                })
+            }
+            else {
+                document.getElementById("warn2").innerHTML = "<font color='red'>{% trans '用户名不能为空' %}</font>";
+            }
         }
     }
     );
-        function test(str){
-        var li=document.getElementById("lang").getElementsByTagName("input");
-        li[1].value=str;
-        document.getElementById("lang").submit();
-        //submit
-    }
 </script>
 </body>
-
-
 </html>
