@@ -32,6 +32,9 @@ urlpatterns = [
     url(r'^manage/$', librarian_views.manager_page, name="manage_page"),
     url(r'^update_reader/$', librarian_views.update_reader_page, name="update_reader_page"),
     url(r'^change_passwd/$', reader_views.change_passwd_page, name="change_passwd"),
+    # 图书详情
+    url(r'^book_detail/$', librarian_views.book_detail, name="book_detail"),
+
     # 用户禁止注册 转由图书管理员注册读者 因而废弃该url
     # url(r'^register/$', reader_views.register, name="register"),
     # 媒体目录 访问 书的条形码
@@ -48,6 +51,12 @@ urlpatterns = [
     url(r'^manager/delete_record/$', librarian_views.del_record, name="manager_del_record"),
     url(r'^manager/delete_book/api/$', librarian_views.delete_book_api, name='delete_book_api'),
     url(r'^manager/post_news_record/$', librarian_views.post_news_record, name="manager_post_news_record"),
+    # 单本信息
+    url(r'^book_detail_api/$', librarian_views.book_detail_api, name="book_detail_api"),
+    # 直接借书
+    url(r'^borrow_book_directly_api/$', librarian_views.directly_borrow_book_api, name="borrow_book_directly_api"),
+
+
 
     url(r'^manager/income_record/$', librarian_views.income_record, name="manager_income_record"),
     url(r'^manager/add_reader/$', librarian_views.add_reader, name="manager_add_reader"),

@@ -79,6 +79,27 @@ def index(request):
     return render(request, 'index.html', message, )
 
 
+def book_detail(request):
+    '''
+    图书详情
+    :param request:
+    :return:
+    '''
+    is_administrator = False
+    username = request.session.get('username', "None")
+    if username == "None":
+        return HttpResponseRedirect(reverse("login"))
+    elif username == "root":
+        is_administrator = True
+    try:
+        book_id = request.GET['book_id']
+        book = Book.objects.get(id=book_id)
+        all_book = AllBook.objects.filter(the_book=book)
+        return render(request, 'book_detail.html', {"books" : all_book, "administrator": is_administrator})
+    except Exception as e:
+        return JsonResponse({'error': e})
+
+
 def manager_page(request):
     '''
     管理员界面
@@ -101,6 +122,69 @@ def clear_message(request):
     '''
     del request.session["username"]
     return HttpResponseRedirect(reverse("index"))
+
+
+def directly_borrow_book_api(request):
+    '''
+    管理员直接借书
+    :param request:
+    :return:
+    '''
+    username = request.session.get('username', "None")
+    if username != "root":
+        return JsonResponse({"result": False, "error": "forbidden!"})
+    try:
+        if request.method == 'POST':
+            book_id = request.POST['book_id']
+            user_name_k = request.POST["user_name"]
+            user = User.objects.get(user_name=user_name_k)
+            user_id = user.user_id
+            book = AllBook.objects.get(book_id=book_id)
+            limit = Role.objects.all().first().books_limit
+            if not book.is_available:
+                return JsonResponse({"result": False, "msg": "This book has been lent out!"})
+            if user.borrow_num >= limit:
+                return JsonResponse({"result": False, "msg": "This User can not borrow!"})
+
+            borrow_time = timezone.now()
+
+            BorrowOrder.objects.create(borrow_time=borrow_time,
+                                       debt=0,
+                                       is_return=False,
+                                       book_id=book_id,
+                                       user_id=user_id,
+                                       expire=False)
+            book.the_book.available_num = book.the_book.available_num - 1
+            book.is_available = False
+            book.status = 2
+            user.borrow_num += 1
+            book.save()
+            user.save()
+            book.the_book.save()
+            return JsonResponse({"result": True, "expire": False})
+    except Exception as e:
+        return JsonResponse({"result": False, "msg": "Error!"})
+
+
+def book_detail_api(request):
+    '''
+    单本的信息
+    :param request:
+    :return:
+    '''
+    book_id = 0
+    username = request.session.get('username', "None")
+    if username == "None":
+        return JsonResponse({"error": "forbidden!"})
+    if request.method == 'POST':
+        book_id = request.POST['book_id']
+    try:
+        book = AllBook.objects.get(book_id=book_id)
+        if book:
+            return JsonResponse({"result": True, "book_id": book.book_id, "book_name": book.the_book.book_name,
+                                 "book_status": book.status, "book_place": book.the_book.place})
+    except Exception as e:
+        return JsonResponse({"result": False, "msg": "can not find this book"})
 
 
 def add_book(request):
@@ -232,7 +316,7 @@ def update_readerByMe(request):
     :return:
     '''
     username = request.session.get('username', "None")
-    if username == "None" :
+    if username == "None":
         return HttpResponseRedirect(reverse("login"))
     if request.method == "GET":
 
@@ -267,9 +351,10 @@ def update_readerByMe(request):
     else:
         return HttpResponseRedirect(reverse("index"))
 
+
 def update_readerByMeInfo(request):
     '''
-
+    更新读者信息
     :param request:
     :return:
     '''
@@ -490,6 +575,11 @@ def del_record(request):
 
 
 def delete_book_api(request):
+    '''
+    删除书
+    :param request:
+    :return:
+    '''
     if request.method == "GET":
         book_id = request.GET.get("book_id", None)
         delreason = request.GET.get("del_reason", None)
@@ -602,34 +692,44 @@ def reserve_api(request):
     '''
     username = request.session.get('username', "None")
     if username == "None":
-        return HttpResponseRedirect(reverse("login"))
-        # return JsonResponse({'result': False, "msg": "Not logged in!"})  # 未登录
+        return JsonResponse({"error": "forbidden!"})
     if request.method == 'POST':
-        isbn = request.POST['isbn']
+        book_id = request.POST['book_id']
 
         try:
-            the_book = Book.objects.filter(isbn=isbn).first()
-            book = AllBook.objects.filter(the_book=the_book, is_available=True).first()
+            role = Role.objects.first()
+            book = AllBook.objects.get(book_id=book_id)
             user = User.objects.get(user_name=username)
-            borrow = ReserveOrder.objects.filter(the_book=the_book, user_id=user.user_id, expire=False).first()
-            if borrow:
-                borrow.borrow_time = timezone.now()
-                borrow.save()
-                return JsonResponse({"result": True, "update": True})
-        except Exception as e:
-            return JsonResponse({'result': False, "msg": "Database Error!"})  # 数据库错误
-        if not (book and user and the_book):
-            return JsonResponse({'result': False, "msg": "No relevant data was found!"})  # 未查到相关数据
-        borrow_time = timezone.now()
-        try:
+            if not (book and user):
+                return JsonResponse({'result': False, "msg": "No relevant data was found!"})  # 未查到相关数据
+            reserve_orders = ReserveOrder.objects.filter(user_id=user.user_id, expire=False)
+            for reserve in reserve_orders:
+                reserve_time = reserve.borrow_time
+                delay = time.mktime(timezone.now().timetuple()) - time.mktime(reserve_time.timetuple())
+                if delay > (60 ** 2) * 2:
+                    reserve.successful = False
+                    reserve.expire = True
+                    reserve.book.status = 0
+                    reserve.book.save()
+                    reserve.save()
+                    reserve_orders.delete(reserve)
+            if len(reserve_orders) >= role.books_limit:
+                return JsonResponse({"result": False, "msg": "You can not borrow"})
+            borrow_time = timezone.now()
             result = ReserveOrder.objects.create(book=book, user=user, borrow_time=borrow_time, successful=False,
-                                                 the_book=the_book)
+                                                 the_book=book.the_book)
             if result:
+                book.status = 1
+                book.save()
                 return JsonResponse({"result": True, "update": False})
             else:
                 return JsonResponse({"result": False, "msg": "Database save failed"})  # 数据库保存失败
         except Exception as e:
-            return JsonResponse({"result": False,  "msg": "Database Error!"})
+            return JsonResponse({'result': False, "msg": e})  # 数据库错误
+
+
+        # except Exception as e:
+        #     return JsonResponse({"result": False,  "msg": "Database Error!"})
 
 
 def return_book_api(request):
@@ -787,9 +887,10 @@ def borrow_book_api(request):
     try:
         limit = Role.objects.all().first().books_limit
         reserve_order = None
-
         try:
             reserve_order = ReserveOrder.objects.get(order_id=reserve_id)
+            if not reserve_order.book.is_available:
+                return JsonResponse({"result": False, "msg": "This book has been lent out!"})
         except:
             return JsonResponse({"result": False, "msg": "Reserve_id is invalid"})
 
@@ -808,7 +909,6 @@ def borrow_book_api(request):
         borrow_time = timezone.now()
         book_id = reserve_order.book.book_id
         user_id = reserve_order.user.user_id
-
 
         BorrowOrder.objects.create(borrow_time=borrow_time,
                                    debt=0,
@@ -868,6 +968,15 @@ def manage_user_api(request):
 
         reserve_orders = list()
         for reserve_order in reserve_order_list:
+            reserve_time = reserve_order.borrow_time
+            delay = time.mktime(timezone.now().timetuple()) - time.mktime(reserve_time.timetuple())
+            if delay > (60 ** 2) * 2:
+                reserve_order.successful = False
+                reserve_order.expire = True
+                reserve_order.book.status = 0
+                reserve_order.book.save()
+                reserve_order.save()
+                continue
             order = {
                 'reserve_order_id': reserve_order.order_id,
                 "reserve_book_name": reserve_order.the_book.book_name,

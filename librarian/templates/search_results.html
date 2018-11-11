@@ -133,7 +133,7 @@
 
                               {#  -----------条形码显示示例----------- #}
                               </tr>
-                                <img src="/media/{{ book.isbn }}.png"/>
+                                <img src="/media/{{ book.isbn }}.png" width="300px"/>
                               <tr>
                               {#  -----------#############----------- #}
                                   <td class="label1">{% trans '价格' %}：</td>
@@ -145,13 +145,15 @@
                         </tbody>
                     </table>
                 </td>
-          {% if not administrator %}
-              {% if book.available_num > 0 %}
-                    <td align="center"><button id="{{ forloop.counter }}" class="button">{% trans '预约' %}</button></td>
-                {% else %}
-                    <td align="center"><button id="{{ forloop.counter }}" class="button" disabled="disabled">{% trans '无可预约数据' %}</button></td>
-                {% endif %}
-          {% endif %}
+          <td align="center"><a href="{% url 'book_detail' %}?book_id={{ book.id }}">查看详情</a></td>
+{#          {% if not administrator %}#}
+
+{#              {% if book.available_num > 0 %} #}
+{#                    <td align="center"><button id="{{ forloop.counter }}" class="button">{% trans '预约' %}</button></td>#}
+{#                {% else %}#}
+{#                    <td align="center"><button id="{{ forloop.counter }}" class="button" disabled="disabled">{% trans '无可预约数据' %}</button></td>#}
+{#                {% endif %}#}
+{#          {% endif %}#}
                 <!--<td class="cover" valign="top" ></td>-->
 
 

@@ -279,6 +279,28 @@ position: relative;
                 </tr>
             </tbody>
         </table>
+{# -----------------------------------------------------------------------------------------------------------------  #}
+    <div class="input-group col-md-3" style="width: 600px;margin-left: auto;margin-right: auto">
+        <input type="text" class="form-control" id="book_input" placeholder="Please input book_id: ">
+            <span class="input-group-btn">
+                <button class="btn btn-info btn-search" onclick="search_book()">Search</button>
+            </span>
+    </div>
+        <table align="center" id="tab" width="300px"  class="table tab1">
+
+	<thead>
+		<tr >
+            <th align="center">{% trans '书编号' %}</th>
+			<th align="center">{% trans '书名' %}</th>
+			<th align="center">{% trans '状态' %}</th>
+			<th align="center">{%  trans '借阅' %}</th>
+		</tr>
+	</thead>
+
+	<tbody id="book_borrow_directly_body">
+	</tbody>
+{# -------------------------------------------------------------------------------------------------------------------#}
+</table>
 
     <hr>
             <div id="section-2" style="position: relative; top: -50px;"></div>
@@ -645,6 +667,62 @@ Copyright &copy;2018 Library
                 }
         });
     }
+{#--------------------------------------------------------------------------------------------------------------------#}
+    function search_book() {
+        var parent = document.getElementById("book_borrow_directly_body");
+        parent.innerText ="";
+        var book_id = $("#book_input").val();
+        $.post('{% url 'book_detail_api' %}',{"book_id":book_id},function(result, statue){
+            if(result["result"] === true){
+                var book_name = result["book_name"];
+                var book_place = result["book_place"];
+                var book_status = result["book_status"];
+                var tr = document.createElement("tr");
+                var td_1 = document.createElement("td");
+                var td_2 = document.createElement("td");
+                var td_3 = document.createElement("td");
+                var td_4 = document.createElement("td");
+                td_1.innerText=book_id;
+                td_2.innerText = book_name;
+                if(book_status ===0){
+                    td_3.innerText ="{% trans '尚在馆内' %}";
+                } if(book_status===1){
+                    td_3.innerText ="{% trans '已被预约' %}";
+                }else if(book_status===2){
+                    td_3.innerText ="{% trans '已被借出' %}";
+                }else if(book_status===3){
+                    td_3.innerText ="{% trans '已丢失' %}";
+                }
+                if(book_status===0||book_status===1){
+                    var button = document.createElement("button");
+                    button.setAttribute("onclick", "directly_borrow_book("+book_id+")");
+                    button.innerText = "{%  trans '借阅' %}";
+                    td_4.appendChild(button)
+                }
+                tr.appendChild(td_1);
+                tr.appendChild(td_2);
+                tr.appendChild(td_3);
+                tr.appendChild(td_4);
+                parent.appendChild(tr);
+                }
+            else {
+                alert("Failed!\n message:"+result["msg"])
+            }
+         });
+    }
+    function  directly_borrow_book(book_id) {
+        var user_name = $("#search_input").val();
+        $.post('{% url 'borrow_book_directly_api' %}',{"book_id":book_id,"user_name":user_name},function(result, statue) {
+            if(result["result"]===true){
+                alert("{% trans '借阅成功' %}");
+                search_user_message();
+                search_book(book_id);
+            }else {
+                alert("Failed!\n message:"+result["msg"]);
+            }
+        });
+    }
+{#--------------------------------------------------------------------------------------------------------------------#}
         function test(str){
         var li=document.getElementById("lang").getElementsByTagName("input");
         li[1].value=str;
