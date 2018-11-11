@@ -130,17 +130,16 @@
                                   <td class="content" valign="top">
                                       {% trans book.get_type_display %}
                                   </td>
-
-                              {#  -----------条形码显示示例----------- #}
                               </tr>
-                                <img src="/media/{{ book.isbn }}.png" width="300px"/>
-                              <tr>
+                              {#  -----------条形码显示示例----------- #}
+{#                                <img src="/media/{{ book.isbn }}.png" width="300px"/>#}
                               {#  -----------#############----------- #}
+                              <tr>
                                   <td class="label1">{% trans '价格' %}：</td>
                                   <td class="content" valign="top">{{ book.price }}</td>
                               </tr>
                               <tr>
-                                  <td class="libs" colspan="2" align="left"><a href="">{% blocktrans %}馆藏复本:{% endblocktrans %}{{ book.total_num }},{% blocktrans %}可用复本:{% endblocktrans %}{{ book.available_num }}</a></td>
+                                  <td class="libs" colspan="2" align="left"><a href="{% url 'book_detail' %}?book_id={{ book.id }}">{% blocktrans %}馆藏复本:{% endblocktrans %}{{ book.total_num }},{% blocktrans %}可用复本:{% endblocktrans %}{{ book.available_num }}</a></td>
                               </tr>
                         </tbody>
                     </table>

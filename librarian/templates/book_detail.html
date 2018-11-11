@@ -11,25 +11,104 @@
     <link href="{% static 'font/css/font-awesome.min.css' %}" rel="stylesheet">
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <title>Book Detail</title>
+        <style type="text/css">
+        body{
+            background-image:url("{% static 'images/bg1.jpg' %}");
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+#menu li a {
+	color: #afd9ee;
+	display: block;
+	font-size: 14px;
+	line-height: 20px;
+	padding: 6px 12px;
+	margin: 8px 8px;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+#menu li a:hover {
+	background: -webkit-gradient(linear, center top, center bottom, from(#ededed), to(#fff));
+	background-image: linear-gradient(#ededed, #fff);
+	border-radius: 12px;
+	box-shadow: inset 0px 0px 1px 1px rgba(0,0,0,0.1);
+	color: #222;
+}
+    .tab1 > tbody > tr:nth-child(2n-1) > td,
+    .tab1 > tbody > tr:nth-child(2n-1) > th {
+        {#background-color: #afd9ee;#}
+         background-color: rgba(100,50,180,0.1);
+     }
+
+    .tab1 > tbody > tr:nth-child(2n) > td,
+    .tab1 > tbody > tr:nth-child(2n) > th {
+        {#background-color: #8EB2D2;#}
+        background-color: rgba(120,200,30,0.1);
+     }
+     th {
+        text-align: center;
+    }
+    tbody {
+        text-align: center;
+    }
+    .table tbody tr td{
+            vertical-align: middle;
+    }
+    </style>
 </head>
 <body>
-    <table>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand">Bibliosoft</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav navbar-right" id="menu" style="position:absolut; left:0px; top:0px">
+                <li><a onClick="javascript :history.back(-1);"><span class="fa fa-backward"></span>&nbsp;{% trans '上一页' %}</a></li>
+                {% if administrator %}
+                <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-user"></span>&nbsp;{% trans '进入管理中心' %}</a></li>
+                {% else %}
+                <li><a href="/user_message/"><span class="fa fa-user-circle-o"></span>&nbsp;{% trans '返回个人中心' %}</a></li>
+                {% endif %}
+{#                <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home"></span>&nbsp;{% trans '返回首页' %}</a></li>#}
+            </ul>
+        </div>
+        <div class="btn-group navbar-btn" data-toggle="buttons">
+                <form action="{% url 'set_language' %}" method="post" id="lang">
+                {% csrf_token %}
+                <input type="hidden" id="lang_s" name="language" value="en">
+                <input name="next" type="hidden" value="{{ redirect_to }}"/>
+                <label class="btn btn-primary active"  onclick="test('zh-hans')">
+                    中文
+                </label>
+                <label class="btn btn-primary" onclick="test('en')">
+                    English
+                </label>
+                </form>
+        </div>
+    </div>
+</nav>
+<div style="margin:auto; width:50%; padding-top: 50px">
+    <table class="table tab1">
+        <caption style="text-align: center; font-size: 26px; font-weight: bold; color: darkblue;">{{ bookname }}</caption>
         <thead>
             <tr>
                 <th width="200px">id</th>
+                <th width="38%">{% trans '条形码' %}</th>
                 <th width="200px">状态</th>
                 <th width="200px">位置</th>
                 {% if not administrator %}
                 <th width="200px">预约</th>
                 {% endif %}
-                <th width="200px"></th>
-
             </tr>
         </thead>
         <tbody>
             {% for book in books %}
                 <tr>
                     <td>{{ book.book_id}}</td>
+                    <td><img src="/media/{{ book.book_id }}.png" width="100%" /></td>
                     <td>
                         {% if book.status == 0 %}
                         {% trans '尚在馆内' %}
@@ -38,25 +117,31 @@
                         {% elif book.status == 2 %}
                         {% trans '已借出' %}
                         {% elif book.status == 3 %}
-                        {% trans '已丢失' %}
+                        {% trans '已删除' %}
                         {% endif %}
                     </td>
                     <td>{{ book.the_book.place }}</td>
-                {% if not administrator %}
-
-{#                      {% if not administrator %}#}
-                          {% if book.status == 0 %}
-                            <td align="center"><button id="{{ book.book_id }}" class="reserve">{% trans '预约' %}</button></td>
-                          {% else %}
-                              <td align="center"><a >{% trans '无可预约数据' %}</a></td>
-                          {% endif %}
-                {% endif %}
+                    {% if not administrator %}
+    {#                      {% if not administrator %}#}
+                              {% if book.status == 0 %}
+                                  <td align="center"><button id="{{ book.book_id }}" class="reserve"><font style="color: blue">{% trans '预约' %}</font></button></td>
+                              {% else %}
+                                  <td align="center"><font>{% trans '不可预约' %}</font></td>
+                              {% endif %}
+                    {% endif %}
                 </tr>
             {% endfor %}
-
         </tbody>
 
     </table>
+</div>
+<footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
+<br>
+Copyright &copy;2018 Library
+<br>
+<a href="#">xiaoxiongxiong@xiongxiong.com</a>
+</footer>
 </body>
 <script>
 $.ajaxSetup({
@@ -77,7 +162,11 @@ $(".reserve").click(function(){
                 }
         })
     });
-
+    function test(str){
+        var li=document.getElementById("lang").getElementsByTagName("input");
+        li[1].value=str;
+        document.getElementById("lang").submit();
+        //submit
+    }
 </script>
-
 </html>

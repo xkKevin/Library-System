@@ -95,7 +95,7 @@ def book_detail(request):
         book_id = request.GET['book_id']
         book = Book.objects.get(id=book_id)
         all_book = AllBook.objects.filter(the_book=book)
-        return render(request, 'book_detail.html', {"books" : all_book, "administrator": is_administrator})
+        return render(request, 'book_detail.html', {"books": all_book, "administrator": is_administrator, "bookname":book.book_name})
     except Exception as e:
         return JsonResponse({'error': e})
 

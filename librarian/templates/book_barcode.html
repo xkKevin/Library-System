@@ -137,9 +137,9 @@
             <a class="navbar-brand">Bibliosoft</a>
         </div>
         <div>
-            <ul class="nav navbar-nav navbar-right" id="menu" style="position:absolut; left:0px; top:0px">
-                <li><a href="{% url 'add_book' %}"><span class="glyphicon glyphicon-th-list"></span> {% trans '继续加书' %}</a></li>
-                <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-th-list"></span> {% trans '进入管理中心' %}</a></li>
+            <ul class="nav navbar-nav navbar-right" id="menu" style="left:0px; top:0px">
+                <li><a onClick="javascript :history.back(-1);"><span class="fa fa-backward"></span>{% trans '上一页' %}</a></li>
+                <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-th-list"></span>&nbsp;{% trans '进入管理中心' %}</a></li>
             </ul>
         </div>
         <div class="btn-group navbar-btn" data-toggle="buttons">
