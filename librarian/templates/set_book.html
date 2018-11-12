@@ -17,16 +17,23 @@
         background-repeat: no-repeat;
         background-size: cover;
     }
-        .form{background: rgba(255,255,255,0.2);width:400px;margin:120px auto;}
-        html, body {
-            height: 100%;
-        }
-	    footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            {#background-color: #ffc0cb;#}
-        }
+        .form{background: rgba(255,255,255,0.2);width:400px;margin:auto;}
+            html {
+    height: 100%;
+    }
+    body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    position: relative;
+    }
+    #footer{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    }
 #menu li a {
 	color: #afd9ee;
 	display: block;
@@ -96,7 +103,7 @@
 		<a href="/manage/"style=" font-size:16px;">{% trans '进入管理中心' %}</a>
 	</div>
 	-->
-<div class="container">
+<div class="container" style="margin: auto; padding-top:120px;">
     <div class="form row" style="position: relative; bottom: 5px">
         <div class="form-horizontal col-md-offset-3" id="register_form">
             <div class="col-md-9">
@@ -160,7 +167,8 @@
         </div>
     </div>
 </div>
-<footer style="color: #000000;font-weight: normal;font-size: .60em;font-style: italic;text-align: center;">
+<div style="padding-bottom: 45px;"></div>
+<footer style="color: #000000;font-size: .60em;font-style: italic;text-align: center;" id="footer">
 京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
 <br>
 Copyright &copy;2018 Library

@@ -21,7 +21,22 @@ body{
     background-repeat: no-repeat;
     background-size: cover;
 }
-
+    html {
+    height: 100%;
+    }
+    body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    position: relative;
+    }
+    #footer{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    }
 /* Custom Styles */
 #menu li a {
 	color: #afd9ee;
@@ -80,7 +95,6 @@ body{
    }
     tr.t1{background:hsla(165,35%,50%,0.2);height:20px;}
     tr.t2{background:hsla(165,35%,50%,0.4);height:20px;}
-    tr.t3{background:hsla(165,35%,50%,0.6);height:20px;}
 
     #login_click{ margin-top:20px; height:30px;}
     #login_click a {
@@ -158,10 +172,9 @@ $(document).ready(function(){
 	
 	</div>
 	-->
-    <div style="text-align:center;"><img src="/static/images/book_logo.png" style="vertical-align:middle;" width="210"  /></div>
+    <div style="margin:auto; padding-top:30px;text-align:center;"><img src="/static/images/book_logo.png" style="vertical-align:middle;" width="200"  /></div>
 
 <div class="container">
-   
     <div class="row">
         <div class="col-xs-3" id="myScrollspy">
             <ul class="nav nav-tabs nav-stacked" data-spy="affix" data-offset-top="125" id="myNav">
@@ -176,8 +189,6 @@ $(document).ready(function(){
         <div class="col-xs-9 " style="float: right">
         <div id="section-1" style="position: relative; top: -50px;"></div>
             <h2 style="display:block; height:50px; width:350px">{% trans '基本资料' %}</h2>
-        
-	
 	
 	<form id="profile" class="setting-profile-form" method="POST" action=" ">
 	 <table align="center"   width="50%" id="tab" >
@@ -340,7 +351,8 @@ $(document).ready(function(){
         </div>
     </div>
 </div>
-<footer style="color: #000000;font-weight: normal;font-size: .60em;font-style: italic;text-align: center;">
+<div style="padding-bottom: 45px;"></div>
+<footer style="color: #000000;font-size: .60em;font-style: italic;text-align: center;" id="footer">
 京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
 <br>
 Copyright &copy;2018 Library

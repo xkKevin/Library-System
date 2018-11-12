@@ -31,15 +31,22 @@
 	color: #222;
 }
         .form{background: rgba(255,255,255,0.2);width:400px;margin:120px auto;}
-        html, body {
-            height: 100%;
-        }
-	    footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            {#background-color: #ffc0cb;#}
-        }
+    html {
+    height: 100%;
+    }
+    body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    position: relative;
+    }
+    #footer{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    }
 
     </style>
 
@@ -69,7 +76,7 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;"> 
     <div class="container"> 
         <div class="navbar-header"> 
-            <a class="navbar-brand">图书馆</a> 
+            <a class="navbar-brand">Bibliosoft</a>
         </div>    
         <div> 
             <ul class="nav navbar-nav navbar-right" id="menu" style="left:0px; top:0px">
@@ -130,7 +137,8 @@
     </div>
     <input id="oldname" value="{{ username }}" style="visibility: hidden">
 </div>
-<footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+<div style="padding-bottom: 45px;"></div>
+<footer style="color: #000000;font-size: .60em;font-style: italic;text-align: center;" id="footer">
 京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
 <br>
 Copyright &copy;2018 Library

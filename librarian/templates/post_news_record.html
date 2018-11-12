@@ -61,78 +61,26 @@ word-break:keep-all;
 	box-shadow: inset 0px 0px 1px 1px rgba(0,0,0,0.1);
 	color: #222;
 }
-    html, body {
-            height: 100%;
-        }
-	    footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            {#background-color: #ffc0cb;#}
-        }
-
-/* Custom Styles */
-    ul.nav-tabs{
-        width: 140px;
-        margin-top: 20px;
-        border-radius: 4px;
-        border: 1px solid #ddd;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);
+   html {
+    height: 100%;
     }
-    ul.nav-tabs li{
-        margin: 0;
-        border-top: 1px solid #ddd;
+    body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    position: relative;
     }
-    ul.nav-tabs li:first-child{
-        border-top: none;
+    #footer{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
     }
-    ul.nav-tabs li a{
-        margin: 0;
-        padding: 8px 16px;
-        border-radius: 0;
-    }
-    ul.nav-tabs li.active a, ul.nav-tabs li.active a:hover{
-        color: #fff;
-        background: #0088cc;
-        border: 1px solid #0088cc;
-    }
-    ul.nav-tabs li:first-child a{
-        border-radius: 4px 4px 0 0;
-    }
-    ul.nav-tabs li:last-child a{
-        border-radius: 0 0 4px 4px;
-    }
-    ul.nav-tabs.affix{
-        top: 30px; /* Set the top position of pinned element */
-    }
-
-	.setting-profile-title {
-        font-size: 30px;
-        color: #999;
-        line-height: 1;
-        padding-bottom: 11px;
-       border-bottom: solid 2px #f2f2f2;
-      }
-
-    .yahei {
-       font-family: "microsoft yahei","\5FAE\8F6F\96C5\9ED1",Tahoma,Arial,Helvetica,STHeiti;
-      }
-
-    #etting-profile-form {
-         color: #666;
-        font-size: 14px;
-        margin-top: 15px;
-     zoom: 1;
-    }
-
-		div {
+   div {
      display: block;
    }
-		tr.t1{background:hsla(165,35%,50%,0.2);height:20px;}
-		tr.t2{background:hsla(165,35%,50%,0.4);height:20px;}
-		tr.t3{background:hsla(165,35%,50%,0.6);height:20px;}
 
-		#login_click{ margin-top:20px; height:30px;}
 		#login_click a {
 			text-decoration:none;
 			background:#2f435e;
@@ -153,8 +101,6 @@ word-break:keep-all;
 			 border-color:black;
 			}
 
-
-
 </style>
 </head>
 
@@ -165,7 +111,7 @@ word-break:keep-all;
             <a class="navbar-brand">Bibliosoft</a>
         </div>
         <div>
-            <ul class="nav navbar-nav navbar-right" id="menu" style="position:absolut; left:0px; top:0px">
+            <ul class="nav navbar-nav navbar-right" id="menu" style="left:0px; top:0px">
                 <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-th-list"></span> {% trans '进入管理中心' %}</a></li>
             </ul>
         </div>
@@ -185,7 +131,7 @@ word-break:keep-all;
     </div>
 </nav>
 
-    <div style="text-align:center; margin-top: 50px">
+    <div style="text-align:center; margin:auto; padding-top:40px;">
         <img src="/static/images/book_logo.png" style="vertical-align:middle;" width="150"  />&nbsp;&nbsp;&nbsp;
         <span style="font-family: 'Adobe 宋体 Std L'; font-size: 36px;">{% trans '推送公告' %}</span>
     </div>
@@ -257,7 +203,8 @@ word-break:keep-all;
         </div>
 </div>
 
-<footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+<div style="padding-bottom: 45px;"></div>
+<footer style="color: #000000;font-size: .60em;font-style: italic;text-align: center;" id="footer">
 京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
 <br>
 Copyright &copy;2018 Library

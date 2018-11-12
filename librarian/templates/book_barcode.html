@@ -17,16 +17,22 @@
         background-repeat: no-repeat;
         background-size: cover;
     }
-    html, body {
-            height: 100%;
-        }
-	    footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            {#background-color: #ffc0cb;#}
-        }
-
+    html {
+    height: 100%;
+    }
+    body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    position: relative;
+    }
+    #footer{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    }
 
 #menu li a {
 	color: #afd9ee;
@@ -78,7 +84,7 @@
     </div>
 </nav>
 
-<div class="container" style="margin-top: 50px;width: 32%;">
+<div class="container" style="margin:auto; padding-top:40px; width: 32%;">
      <h2 class="form-title" style="text-align: center">{% trans '书籍二维码' %}</h2>
     <table class="table" style="text-align: center;">
         {% for myimg in book_list %}
@@ -90,7 +96,8 @@
     </table>
 </div>
 
-<footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+<div style="padding-bottom: 45px;"></div>
+<footer style="color: #000000;font-size: .60em;font-style: italic;text-align: center;" id="footer">
 京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
 <br>
 Copyright &copy;2018 Library

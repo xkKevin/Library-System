@@ -20,6 +20,22 @@
         background-repeat: no-repeat;
         background-size: cover;
     }
+    html {
+    height: 100%;
+    }
+    body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    position: relative;
+    }
+    #footer{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    }
     th {
     text-align: center;
 }
@@ -90,25 +106,6 @@ tbody {
         top: 30px; /* Set the top position of pinned element */
     }
 
-	.setting-profile-title {
-        font-size: 30px;
-        color: #999;
-        line-height: 1;
-        padding-bottom: 11px;
-       border-bottom: solid 2px #f2f2f2;
-      }
-
-    .yahei {
-       font-family: "microsoft yahei","\5FAE\8F6F\96C5\9ED1",Tahoma,Arial,Helvetica,STHeiti;
-      }
-
-    #etting-profile-form {
-         color: #666;
-        font-size: 14px;
-        margin-top: 15px;
-     zoom: 1;
-    }
-
     div {
      display: block;
    }
@@ -135,9 +132,6 @@ tbody {
 			 text-algn:right;
 			 border-color:black;
 			}
-
-
-
 </style>
 <script>
 $(document).ready(function(){
@@ -158,7 +152,7 @@ $(document).ready(function(){
                 <a class="navbar-brand">Bibliosoft</a>
             </div>
             <div>
-                <ul class="nav navbar-nav navbar-right" id="menu" style="position:absolut; left:0px; top:0px">
+                <ul class="nav navbar-nav navbar-right" id="menu" style="left:0px; top:0px">
                     <li><a style="cursor: pointer;"><span class="fa fa-user fa-lg"></span>&nbsp;&nbsp;admin{{ admin_name }} </a></li>
                     <li><a href="{% url 'admin_login' %}"><span class="glyphicon glyphicon-home"></span> {% trans '返回登录页面' %}</a></li>
                 </ul>
@@ -181,13 +175,9 @@ $(document).ready(function(){
     <br/>
     <br/>
     <br/>
-    <div class="title" align="center" tyle="margin-top: 50px;">
-
-                    <img src="/static/images/bibliosoft.png" height="108"/>
-
+    <div class="title" align="center" tyle="margin:auto; padding-top:40px;">
+         <img src="/static/images/bibliosoft.png" height="108"/>
     </div>
-
-
 <div class="container">
 
     <div class="row" style="float: left;">
@@ -218,7 +208,6 @@ $(document).ready(function(){
                         <button class="btn btn-info btn-search"  onclick="searchLib()">{% trans '查找' %}</button>
                     </span>
             	</div>
-
 
                 <table align="center" id="tab" width="300px"  class="table tab1">
 
@@ -270,8 +259,6 @@ $(document).ready(function(){
                     </td>
     		</table>
 
-
-
         	<div id="login_click" align="center">
                 <a id="btlogin" onclick="createLib()" style="cursor: pointer;">{% trans '注册' %}</a>
             </div>
@@ -307,14 +294,12 @@ $(document).ready(function(){
 				<a id="btlogin" onclick="editRules()" style="cursor: pointer;">{% trans '修改' %}</a>
 			</div>
         </form>
-
-
-
             <hr>
     </div>
 </div>
 
-<footer style="color: #000000;font-weight: normal;font-size: .60em;font-style: italic;text-align: center;">
+<div style="padding-bottom: 45px;"></div>
+<footer style="color: #000000;font-size: .60em;font-style: italic;text-align: center;" id="footer">
 京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
 <br>
 Copyright &copy;2018 Library
