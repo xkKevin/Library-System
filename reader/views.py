@@ -176,7 +176,7 @@ def user_message(request):
             '''
             for reserve in reserve_order_list:
                 reserve_time = reserve.borrow_time
-                delay = time.mktime(timezone.now().timetuple()) - time.mktime(reserve_time.timetuple())
+                delay = time.time() - time.mktime(reserve_time.timetuple())
                 if delay > (60 ** 2) * 2:
                     reserve.successful = False
                     reserve.expire = True
@@ -195,10 +195,10 @@ def user_message(request):
             return render(request, 'user_message.html', {'user_id': user.user_id,
                                                          'user_email': user.email,
                                                          'user_name': user.user_name,
-                                                         'reserve_order_list': reserve_order_list,
-                                                         'borrow_order_list': borrow_order_list,
+                                                         'reserve_order_list': reserve_order_list.order_by('-borrow_time'),
+                                                         'borrow_order_list': borrow_order_list.order_by('-borrow_time'),
                                                          'all_fine': all_fine,
-                                                         'money_order_list': money_order_list
+                                                         'money_order_list': money_order_list.order_by('-order_time')
                                                          }
                           )
         else:

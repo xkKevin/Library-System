@@ -41,4 +41,4 @@ if __name__ == '__main__':
     # books = Book.objects.all()
     # for book in books:
     #     print(BarCode.create_bar_code(book.isbn))
-    print(BarCode.create_bar_code(9787115191120))
+    print(BarCode.create_bar_code(00000))

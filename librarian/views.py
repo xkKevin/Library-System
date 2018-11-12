@@ -756,10 +756,13 @@ def return_book_api(request):
         borrow_order.return_time = timezone.now()
         borrow_order.is_return = True
         borrow_order.book.is_available = True
+        borrow_order.user.borrow_num -= 1
         if borrow_order.book.the_book.available_num < borrow_order.book.the_book.total_num:
             borrow_order.book.the_book.available_num = borrow_order.book.the_book.available_num + 1
         else:
             borrow_order.book.the_book.available_num = borrow_order.book.the_book.total_num
+        borrow_order.user.save()
+        borrow_order.book.status = 0
         borrow_order.book.the_book.save()
         borrow_order.book.save()
         borrow_order.save()
@@ -1134,7 +1137,8 @@ def bar_code_page(request):
     if request.method == "GET":
         str = request.GET["book"]
         need = str.split("!")
-    return render(request, 'book_barcode.html',{"book_list":need})
+    return render(request, 'book_barcode.html', {"book_list": need})
+
 
 def get_book(request):
     '''
@@ -1279,8 +1283,8 @@ def search_del_history_api(request):
         return JsonResponse({"result": False, "msg": "Forbidden"})
     try:
         title = request.POST["book_title"]
-
         del_history_list = BookDelHistory.objects.filter(book_name__contains=title).order_by('-deleted_time')
+        #  del_history_list = BookDelHistory.objects.filter(book_isbn=isbn).order_by('-deleted_time')
 
         del_historys = list()
         for del_history in del_history_list:
