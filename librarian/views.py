@@ -713,8 +713,8 @@ def reserve_api(request):
                     reserve.book.save()
                     reserve.save()
                     reserve_orders.delete(reserve)
-            if len(reserve_orders) >= role.books_limit:
-                return JsonResponse({"result": False, "msg": "You can not borrow"})
+            if len(reserve_orders) >= role.books_limit-user.borrow_num:
+                return JsonResponse({"result": False, "msg": "You can not reserve it!"})
             borrow_time = timezone.now()
             result = ReserveOrder.objects.create(book=book, user=user, borrow_time=borrow_time, successful=False,
                                                  the_book=book.the_book)

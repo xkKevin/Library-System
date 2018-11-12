@@ -11,7 +11,7 @@ import time
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from librarian.models import ReserveOrder, BorrowOrder, MoneyOrder, Role
-
+from django.utils import timezone
 
 def forget_passwd_page(request):
     return render(request, 'forget_passwd.html')
@@ -172,6 +172,19 @@ def user_message(request):
         if user:
             borrow_order_list = BorrowOrder.objects.filter(user_id=user.user_id)
             reserve_order_list = ReserveOrder.objects.filter(user_id=user.user_id)
+            #  --------------------------------------------------------------------
+            '''
+            for reserve in reserve_order_list:
+                reserve_time = reserve.borrow_time
+                delay = time.mktime(timezone.now().timetuple()) - time.mktime(reserve_time.timetuple())
+                if delay > (60 ** 2) * 2:
+                    reserve.successful = False
+                    reserve.expire = True
+                    reserve.book.status = 0
+                    reserve.book.save()
+                    reserve.save()
+            '''
+            #  --------------------------------------------------------------------
             money_order_list = MoneyOrder.objects.filter(user=user)
 
             # 计算全部罚金

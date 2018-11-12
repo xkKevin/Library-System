@@ -312,14 +312,12 @@ position: relative;
             <th align="center">{% trans '书籍id' %}</th>
             <th align="center">{% trans '书名' %}</th>
             <th align="center">{% trans '借阅时间' %}</th>
-            <th align="center">{% trans '欠费' %}</th>
+            <th align="center">{% trans '欠费金额' %}</th>
             <th align="center">{%  trans '归还' %}</th>
-            <th align="center">{%  trans '归还提醒' %}</th>
+            <th align="center" style="width: 20%;">{%  trans '归还提醒' %}</th>
         </tr>
         </thead>
 	<tbody id="unreturned_book_tbody">
-
-
 
 	</tbody>
 </table>
@@ -370,7 +368,7 @@ position: relative;
     </div>
 </div>
 
-<footer style="color: #000000;font-weight: 20px;font-size: .60em;font-style: italic;text-align: center;">
+<footer style="color: #000000;font-size: .60em;font-style: italic;text-align: center;">
 京 ICP备 09067229号   京公网安备 110105000296   版权所有 A14组
 <br>
 Copyright &copy;2018 Library
@@ -665,11 +663,11 @@ Copyright &copy;2018 Library
                 td_1.innerText=book_id;
                 td_2.innerText = book_name;
                 if(book_status ===0){
-                    td_3.innerText ="{% trans '尚在馆内' %}";
+                    td_3.innerText ="{% trans '可借阅' %}";
                 } if(book_status===1){
-                    td_3.innerText ="{% trans '已被预约' %}";
+                    td_3.innerText ="{% trans '已预约' %}";
                 }else if(book_status===2){
-                    td_3.innerText ="{% trans '已被借出' %}";
+                    td_3.innerText ="{% trans '已借出' %}";
                 }else if(book_status===3){
                     td_3.innerText ="{% trans '已删除' %}";
                 }

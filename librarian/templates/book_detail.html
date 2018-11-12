@@ -113,7 +113,9 @@
             <tr>
                 <th width="200px">{% trans '书籍id' %}</th>
                 <th width="38%">{% trans '条形码' %}</th>
+                {% if administrator %}
                 <th width="200px">{% trans '状态' %}</th>
+                {% endif %}
                 <th width="200px">{% trans '位置' %}</th>
                 {% if not administrator %}
                 <th width="200px">{% trans '预约' %}</th>
@@ -123,11 +125,41 @@
         <tbody>
             {% for book in books %}
                 <tr>
+                {% if not administrator and book.status == 0 %}
+                    <td>{{ book.book_id}}</td>
+                    <td><img src="/media/{{ book.book_id }}.png" width="100%" /></td>
+                    <!--
+                    <td>
+                        {% if book.status == 0 %}
+                        <font color="green">{% trans '可预约' %}</font>
+                        {% elif book.status == 1 %}
+                        <font color="red">{% trans '已预约' %}</font>
+                        {% elif book.status == 2 %}
+                        <font color="red">{% trans '已借出' %}</font>
+                        {% elif book.status == 3 %}
+                        <font color="red">{% trans '已删除' %}</font>
+                        {% endif %}
+                    </td>
+                    -->
+                    <td>{{ book.the_book.place }}</td>
+                    <td align="center"><button id="{{ book.book_id }}" class="reserve"><font style="color: blue">{% trans '预约' %}</font></button></td>
+                    <!--
+                    {% if not administrator %}
+    {#                      {% if not administrator %}#}
+                              {% if book.status == 0 %}
+                                  <td align="center"><button id="{{ book.book_id }}" class="reserve"><font style="color: blue">{% trans '预约' %}</font></button></td>
+                              {% else %}
+                                  <td align="center"><font>{% trans '不可预约' %}</font></td>
+                              {% endif %}
+                    {% endif %}
+                    -->
+                {% endif %}
+                {% if administrator %}
                     <td>{{ book.book_id}}</td>
                     <td><img src="/media/{{ book.book_id }}.png" width="100%" /></td>
                     <td>
                         {% if book.status == 0 %}
-                        <font color="green">{% trans '尚在馆内' %}</font>
+                        <font color="green">{% trans '可借阅' %}</font>
                         {% elif book.status == 1 %}
                         <font color="red">{% trans '已预约' %}</font>
                         {% elif book.status == 2 %}
@@ -137,14 +169,7 @@
                         {% endif %}
                     </td>
                     <td>{{ book.the_book.place }}</td>
-                    {% if not administrator %}
-    {#                      {% if not administrator %}#}
-                              {% if book.status == 0 %}
-                                  <td align="center"><button id="{{ book.book_id }}" class="reserve"><font style="color: blue">{% trans '预约' %}</font></button></td>
-                              {% else %}
-                                  <td align="center"><font>{% trans '不可预约' %}</font></td>
-                              {% endif %}
-                    {% endif %}
+                {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
