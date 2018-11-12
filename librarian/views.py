@@ -1278,9 +1278,9 @@ def search_del_history_api(request):
     if not username == 'root':
         return JsonResponse({"result": False, "msg": "Forbidden"})
     try:
-        isbn = request.POST["book_isbn"]
+        title = request.POST["book_title"]
 
-        del_history_list = BookDelHistory.objects.filter(book_isbn=isbn).order_by('-deleted_time')
+        del_history_list = BookDelHistory.objects.filter(book_name__contains=title).order_by('-deleted_time')
 
         del_historys = list()
         for del_history in del_history_list:

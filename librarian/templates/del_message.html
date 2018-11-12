@@ -189,9 +189,9 @@
                     <button class="btn btn-info btn-search">{% trans '全部' %}</button>
                 </a>
 			</span>
-			<input type="text" class="form-control" id="search_del_book_input"  placeholder="{% trans '请输入书的ISBN' %}" />
+			<input type="text" class="form-control" id="search_del_book_input"  placeholder="{% trans '请输入书名' %}" />
 			<span class="input-group-btn">
-				<button class="btn btn-info btn-search" onclick="search_del_history_by_isbn()">{% trans '查找' %}</button>
+				<button class="btn btn-info btn-search" onclick="search_del_history_by_title()">{% trans '查找' %}</button>
 			</span>
         </div>
         <br/>
@@ -264,7 +264,11 @@ Copyright &copy;2018 Library
 
             td.innerText = del_historys[i]["book_id"];
             td_1.innerText = del_historys[i]["book_name"];
-            td_2.innerText = del_historys[i]["book_isbn"];
+            if (del_historys[i]["book_isbn"] == null)
+                td_2.innerText = 'None';
+            else
+                td_2.innerText = del_historys[i]["book_isbn"];
+
             td_3.innerText = del_historys[i]["deleted_time"];
             td_4.innerText = del_historys[i]["del_reason"];
             td_5.innerText = del_historys[i]["librarian_name"];
@@ -279,9 +283,9 @@ Copyright &copy;2018 Library
             parent.appendChild(tr);
         }
     }
-    function search_del_history_by_isbn() {
-         var book_isbn = $("#search_del_book_input").val();
-        $.post('{% url 'search_del_history_api' %}',{"book_isbn": book_isbn},function(result){
+    function search_del_history_by_title() {
+         var book_title = $("#search_del_book_input").val();
+        $.post('{% url 'search_del_history_api' %}',{"book_title": book_title},function(result){
                 if(result["result"] === true){
                         var del_historys = result["del_historys"];
                         add_del_history(del_historys);
