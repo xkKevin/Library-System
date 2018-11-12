@@ -11,31 +11,31 @@
     <link href="{% static 'font/css/font-awesome.min.css' %}" rel="stylesheet">
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <title>Book Detail</title>
-        <style type="text/css">
-        body{
-            background-image:url("{% static 'images/bg1.jpg' %}");
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-#menu li a {
-	color: #afd9ee;
-	display: block;
-	font-size: 14px;
-	line-height: 20px;
-	padding: 6px 12px;
-	margin: 8px 8px;
-	vertical-align: middle;
-	text-decoration: none;
-}
+    <style type="text/css">
+    body{
+        background-image:url("{% static 'images/bg1.jpg' %}");
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    #menu li a {
+        color: #afd9ee;
+        display: block;
+        font-size: 14px;
+        line-height: 20px;
+        padding: 6px 12px;
+        margin: 8px 8px;
+        vertical-align: middle;
+        text-decoration: none;
+    }
 
-#menu li a:hover {
-	background: -webkit-gradient(linear, center top, center bottom, from(#ededed), to(#fff));
-	background-image: linear-gradient(#ededed, #fff);
-	border-radius: 12px;
-	box-shadow: inset 0px 0px 1px 1px rgba(0,0,0,0.1);
-	color: #222;
-}
+    #menu li a:hover {
+        background: -webkit-gradient(linear, center top, center bottom, from(#ededed), to(#fff));
+        background-image: linear-gradient(#ededed, #fff);
+        border-radius: 12px;
+        box-shadow: inset 0px 0px 1px 1px rgba(0,0,0,0.1);
+        color: #222;
+    }
     .tab1 > tbody > tr:nth-child(2n-1) > td,
     .tab1 > tbody > tr:nth-child(2n-1) > th {
         {#background-color: #afd9ee;#}
@@ -56,7 +56,7 @@
     .table tbody tr td{
             vertical-align: middle;
     }
-    </style>
+</style>
 </head>
 <body>
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color: #003366;height:50px;">
@@ -65,8 +65,8 @@
             <a class="navbar-brand">Bibliosoft</a>
         </div>
         <div>
-            <ul class="nav navbar-nav navbar-right" id="menu" style="position:absolut; left:0px; top:0px">
-                <li><a onClick="javascript :history.back(-1);"><span class="fa fa-backward"></span>&nbsp;{% trans '上一页' %}</a></li>
+            <ul class="nav navbar-nav navbar-right" id="menu" style="left:0px; top:0px">
+                <li><a onClick="javascript :history.back(-1);" style="cursor: pointer;"><span class="fa fa-backward"></span>&nbsp;{% trans '上一页' %}</a></li>
                 {% if administrator %}
                 <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-user"></span>&nbsp;{% trans '进入管理中心' %}</a></li>
                 {% else %}
@@ -95,12 +95,12 @@
         <caption style="text-align: center; font-size: 26px; font-weight: bold; color: darkblue;">{{ bookname }}</caption>
         <thead>
             <tr>
-                <th width="200px">id</th>
+                <th width="200px">{% trans '书籍id' %}</th>
                 <th width="38%">{% trans '条形码' %}</th>
-                <th width="200px">状态</th>
-                <th width="200px">位置</th>
+                <th width="200px">{% trans '状态' %}</th>
+                <th width="200px">{% trans '位置' %}</th>
                 {% if not administrator %}
-                <th width="200px">预约</th>
+                <th width="200px">{% trans '预约' %}</th>
                 {% endif %}
             </tr>
         </thead>
@@ -111,13 +111,13 @@
                     <td><img src="/media/{{ book.book_id }}.png" width="100%" /></td>
                     <td>
                         {% if book.status == 0 %}
-                        {% trans '尚在馆内' %}
+                        <font color="green">{% trans '尚在馆内' %}</font>
                         {% elif book.status == 1 %}
-                        {% trans '已预约' %}
+                        <font color="red">{% trans '已预约' %}</font>
                         {% elif book.status == 2 %}
-                        {% trans '已借出' %}
+                        <font color="red">{% trans '已借出' %}</font>
                         {% elif book.status == 3 %}
-                        {% trans '已删除' %}
+                        <font color="red">{% trans '已删除' %}</font>
                         {% endif %}
                     </td>
                     <td>{{ book.the_book.place }}</td>

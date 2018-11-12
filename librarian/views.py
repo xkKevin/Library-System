@@ -1073,10 +1073,12 @@ def add_book_api(request):
 
 
             # -----------生成条形码示例-----------
+            '''
             if isbn.isalnum() and isbn:
                 result = BarCode.create_bar_code(isbn)
                 if result[0]:
                     bar_code_url = result[2]
+            '''
             # -----------##############----------
 
             book = Book()
@@ -1107,7 +1109,6 @@ def add_book_api(request):
                 all_book_list.append(AllBook(the_book=book, is_available=True))
             AllBook.objects.bulk_create(all_book_list)
 
-
             all = list(AllBook.objects.all())
             need = all[-int(total_num):]
             img_result = []
@@ -1124,8 +1125,9 @@ def add_book_api(request):
         except Exception as e:
             return JsonResponse({'result': False, "msg": "Database save failed"})
 
+    return JsonResponse({'result': True, 'book_image': image_url, 'bar_code_url': bar_code_url,
+                         "book_list": img_str})
 
-    return JsonResponse({'result': True, 'book_image': image_url, 'bar_code_url': bar_code_url,"book_list": img_str})
 
 def bar_code_page(request):
     need = []
