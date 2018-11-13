@@ -34,6 +34,10 @@
     bottom: 0px;
     text-align: center;
     }
+        .tab1 > tbody > tr > td{
+        {#background-color: #afd9ee;#}
+         background-color: rgba(250,250,250,0.6);
+     }
 #menu li a {
 	color: #afd9ee;
 	display: block;
@@ -123,18 +127,18 @@
 
 <div id="result">
 {% for book in book_list %}
-    <table class="items" style="padding:5px 0">
+    <table class="items tab1" style="padding:5px 0">
      <tbody>
           <tr>
-                <td class="col1" valign="top"></td>
-                <td class="cover" valign="top">
+                <td width="2%"></td>
+                <td width="10%">
                     {% if  book.image_url != 'None' %}
-                        <img style="border: medium none;" src="{{ book.image_url }}"/>
+                        <img style="width: 80%;" src="{{ book.image_url }}"/>
                     {% else %}
-                        <img style="border: medium none;width: 77px" src="/media/book_noe.jpg"/>
+                        <img style="width: 80%;" src="/media/book_noe.jpg"/>
                     {% endif %}
                 </td>
-              <td class="col2">
+              <td class="col2" width="20%">
                     <div class="itemtitle">{{ book.book_name }}</div>
                     <table border="0" cellpadding="0" cellspacing="0">
                         <tbody>
@@ -169,7 +173,21 @@
                         </tbody>
                     </table>
                 </td>
-          <td align="center"><a href="{% url 'book_detail' %}?book_id={{ book.id }}">{% trans '查看详情' %}</a></td>
+          <td width="25%" align="left" style="vertical-align: top;">
+              <div width="90%" style="padding-top: 2%;">
+                  <i class="fa fa-address-book-o"> {% trans '作者简介' %} : </i>
+                  <br/>
+                  {{ book.author_intro }}
+              </div>
+          </td>
+          <td width="40%" align="left" style="vertical-align: top;">
+              <div width="90%" style="padding-top: 2%;">
+                  <i class="fa fa-file-text-o"> {% trans '书籍摘要' %} : </i>
+                  <br/>
+                  {{ book.summary }}
+              </div>
+          </td>
+          <td width="3%"></td>
 {#          {% if not administrator %}#}
 
 {#              {% if book.available_num > 0 %} #}

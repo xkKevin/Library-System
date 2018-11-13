@@ -16,7 +16,8 @@ class Book(models.Model):
     place = models.CharField(max_length=50, null=False)
     image_url = models.CharField(max_length=100, default='None')
     price = models.CharField(max_length=100, default='100')
-
+    summary = models.TextField(max_length=2000, default='None')
+    author_intro = models.TextField(max_length=2000, default='None')
     def __str__(self):
         return self.book_name
 

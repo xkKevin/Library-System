@@ -859,6 +859,8 @@ def book_message_api(request):
                     result_json['author'] = ','.join(book_message['author'])
                     result_json['image_url'] = book_message['image']
                     result_json['book_name'] = book_message['title']
+                    result_json['summary'] = book_message['summary']
+                    result_json['author_intro'] = book_message['author_intro']
                     result_json['type'] = ','.join([i['name'] for i in book_message['tags']])
                 except KeyError:
                     pass
@@ -1102,7 +1104,8 @@ def add_book_api(request):
             price = request.POST['price']
             type = request.POST["type"]
             place = request.POST['place']
-
+            summary = request.POST['summary']
+            author_intro = request.POST['author_intro']
             if image_url != '':
                 image_result = requests.get(image_url)
                 if image_result.status_code == 200:
@@ -1133,6 +1136,8 @@ def add_book_api(request):
                 book.place = place
                 book.price = price
                 book.available_num = total_num
+                book.author_intro = author_intro
+                book.summary = summary
                 book.save()
             else:
                 book.author = author
@@ -1143,6 +1148,8 @@ def add_book_api(request):
                 book.place = place
                 book.price = price
                 book.available_num = total_num
+                book.author_intro = author_intro
+                book.summary = summary
                 book.save()
 
             all_book_list = list()
