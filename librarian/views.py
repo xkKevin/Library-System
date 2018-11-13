@@ -557,7 +557,8 @@ def search_book(request):
             if book_name == "":
                 result = Book.objects.filter(type=book_type)
             else:
-                result = Book.objects.filter(book_name__contains=book_name, type=book_type)
+                result = Book.objects.filter(book_name__contains=book_name, type=book_type)\
+                         | Book.objects.filter(author__contains=book_name, type=book_type)
 
         return render(request, 'search_results.html', {"book_list": result, "administrator": is_administrator,
                                      "username": username, 'search_text': book_name, 'search_type': book_type})
