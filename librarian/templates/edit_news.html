@@ -73,7 +73,20 @@
 			-moz-transition:all linear 0.30s;
 			transition:all linear 0.30s;		}
 		#login_click a:hover { background:#385f9e; }
-
+        textarea::-webkit-scrollbar {/*滚动条整体样式*/
+            width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+            height: 4px;
+        }
+        textarea::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+            border-radius: 5px;
+            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.3);
+        }
+        textarea::-webkit-scrollbar-track {/*滚动条里面轨道*/
+            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            border-radius: 0;
+            background: rgba(0,0,0,0.1);
+        }
 </style>
 </head>
 
@@ -125,7 +138,7 @@
                 </div>
                 <div class="form-group">
                     <i class="fa fa-header">&nbsp;&nbsp;{% trans '标题' %}</i>
-                    <input class="form-control required" type="text" id="title" maxlength="16" value="{{ notice.title }}" /><span id="warn1"></span>
+                    <input class="form-control required" type="text" id="title" maxlength="100" value="{{ notice.title }}" /><span id="warn1"></span>
                 </div>
                 <div class="form-group">
                     <i class="fa fa-file-text-o">&nbsp;&nbsp;{% trans '内容' %}</i>
