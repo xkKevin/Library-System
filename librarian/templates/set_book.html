@@ -242,7 +242,7 @@ bookid_fouces()
                         document.getElementById("total_num").value = result["total_num"];
                         document.getElementById("old_num").value = result["total_num"];
                     } else {
-                        alert('{% trans 'ISBN查询失败' %}')
+                        alert('{% trans '书籍ID查询失败\n不存在此类书籍' %}')
                     }
                 });
             } else {

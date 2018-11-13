@@ -116,6 +116,9 @@ def manager_page(request):
                 reserve.successful = False
                 reserve.expire = True
                 reserve.book.status = 0
+                reserve.book.is_available = True
+                reserve.the_book.available_num += 1
+                reserve.the_book.save()
                 reserve.book.save()
                 reserve.save()
 
@@ -153,9 +156,12 @@ def directly_borrow_book_api(request):
             user = User.objects.get(user_name=user_name_k)
             user_id = user.user_id
             book = AllBook.objects.get(book_id=book_id)
-            limit = Role.objects.all().first().books_limit
-            if not book.is_available:
+            reserve_num = ReserveOrder.objects.filter(user=user_id, expire=False).count()
+            limit = Role.objects.all().first().books_limit - reserve_num
+            if book.status == 2:
                 return JsonResponse({"result": False, "msg": "This book has been lent out!"})
+            if book.status == 3:
+                return JsonResponse({"result": False, "msg": "This book has been deleted!"})
             if user.borrow_num >= limit:
                 return JsonResponse({"result": False, "msg": "This User can not borrow!"})
 
@@ -168,7 +174,7 @@ def directly_borrow_book_api(request):
                                        user_id=user_id,
                                        expire=False)
             book.the_book.available_num = book.the_book.available_num - 1
-            book.is_available = False
+            #  book.is_available = False
             book.status = 2
             user.borrow_num += 1
             book.save()
@@ -723,6 +729,9 @@ def reserve_api(request):
                     reserve.successful = False
                     reserve.expire = True
                     reserve.book.status = 0
+                    reserve.book.is_available = True
+                    reserve.the_book.available_num += 1
+                    reserve.the_book.save()
                     reserve.book.save()
                     reserve.save()
                     reserve_orders.delete(reserve)
@@ -733,7 +742,11 @@ def reserve_api(request):
                                                  the_book=book.the_book)
             if result:
                 book.status = 1
+                book.is_available = False
                 book.save()
+                the_book = Book.objects.get(id=book.the_book_id)
+                the_book.available_num -= 1
+                the_book.save()
                 return JsonResponse({"result": True, "update": False})
             else:
                 return JsonResponse({"result": False, "msg": "Database save failed"})  # 数据库保存失败
@@ -905,8 +918,11 @@ def borrow_book_api(request):
         reserve_order = None
         try:
             reserve_order = ReserveOrder.objects.get(order_id=reserve_id)
-            if not reserve_order.book.is_available:
+            if reserve_order.book.status == 2:
                 return JsonResponse({"result": False, "msg": "This book has been lent out!"})
+            if reserve_order.book.status == 3:
+                return JsonResponse({"result": False, "msg": "This book has been deleted!"})
+
         except:
             return JsonResponse({"result": False, "msg": "Reserve_id is invalid"})
 
@@ -916,9 +932,14 @@ def borrow_book_api(request):
             return JsonResponse({"result": False, "msg": "All Book have been lent out!"})
         reserve_time = reserve_order.borrow_time
         delay = time.mktime(timezone.now().timetuple()) - time.mktime(reserve_time.timetuple())
-        if delay > (60**2)*2:
+        if delay > (60 ** 2) * 2:
             reserve_order.successful = False
             reserve_order.expire = True
+            reserve_order.book.status = 0
+            reserve_order.book.is_available = True
+            reserve_order.the_book.available_num += 1
+            reserve_order.the_book.save()
+            reserve_order.book.save()
             reserve_order.save()
             return JsonResponse({"result": True, "expire": True})
 
@@ -933,7 +954,7 @@ def borrow_book_api(request):
                                    user_id=user_id,
                                    expire=False)
 
-        reserve_order.the_book.available_num = reserve_order.the_book.available_num - 1
+        #  reserve_order.the_book.available_num = reserve_order.the_book.available_num - 1
         reserve_order.successful = True
 
         reserve_order.book.is_available = False
@@ -990,6 +1011,9 @@ def manage_user_api(request):
                 reserve_order.successful = False
                 reserve_order.expire = True
                 reserve_order.book.status = 0
+                reserve_order.book.is_available = True
+                reserve_order.the_book.available_num += 1
+                reserve_order.the_book.save()
                 reserve_order.book.save()
                 reserve_order.save()
                 continue

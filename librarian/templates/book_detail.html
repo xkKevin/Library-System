@@ -82,7 +82,7 @@
         </div>
         <div>
             <ul class="nav navbar-nav navbar-right" id="menu" style="left:0px; top:0px">
-                <li><a onClick="javascript :history.back(-1);" style="cursor: pointer;"><span class="fa fa-backward"></span>&nbsp;{% trans '上一页' %}</a></li>
+                <li><a onClick="javascript :self.location=document.referrer;" style="cursor: pointer;"><span class="fa fa-backward"></span>&nbsp;{% trans '上一页' %}</a></li>
                 {% if administrator %}
                 <li><a href="{% url 'manage_page' %}"><span class="glyphicon glyphicon-user"></span>&nbsp;{% trans '进入管理中心' %}</a></li>
                 {% else %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-13 10:36+0800\n"
+"POT-Creation-Date: 2018-11-13 13:36+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -402,7 +402,6 @@ msgstr "添加图书"
 
 #: .\librarian\templates\add_book.html:178
 #: .\librarian\templates\set_book.html:215
-#: .\librarian\templates\set_book.html:245
 msgid "ISBN查询失败"
 msgstr "ISBN查询失败"
 
@@ -961,6 +960,7 @@ msgid "馆藏复本:"
 msgstr "总共数量:"
 
 #: .\librarian\templates\result_json.html:33
+#: .\librarian\templates\search_results.html:167
 msgid "可用复本:"
 msgstr "可用复本:"
 
@@ -971,10 +971,6 @@ msgstr "无可预约数据"
 #: .\librarian\templates\search_results.html:113
 msgid "检索"
 msgstr "检索"
-
-#: .\librarian\templates\search_results.html:167
-msgid "尚在馆内:"
-msgstr "尚在馆内:"
 
 #: .\librarian\templates\search_results.html:172
 msgid "查看详情"
@@ -991,6 +987,10 @@ msgstr "书籍ID"
 #: .\librarian\templates\set_book.html:163
 msgid "编辑图书"
 msgstr "编辑图书"
+
+#: .\librarian\templates\set_book.html:245
+msgid "书籍ID查询失败\\n不存在此类书籍"
+msgstr "书籍ID查询失败\\n不存在此类书籍"
 
 #: .\librarian\templates\set_book.html:281
 msgid "图书信息修改成功"
@@ -1113,6 +1113,9 @@ msgstr "是否有效"
 #: .\reader\templates\user_message.html:331
 msgid "付费用户"
 msgstr "付费用户"
+
+#~ msgid "尚在馆内:"
+#~ msgstr "尚在馆内:"
 
 #~ msgid "请输入书的ISBN"
 #~ msgstr "请输入书的ISBN"
