@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-13 00:42+0800\n"
+"POT-Creation-Date: 2018-11-13 10:36+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -975,6 +975,10 @@ msgstr "检索"
 #: .\librarian\templates\search_results.html:167
 msgid "尚在馆内:"
 msgstr "尚在馆内:"
+
+#: .\librarian\templates\search_results.html:172
+msgid "查看详情"
+msgstr "查看详情"
 
 #: .\librarian\templates\search_results.html:239
 msgid "搜索失败!\\n失败信息:"

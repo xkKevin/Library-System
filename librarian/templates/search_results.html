@@ -169,7 +169,7 @@
                         </tbody>
                     </table>
                 </td>
-          <td align="center"><a href="{% url 'book_detail' %}?book_id={{ book.id }}">查看详情</a></td>
+          <td align="center"><a href="{% url 'book_detail' %}?book_id={{ book.id }}">{% trans '查看详情' %}</a></td>
 {#          {% if not administrator %}#}
 
 {#              {% if book.available_num > 0 %} #}

@@ -1,5 +1,6 @@
 import datetime
 import json
+import threading
 
 from tool.bar_code import BarCode
 from django.shortcuts import render
@@ -106,6 +107,18 @@ def manager_page(request):
     :param request:
     :return:
     '''
+    reserve_orders = ReserveOrder.objects.filter(expire=False)
+    if len(reserve_orders) > 0:
+        for reserve in reserve_orders:
+            reserve_time = reserve.borrow_time
+            delay = time.time() - time.mktime(reserve_time.timetuple())
+            if delay > (60 ** 2) * 2:
+                reserve.successful = False
+                reserve.expire = True
+                reserve.book.status = 0
+                reserve.book.save()
+                reserve.save()
+
     username = request.session.get('username', "None")
     if username == 'root':
         librarian_name = request.session['admin_name']
