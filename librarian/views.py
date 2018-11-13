@@ -67,9 +67,9 @@ def index(request):
     username = request.session.get('username', "None")
     # 获取最近5条通知
     notices = Notice.objects.filter().order_by('-updated_time')
-    for i in range(len(notices)):  # 去掉回车换行
-        notices[i].content = notices[i].content.replace("\n", "")
-        notices[i].content = notices[i].content.replace("\r", "")
+    for i in range(len(notices)):  # 去掉回车换行，换成空格
+        notices[i].content = notices[i].content.replace("\n", " ")
+        notices[i].content = notices[i].content.replace("\r", " ")
     if username != "None":
         if username == 'anti_man':  # 如果是系统管理员，不能在主页登录
             message = {'login': False, "username": None, 'notices': notices}
@@ -659,9 +659,9 @@ def post_news_record(request):
     username = request.session.get('username', "None")
     if username == 'root':
         all_notices = Notice.objects.all().order_by("-updated_time")
-        for i in range(len(all_notices)):  # 去掉回车换行
-            all_notices[i].content = all_notices[i].content.replace("\n", "")
-            all_notices[i].content = all_notices[i].content.replace("\r", "")
+        for i in range(len(all_notices)):  # 去掉回车换行，换成空格
+            all_notices[i].content = all_notices[i].content.replace("\n", " ")
+            all_notices[i].content = all_notices[i].content.replace("\r", " ")
         return render(request, 'post_news_record.html', {'all_notices': all_notices})
     else:
         return HttpResponseRedirect(reverse("index"))

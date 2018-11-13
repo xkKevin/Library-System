@@ -247,12 +247,12 @@
             {% for notice in notices %}
                 <tr>
                     <td style="text-align: center;  width: 15%"><a href="{% url 'view_notice_content' notice.id %}">
-                        <marquee onMouseOut="outFunc(this)" onMouseOver=overFunc(this,"{{ notice.title }}") scrollAmount="0"  behavior="alternate">
+                        <marquee onMouseOut="outFunc(this)" onMouseOver="overFunc(this,'{{ notice.title|escape|addslashes }}')" scrollAmount="0"  behavior="alternate">
                         {{ notice.title }}
                         </marquee>
                     </a></td>
                     <td style="text-align: center; width: 45%">
-                        <marquee onMouseOut="outFunc(this)" onMouseOver=overFunc(this,"{{ notice.content }}") scrollAmount="0"  behavior="alternate">
+                        <marquee onMouseOut="outFunc(this)" onMouseOver="overFunc(this,'{{ notice.content|escape|addslashes }}')" scrollAmount="0"  behavior="alternate">
                             {{ notice.content }}
                         </marquee>
                         <span id="content_td" style="display: none;"></span>
