@@ -552,7 +552,7 @@ def search_book(request):
         return JsonResponse({"result": False, "msg": "Query parameter incorrect!"})  # 查询参数不正确
     try:
         if book_type == "ALL":
-            result = Book.objects.filter(book_name__contains=book_name)
+            result = Book.objects.filter(book_name__contains=book_name) | Book.objects.filter(author__contains=book_name)
         else:
             if book_name == "":
                 result = Book.objects.filter(type=book_type)
